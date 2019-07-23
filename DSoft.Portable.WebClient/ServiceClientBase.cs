@@ -37,6 +37,17 @@ namespace DSoft.Portable.WebClient
         /// <value>The name of the controller.</value>
         public abstract string ControllerName { get; }
 
+        /// <summary>
+        /// Optional api module name if the api has been modularized  /api/module/controller
+        /// </summary>
+        /// <value>The module.</value>
+        public virtual string Module
+        {
+            get
+            {
+                return null;
+            }
+        }
         #endregion
 
 
@@ -66,9 +77,14 @@ namespace DSoft.Portable.WebClient
         /// </summary>
         /// <param name="methodName">Name of the method.</param>
         /// <returns></returns>
-        protected string CalculateUrlForMethod(String methodName)
+        protected string CalculateUrlForMethod(string methodName)
         {
-            var url = String.Format("api/{0}/{1}", ControllerName, methodName);
+            var url = string.Format("api/{0}/{1}", ControllerName, methodName);
+
+            if (!string.IsNullOrWhiteSpace(Module))
+            {
+                url = string.Format("api/{0}/{1}/{2}", Module, ControllerName, methodName);
+            }
 
             return url;
         }
