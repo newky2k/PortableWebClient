@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace DSoft.Portable.WebClient
 {
+    /// <summary>
+    /// Base Web Client class for connecting to an Web API application
+    /// </summary>
     public abstract class WebClientBase
     {
         #region Fields

@@ -6,6 +6,10 @@ using System.Text;
 
 namespace DSoft.Portable.WebClient
 {
+
+    /// <summary>
+    /// Base Service Client  class for consuming services provided by ASP.NET ApiControllers
+    /// </summary>
     public abstract class ServiceClientBase
     {
         #region Fields
