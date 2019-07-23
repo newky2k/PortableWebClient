@@ -2,6 +2,18 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Authors>newky2k</Authors>
+    <Description>Web Client base library for interacting with ASP.NET MVC and Core Web Apis
+</Description>
+    <Copyright>Copyright © 2019 DSoft</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/newky2k/PortableWebClient</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/newky2k/PortableWebClient</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Web Client</PackageTags>
+    <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='portable45-net45+win8+wpa81'">
@@ -22,5 +34,11 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="NETStandard.Library" Version="2.0.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 </Project>
