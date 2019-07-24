@@ -5,7 +5,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Authors>newky2k</Authors>
-    <Description>Web Client base library for interacting with ASP.NET MVC and Core Web Apis
+    <Description>Web Client base library for interacting with ASP.NET MVC and ASP.NET Core Web Apis
 </Description>
     <Copyright>Copyright © 2019 DSoft</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
