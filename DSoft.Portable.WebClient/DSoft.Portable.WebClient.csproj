@@ -15,7 +15,7 @@
     <PackageTags>Web Client</PackageTags>
     <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>dsoftkey.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>DSoft.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='portable45-net45+win8+wpa81'">
