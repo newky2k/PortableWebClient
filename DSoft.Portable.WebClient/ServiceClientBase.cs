@@ -10,7 +10,7 @@ namespace DSoft.Portable.WebClient
     /// <summary>
     /// Base Service Client  class for consuming services provided by ASP.NET ApiControllers
     /// </summary>
-    public abstract class ServiceClientBase
+    public abstract class ServiceClientBase : IDisposable
     {
         #region Fields
         private WebClientBase _client;

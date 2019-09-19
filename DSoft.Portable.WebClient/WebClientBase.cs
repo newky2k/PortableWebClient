@@ -7,7 +7,7 @@ namespace DSoft.Portable.WebClient
     /// <summary>
     /// Base Web Client class for connecting to an Web API application
     /// </summary>
-    public abstract class WebClientBase
+    public abstract class WebClientBase : IDisposable
     {
         #region Fields
 
@@ -115,6 +115,11 @@ namespace DSoft.Portable.WebClient
                 return false;
             }
 
+        }
+
+        public virtual void Dispose()
+        {
+           
         }
 
         #endregion
