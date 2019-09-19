@@ -122,6 +122,16 @@ namespace DSoft.Portable.WebClient
            
         }
 
+        /// <summary>
+        /// Get an instance of a service that implements ServiceClientBase
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T Service<T>() where T : ServiceClientBase
+        {
+            return (T)Activator.CreateInstance(typeof(T), this);
+        }
+
         #endregion
     }
 
