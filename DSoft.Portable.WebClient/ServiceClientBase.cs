@@ -23,7 +23,7 @@ namespace DSoft.Portable.WebClient
         /// <value>
         /// The rest client.
         /// </value>
-        protected RestClient RestClient
+        public RestClient RestClient
         {
             get
             {
@@ -62,6 +62,13 @@ namespace DSoft.Portable.WebClient
 
         #region Methods
 
+        public WebClientBase WebClient
+        {
+            get
+            {
+                return _client;
+            }
+        }
         /// <summary>
         /// Access a typed version of the client
         /// </summary>
