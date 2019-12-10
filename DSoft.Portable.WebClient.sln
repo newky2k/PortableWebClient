@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSoft.Portable.WebClient", "DSoft.Portable.WebClient\DSoft.Portable.WebClient.csproj", "{2E566639-B623-4D2D-B6BA-5EF804A87934}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSoft.Portable.WebClient.Encryption", "DSoft.Portable.WebClient.Encryption\DSoft.Portable.WebClient.Encryption.csproj", "{D9568668-52C6-41CE-907C-7A3857981288}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSoft.Portable.WebClient.Encryption", "DSoft.Portable.WebClient.Encryption\DSoft.Portable.WebClient.Encryption.csproj", "{D9568668-52C6-41CE-907C-7A3857981288}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSoft.Portable.WebClient.Extensions", "DSoft.Portable.WebClient.Extensions\DSoft.Portable.WebClient.Extensions.csproj", "{A8F794B1-8C2B-4D98-8CA1-771D23DAFF6B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{D9568668-52C6-41CE-907C-7A3857981288}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9568668-52C6-41CE-907C-7A3857981288}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9568668-52C6-41CE-907C-7A3857981288}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8F794B1-8C2B-4D98-8CA1-771D23DAFF6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8F794B1-8C2B-4D98-8CA1-771D23DAFF6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8F794B1-8C2B-4D98-8CA1-771D23DAFF6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8F794B1-8C2B-4D98-8CA1-771D23DAFF6B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
