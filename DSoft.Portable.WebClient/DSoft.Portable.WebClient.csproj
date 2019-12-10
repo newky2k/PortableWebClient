@@ -13,7 +13,7 @@
     <RepositoryUrl>https://github.com/newky2k/PortableWebClient</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>Web Client</PackageTags>
-    <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
+    <PackageReleaseNotes>Added ClientVersionNo property to the WebClientBase and WebClient property to ServiceClientBase</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>DSoft.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>

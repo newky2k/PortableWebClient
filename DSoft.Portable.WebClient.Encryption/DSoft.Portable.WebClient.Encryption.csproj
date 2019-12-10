@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Authors>newky2k</Authors>
+    <Company>newky2k</Company>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Description>Encryption extension for DSoft.Portable.WebClient providing encrypted payload communications class for the client library</Description>
+    <PackageProjectUrl>https://github.com/newky2k/PortableWebClient</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/newky2k/PortableWebClient</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Web Client</PackageTags>
+    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>DSoft.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DSoft.Portable.WebClient\DSoft.Portable.WebClient.csproj" />
+  </ItemGroup>
+
+</Project>

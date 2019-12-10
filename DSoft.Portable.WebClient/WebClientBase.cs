@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace DSoft.Portable.WebClient
@@ -10,7 +11,7 @@ namespace DSoft.Portable.WebClient
     public abstract class WebClientBase : IDisposable
     {
         #region Fields
-
+        private Version _appVersion;
         private string _baseUrl;
         private int _defaultTimeOutSeconds = 1;
 
@@ -23,6 +24,22 @@ namespace DSoft.Portable.WebClient
         public int TimeOut { get => _defaultTimeOutSeconds; set => _defaultTimeOutSeconds = value; }
 
         public bool CanConnect => CheckCanConnect(TimeOut);
+
+        public string ClientVersionNo
+        {
+            get
+            {
+                if (_appVersion == null)
+                {
+                    var asm = Assembly.GetAssembly(this.GetType());
+
+                    _appVersion = asm.GetName().Version;
+                }
+
+
+                return _appVersion.ToString();
+            }
+        }
 
         #endregion
         public WebClientBase(string baseUrl)
