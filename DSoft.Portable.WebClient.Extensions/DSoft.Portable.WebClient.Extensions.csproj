@@ -20,6 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DSoft.Portable.WebClient.Core\DSoft.Portable.WebClient.Core.csproj" />
     <ProjectReference Include="..\DSoft.Portable.WebClient.Encryption\DSoft.Portable.WebClient.Encryption.csproj" />
     <ProjectReference Include="..\DSoft.Portable.WebClient\DSoft.Portable.WebClient.csproj" />
   </ItemGroup>

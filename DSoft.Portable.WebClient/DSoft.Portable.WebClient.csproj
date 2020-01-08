@@ -7,7 +7,7 @@
     <Authors>newky2k</Authors>
     <Description>Web Client base library for interacting with ASP.NET MVC and ASP.NET Core Web Apis
 </Description>
-    <Copyright>Copyright © 2019 DSoft</Copyright>
+    <Copyright>Copyright © 2020 DSoft</Copyright>
     <PackageLicenseFile></PackageLicenseFile>
     <PackageProjectUrl>https://github.com/newky2k/PortableWebClient</PackageProjectUrl>
     <RepositoryUrl>https://github.com/newky2k/PortableWebClient</RepositoryUrl>
@@ -34,6 +34,10 @@
 
   <ItemGroup>
     <PackageReference Include="RestSharp" Version="106.6.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DSoft.Portable.WebClient.Core\DSoft.Portable.WebClient.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="NETStandard.Library" Version="2.0.3" />

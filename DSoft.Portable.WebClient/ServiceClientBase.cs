@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DSoft.Portable.WebClient
 {
@@ -60,8 +61,6 @@ namespace DSoft.Portable.WebClient
 
         #region Methods
 
-        #region Methods
-
         public WebClientBase WebClient
         {
             get
@@ -69,6 +68,7 @@ namespace DSoft.Portable.WebClient
                 return _client;
             }
         }
+
         /// <summary>
         /// Access a typed version of the client
         /// </summary>
@@ -118,6 +118,51 @@ namespace DSoft.Portable.WebClient
             return new RestRequest(CalculateUrlForMethod(methodName), Method.GET, type);
         }
 
+        /// <summary>
+        /// Execute a Request asynchronously
+        /// </summary>
+        /// <typeparam name="T">Response type</typeparam>
+        /// <param name="request">Request</param>
+        /// <returns></returns>
+        public async Task<T> ExecuteRequestAsync<T>(IRestRequest request) where T : ResponseBase
+        {
+            var result = await RestClient.ExecuteTaskAsync<T>(request);
+
+            if (!result.IsSuccessful)
+                throw new Exception(result.ErrorMessage);
+
+            if (result.Data.Success == false)
+                throw new Exception(result.Data.Message);
+
+            return result.Data;
+        }
+
+        /// <summary>
+        /// Execute a Post request asynchronously
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="actionName">Controller action name</param>
+        /// <param name="packetBuilder">Function to buile request body object</param>
+        /// <returns></returns>
+        public async Task<T> ExecutePostRequestAsync<T>(string actionName, Func<object> packetBuilder) where T : ResponseBase
+        {
+            var request = BuildPostRequest(actionName);
+
+            var body = packetBuilder?.Invoke();
+
+            if (body != null)
+                request.AddJsonBody(body);
+
+            var result = await RestClient.ExecuteTaskAsync<T>(request);
+
+            if (!result.Data.Success)
+            {
+                throw new Exception(result.Data.Message);
+            }
+
+            return result.Data;
+        }
+
         public virtual void Dispose()
         {
             _client = null;
@@ -125,6 +170,5 @@ namespace DSoft.Portable.WebClient
 
         #endregion
 
-        #endregion
     }
 }

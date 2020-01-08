@@ -15,6 +15,26 @@ namespace DSoft.Portable.WebClient.Encryption
             Payload = new SecurePayload();
         }
 
+        public SecureRequest(string passKey)
+        {
+            Payload = new SecurePayload(passKey);
+        }
+
+        public SecureRequest(string passKey, DateTime timestamp) : this(passKey)
+        {
+            Payload.Timestamp = timestamp;
+        }
+
+        public SecureRequest(string passKey, string clientVersionNumber) : this(passKey)
+        {
+            ClientVersionNo = clientVersionNumber;
+        }
+
+        public SecureRequest(string passKey, string clientVersionNumber, DateTime timestamp) : this(passKey, clientVersionNumber)
+        {
+            Payload.Timestamp = timestamp;
+        }
+
         public void Validate(TimeSpan timeout)
         {
             if (Payload == null)

@@ -18,7 +18,7 @@ namespace DSoft.Portable.WebClient
             var request = new RestRequest($"{target.ControllerName}/{action}", Method.POST);
             request.RequestFormat = DataFormat.Json;
 
-            request.AddBody(target.CreateUserRequest(data,tokenId, encryptionToken));
+            request.AddJsonBody(target.CreateUserRequest(data,tokenId, encryptionToken));
 
             return request;
         }
@@ -28,7 +28,7 @@ namespace DSoft.Portable.WebClient
             var request = new RestRequest($"{target.ControllerName}/{action}", Method.POST);
             request.RequestFormat = DataFormat.Json;
 
-            request.AddBody(target.CreateEmptyUserRequest(tokenId, encryptionToken));
+            request.AddJsonBody(target.CreateEmptyUserRequest(tokenId, encryptionToken));
 
             return request;
         }
@@ -38,7 +38,7 @@ namespace DSoft.Portable.WebClient
             var request = new RestRequest($"{target.ControllerName}/{action}", Method.POST);
             request.RequestFormat = DataFormat.Json;
 
-            request.AddBody(target.CreateUserBinaryRequest(data, binary,tokenId, encryptionToken));
+            request.AddJsonBody(target.CreateUserBinaryRequest(data, binary,tokenId, encryptionToken));
 
             return request;
         }
@@ -55,7 +55,7 @@ namespace DSoft.Portable.WebClient
                 Payload = new SecurePayload(data, encryptionToken),
             };
 
-            request.AddBody(fReq);
+            request.AddJsonBody(fReq);
 
             return request;
         }
@@ -102,19 +102,6 @@ namespace DSoft.Portable.WebClient
         #endregion
 
         #region Request execution methods
-
-        public static async Task<T> ExecuteRequestAsync<T>(this ServiceClientBase target, IRestRequest request) where T : ResponseBase
-        {
-            var result = await target.RestClient.ExecuteTaskAsync<T>(request);
-
-            if (!result.IsSuccessful)
-                throw new Exception(result.ErrorMessage);
-
-            if (result.Data.Success == false)
-                throw new Exception(result.Data.Message);
-
-            return result.Data;
-        }
 
         public static async Task ExecuteSecureCallAsync(this ServiceClientBase target, string methodName, object data, string tokenId, string encryptionToken)
         {
