@@ -12,11 +12,13 @@
     <RepositoryUrl>https://github.com/newky2k/PortableWebClient</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>Web Client</PackageTags>
-    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <PackageReleaseNotes>  Updated to use Core types package
+    Added new constructors for SecureRequest
+    </PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>DSoft.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
-    <Copyright>Copyright © 2019 DSoft</Copyright>
+    <Copyright>Copyright © 2020 DSoft</Copyright>
   </PropertyGroup>
 
   <ItemGroup>

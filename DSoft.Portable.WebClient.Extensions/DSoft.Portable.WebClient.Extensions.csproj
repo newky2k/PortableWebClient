@@ -11,12 +11,12 @@
     <Authors>newky2k</Authors>
     <Description>Extensions to the core DSoft.Portable.WebClient classes</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Copyright>Copyright © 2019 DSoft</Copyright>
+    <Copyright>Copyright © 2020 DSoft</Copyright>
     <PackageProjectUrl>https://github.com/newky2k/PortableWebClient</PackageProjectUrl>
     <RepositoryUrl>https://github.com/newky2k/PortableWebClient</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>Web Client</PackageTags>
-    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <PackageReleaseNotes>Updated to use Core types package.  Some extensions methods were moved into ServiceClientBase</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
