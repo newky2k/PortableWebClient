@@ -11,9 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSoft.Portable.WebClient.Ex
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSoft.Portable.WebClient.Core", "DSoft.Portable.WebClient.Core\DSoft.Portable.WebClient.Core.csproj", "{01D448D4-E0D5-4744-9DD0-4F287E36B967}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSoft.EntityFrameworkCore.Session", "DSoft.EntityFrameworkCore.Session\DSoft.EntityFrameworkCore.Session.csproj", "{480304DA-678A-4800-826C-FAE051AF24D5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSoft.EntityFrameworkCore.Security", "DSoft.EntityFrameworkCore.Session\DSoft.EntityFrameworkCore.Security.csproj", "{480304DA-678A-4800-826C-FAE051AF24D5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSoft.Portable.Server.Security.Core", "DSoft.Portable.Security.Session\DSoft.Portable.Server.Security.Core.csproj", "{D25B4F31-0C72-40BF-B426-EF2F49D0AA02}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSoft.AspNetCore.Security", "DSoft.AspNetCore.Security\DSoft.AspNetCore.Security.csproj", "{1A88DF68-CCEA-490F-9B9A-2CCCA53FF721}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{D25B4F31-0C72-40BF-B426-EF2F49D0AA02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D25B4F31-0C72-40BF-B426-EF2F49D0AA02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D25B4F31-0C72-40BF-B426-EF2F49D0AA02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A88DF68-CCEA-490F-9B9A-2CCCA53FF721}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A88DF68-CCEA-490F-9B9A-2CCCA53FF721}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A88DF68-CCEA-490F-9B9A-2CCCA53FF721}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A88DF68-CCEA-490F-9B9A-2CCCA53FF721}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
