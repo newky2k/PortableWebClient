@@ -69,7 +69,7 @@ namespace DSoft.EntityFrameworkCore.Security
         }
 
         /// <summary>
-        /// Removed Expired sessions
+        /// Remove Expired sessions
         /// </summary>
         /// <returns></returns>
         public async Task RemoveExpiredSessionsAsync()
