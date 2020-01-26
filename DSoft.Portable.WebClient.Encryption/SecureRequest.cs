@@ -20,6 +20,11 @@ namespace DSoft.Portable.WebClient.Encryption
             Payload = new SecurePayload(passKey);
         }
 
+        public SecureRequest(string passKey, object data)
+        {
+            Payload = new SecurePayload(data, passKey);
+        }
+
         public SecureRequest(string passKey, DateTime timestamp) : this(passKey)
         {
             Payload.Timestamp = timestamp;
