@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DSoft.EntityFrameworkCore.Security
+namespace DSoft.Portable.EntityFrameworkCore.Security
 {
     public abstract class SessionManagerBase<T, TDbContext, TKey, TTokenType>
     where T : class, ISession<TKey, TTokenType>, new()
