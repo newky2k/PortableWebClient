@@ -4,6 +4,17 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>DSoft.Portable.Server.Security.Core</AssemblyName>
     <RootNamespace>DSoft.Portable.Server.Security.Core</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Authors>newky2k</Authors>
+    <Copyright>Copyright © 2020 DSoft</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/newky2k/PortableWebClient</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/newky2k/PortableWebClient</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Web security</PackageTags>
+    <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
+    <Description>Core security classess</Description>
   </PropertyGroup>
 
 </Project>
