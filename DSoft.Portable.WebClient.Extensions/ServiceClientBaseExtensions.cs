@@ -15,8 +15,7 @@ namespace DSoft.Portable.WebClient
 
         public static RestRequest BuildUserPostRequest(this ServiceClientBase target, string action, object data, string tokenId, string encryptionToken)
         {
-            var request = new RestRequest($"{target.ControllerName}/{action}", Method.POST);
-            request.RequestFormat = DataFormat.Json;
+            var request = new RestRequest(target.CalculateUrlForMethod(action), Method.POST, DataFormat.Json);
 
             request.AddJsonBody(target.CreateUserRequest(data,tokenId, encryptionToken));
 
@@ -25,8 +24,7 @@ namespace DSoft.Portable.WebClient
 
         public static RestRequest BuildEmptyUserPostRequest(this ServiceClientBase target, string action, string tokenId, string encryptionToken)
         {
-            var request = new RestRequest($"{target.ControllerName}/{action}", Method.POST);
-            request.RequestFormat = DataFormat.Json;
+            var request = new RestRequest(target.CalculateUrlForMethod(action), Method.POST, DataFormat.Json);
 
             request.AddJsonBody(target.CreateEmptyUserRequest(tokenId, encryptionToken));
 
@@ -35,8 +33,7 @@ namespace DSoft.Portable.WebClient
 
         public static RestRequest BuildUserBinaryPostRequest(this ServiceClientBase target, string action, object data, byte[] binary, string tokenId, string encryptionToken)
         {
-            var request = new RestRequest($"{target.ControllerName}/{action}", Method.POST);
-            request.RequestFormat = DataFormat.Json;
+            var request = new RestRequest(target.CalculateUrlForMethod(action), Method.POST, DataFormat.Json);
 
             request.AddJsonBody(target.CreateUserBinaryRequest(data, binary,tokenId, encryptionToken));
 
@@ -45,8 +42,7 @@ namespace DSoft.Portable.WebClient
 
         public static RestRequest BuildSecurePostRequest(this ServiceClientBase target, string action, object data, string tokenId, string encryptionToken)
         {
-            var request = new RestRequest($"{target.ControllerName}/{action}", Method.POST);
-            request.RequestFormat = DataFormat.Json;
+            var request = new RestRequest(target.CalculateUrlForMethod(action), Method.POST, DataFormat.Json);
 
             var fReq = new SecureRequest()
             {

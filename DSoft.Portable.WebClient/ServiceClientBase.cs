@@ -84,7 +84,7 @@ namespace DSoft.Portable.WebClient
         /// </summary>
         /// <param name="methodName">Name of the method.</param>
         /// <returns></returns>
-        protected string CalculateUrlForMethod(string methodName)
+        public string CalculateUrlForMethod(string methodName)
         {
             var url = string.Format("api/{0}/{1}", ControllerName, methodName);
 
@@ -129,7 +129,11 @@ namespace DSoft.Portable.WebClient
             var result = await RestClient.ExecuteTaskAsync<T>(request);
 
             if (!result.IsSuccessful)
-                throw new Exception(result.ErrorMessage);
+            {
+                if (result.StatusCode != System.Net.HttpStatusCode.OK)
+                    throw new Exception(result.StatusDescription);
+            }
+               
 
             if (result.Data.Success == false)
                 throw new Exception(result.Data.Message);
@@ -154,6 +158,12 @@ namespace DSoft.Portable.WebClient
                 request.AddJsonBody(body);
 
             var result = await RestClient.ExecuteTaskAsync<T>(request);
+
+            if (!result.IsSuccessful)
+            {
+                if (result.StatusCode != System.Net.HttpStatusCode.OK)
+                    throw new Exception(result.StatusDescription);
+            }
 
             if (!result.Data.Success)
             {
