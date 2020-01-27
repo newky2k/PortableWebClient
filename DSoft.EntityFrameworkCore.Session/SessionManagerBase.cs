@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DSoft.Portable.EntityFrameworkCore.Security
 {
-    public abstract class SessionManagerBase<T, TDbContext, TKey, TTokenType>
+    public abstract class SessionManagerBase<T, TDbContext, TKey, TTokenType> : IDisposable
     where T : class, ISession<TKey, TTokenType>, new()
-    where TDbContext : class, ISessionDataContext<T, TKey, TTokenType>, new()
+    where TDbContext : class, ISessionDataContext<T, TKey, TTokenType>
     {
 
         private TDbContext _dbContext;
@@ -37,7 +37,7 @@ namespace DSoft.Portable.EntityFrameworkCore.Security
         }
 
         /// <summary>
-        /// Find the specific session
+        /// Find the specific session asyncronously
         /// </summary>
         /// <param name="sessionId">Id of the session</param>
         /// <returns></returns>
@@ -52,7 +52,7 @@ namespace DSoft.Portable.EntityFrameworkCore.Security
         }
 
         /// <summary>
-        /// Delete the specific session
+        /// Delete the specific session asyncronously
         /// </summary>
         /// <param name="sessionId">Id of the session</param>
         /// <returns></returns>
@@ -69,7 +69,7 @@ namespace DSoft.Portable.EntityFrameworkCore.Security
         }
 
         /// <summary>
-        /// Remove Expired sessions
+        /// Remove Expired sessions asyncronously
         /// </summary>
         /// <returns></returns>
         public async Task RemoveExpiredSessionsAsync()
@@ -80,5 +80,9 @@ namespace DSoft.Portable.EntityFrameworkCore.Security
             await _dbContext.SaveChangesAsync();
         }
 
-    }
+		public void Dispose()
+		{
+            _dbContext = null;
+		}
+	}
 }
