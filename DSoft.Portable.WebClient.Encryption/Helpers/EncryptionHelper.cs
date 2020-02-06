@@ -59,7 +59,7 @@ namespace DSoft.Portable.WebClient.Encryption.Helpers
             return cipherTextBytes;
         }
 
-		private static byte[] Decrypt(string passPhrase, byte[] data)
+		private static (byte[] data, int byteCount) Decrypt(string passPhrase, byte[] data)
 		{
             ICryptoTransform decryptor = CreateDecryptor(passPhrase);
 
@@ -70,7 +70,7 @@ namespace DSoft.Portable.WebClient.Encryption.Helpers
             memoryStream.Close();
             cryptoStream.Close();
 
-            return plainTextBytes;
+            return (plainTextBytes, decryptedByteCount);
         }
 
 		#region Public Methods
@@ -110,9 +110,9 @@ namespace DSoft.Portable.WebClient.Encryption.Helpers
         {
             byte[] cipherTextBytes = Convert.FromBase64String(cipherText);
 
-            var data = Decrypt(passPhrase, cipherTextBytes);
+            var result = Decrypt(passPhrase, cipherTextBytes);
 
-            return Encoding.UTF8.GetString(data, 0, data.Length);
+            return Encoding.UTF8.GetString(result.data, 0, result.byteCount);
         }
 
 		/// <summary>
@@ -123,7 +123,9 @@ namespace DSoft.Portable.WebClient.Encryption.Helpers
 		/// <returns></returns>
         public static byte[] DecryptBytes(byte[] data, string passPhrase)
         {
-            return Decrypt(passPhrase, data);
+            var result = Decrypt(passPhrase, data);
+
+            return result.data;
         }
 
 		#endregion
