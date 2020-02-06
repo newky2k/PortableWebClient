@@ -1,4 +1,5 @@
-﻿using RestSharp;
+﻿using DSoft.Portable.WebClient.Core.Exceptions;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -130,10 +131,11 @@ namespace DSoft.Portable.WebClient
 
             if (!result.IsSuccessful)
             {
-                if (result.StatusCode != System.Net.HttpStatusCode.OK)
+                if (result.StatusCode == 0)
+                    throw new NoServerResponseException();
+                else if (result.StatusCode != System.Net.HttpStatusCode.OK)
                     throw new Exception(result.StatusDescription);
             }
-               
 
             if (result.Data.Success == false)
                 throw new Exception(result.Data.Message);
@@ -161,7 +163,10 @@ namespace DSoft.Portable.WebClient
 
             if (!result.IsSuccessful)
             {
-                if (result.StatusCode != System.Net.HttpStatusCode.OK)
+                if (result.StatusCode == 0)
+                    throw new NoServerResponseException();
+
+               else if (result.StatusCode != System.Net.HttpStatusCode.OK)
                     throw new Exception(result.StatusDescription);
             }
 

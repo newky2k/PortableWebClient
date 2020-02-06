@@ -12,8 +12,7 @@
     <RepositoryUrl>https://github.com/newky2k/PortableWebClient</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>Web Client</PackageTags>
-    <PackageReleaseNotes>  Updated to use Core types package
-    Added new constructors for SecureRequest
+    <PackageReleaseNotes>  Breaking Change:  Switched to AesManaged from RijndaelManaged
     </PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>DSoft.snk</AssemblyOriginatorKeyFile>
