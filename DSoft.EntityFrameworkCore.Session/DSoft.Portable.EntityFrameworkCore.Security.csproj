@@ -12,7 +12,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>Web client security entity framework</PackageTags>
     <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
-    <Description>Security classes for entity framework</Description>
+    <Description>Security database context classes for entity framework</Description>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>DSoft.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>

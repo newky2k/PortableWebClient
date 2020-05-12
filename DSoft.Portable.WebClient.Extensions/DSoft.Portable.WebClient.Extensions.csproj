@@ -16,7 +16,7 @@
     <RepositoryUrl>https://github.com/newky2k/PortableWebClient</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>Web Client</PackageTags>
-    <PackageReleaseNotes>Updated to use Core types package.  Some extensions methods were moved into ServiceClientBase</PackageReleaseNotes>
+    <PackageReleaseNotes>Updated to 2.0</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

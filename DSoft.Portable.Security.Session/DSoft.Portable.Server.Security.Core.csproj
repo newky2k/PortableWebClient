@@ -14,7 +14,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>Web security</PackageTags>
     <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
-    <Description>Core security classess</Description>
+    <Description>EF Core security entities</Description>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>DSoft.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>

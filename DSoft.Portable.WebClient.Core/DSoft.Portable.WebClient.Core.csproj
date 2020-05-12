@@ -15,7 +15,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>Web Client</PackageTags>
     <Description>Core libraries for DSoft.Portable.WebClient</Description>
-    <PackageReleaseNotes>Inital release</PackageReleaseNotes>
+    <PackageReleaseNotes>Updated to 2.0</PackageReleaseNotes>
   </PropertyGroup>
 
 </Project>
