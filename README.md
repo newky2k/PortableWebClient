@@ -16,6 +16,8 @@ The libary provides base level, bootstrap classes to simplify the building of cl
   - Simplifies calls to the services
 - Base Request and Response classes
 - Generic methods and extensions for call RestFul web apis
+- EF Core session
+  - Secure sessions for users
  
  
 ## Packages ##
