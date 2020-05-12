@@ -18,7 +18,9 @@ The libary provides base level, bootstrap classes to simplify the building of cl
 - Generic methods and extensions for call RestFul web apis
 - EF Core session
   - Secure sessions for users
- 
+
+## Build status  
+![alt-text](https://dev.azure.com/humbatt/Daves%20Projects/_apis/build/status/PortableWebClient/PortableWebClient%20Build "DevOps")
  
 ## Packages ##
 
