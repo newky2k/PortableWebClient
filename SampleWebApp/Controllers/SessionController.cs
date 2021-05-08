@@ -28,6 +28,8 @@ namespace SampleWebApp.Controllers
                 //try and extract the empty payload, will fail if the key is wrong
                 var payload = ExtractPayload<EmptyPayLoad>(request, initKey);
 
+                await Task.Delay(10);
+
                 result.Payload.Data = PayloadManager.EncryptPayload(EmptyPayLoad.Empty, initKey);
 
 
