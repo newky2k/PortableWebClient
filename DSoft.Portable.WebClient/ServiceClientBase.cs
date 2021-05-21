@@ -50,6 +50,15 @@ namespace DSoft.Portable.WebClient
                 return null;
             }
         }
+
+        /// <summary>
+        /// Gets the API prefix inserted before the controller name E.g. api/controller/method
+        /// </summary>
+        /// <value>
+        /// The api prefix - default: api
+        /// </value>
+        public virtual string ApiPrefix => "api";
+
         #endregion
 
 
@@ -87,11 +96,18 @@ namespace DSoft.Portable.WebClient
         /// <returns></returns>
         public string CalculateUrlForMethod(string methodName)
         {
-            var url = string.Format("api/{0}/{1}", ControllerName, methodName);
+            var apiPrefix = ApiPrefix;
+
+            if (!string.IsNullOrEmpty(apiPrefix) && !apiPrefix.EndsWith(@"/"))
+            {
+                apiPrefix = $"{apiPrefix}/";
+            }
+
+            var url = $"{apiPrefix}{ControllerName}/{methodName}";
 
             if (!string.IsNullOrWhiteSpace(Module))
             {
-                url = string.Format("api/{0}/{1}/{2}", Module, ControllerName, methodName);
+                url = $"{apiPrefix}{Module}/{ControllerName}/{methodName}";
             }
 
             return url;
@@ -127,18 +143,18 @@ namespace DSoft.Portable.WebClient
         /// <returns></returns>
         public async Task<T> ExecuteRequestAsync<T>(IRestRequest request) where T : ResponseBase
         {
-            var result = await RestClient.ExecuteTaskAsync<T>(request);
+            var result = await RestClient.ExecuteAsync<T>(request);
 
             if (!result.IsSuccessful)
             {
                 if (result.StatusCode == 0)
-                    throw new NoServerResponseException();
+                    throw new NoServerResponseException(result.ErrorMessage, result.ErrorException);
                 else if (result.StatusCode != System.Net.HttpStatusCode.OK)
-                    throw new Exception(result.StatusDescription);
+                    throw new ServerResponseFailureException(result.StatusCode, result.ErrorMessage, result.ErrorException);
             }
 
             if (result.Data.Success == false)
-                throw new Exception(result.Data.Message);
+                throw new DataResponseFailureException(result.Data.Message);
 
             return result.Data;
         }
@@ -159,20 +175,20 @@ namespace DSoft.Portable.WebClient
             if (body != null)
                 request.AddJsonBody(body);
 
-            var result = await RestClient.ExecuteTaskAsync<T>(request);
+            var result = await RestClient.ExecuteAsync<T>(request);
 
             if (!result.IsSuccessful)
             {
                 if (result.StatusCode == 0)
-                    throw new NoServerResponseException();
+                    throw new NoServerResponseException(result.ErrorMessage, result.ErrorException);
 
                else if (result.StatusCode != System.Net.HttpStatusCode.OK)
-                    throw new Exception(result.StatusDescription);
+                    throw new ServerResponseFailureException(result.StatusCode, result.ErrorMessage, result.ErrorException);
             }
 
             if (!result.Data.Success)
             {
-                throw new Exception(result.Data.Message);
+                throw new DataResponseFailureException(result.Data.Message);
             }
 
             return result.Data;
