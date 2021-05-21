@@ -148,7 +148,7 @@ namespace DSoft.Portable.WebClient
             if (!result.IsSuccessful)
             {
                 if (result.StatusCode == 0)
-                    throw new NoServerResponseException();
+                    throw new NoServerResponseException(result.StatusCode, result.ErrorMessage, result.ErrorException);
                 else if (result.StatusCode != System.Net.HttpStatusCode.OK)
                     throw new Exception(result.StatusDescription);
             }
@@ -180,7 +180,7 @@ namespace DSoft.Portable.WebClient
             if (!result.IsSuccessful)
             {
                 if (result.StatusCode == 0)
-                    throw new NoServerResponseException();
+                    throw new NoServerResponseException(result.StatusCode, result.ErrorMessage, result.ErrorException);
 
                else if (result.StatusCode != System.Net.HttpStatusCode.OK)
                     throw new Exception(result.StatusDescription);
