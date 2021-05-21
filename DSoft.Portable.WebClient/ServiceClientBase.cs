@@ -148,13 +148,13 @@ namespace DSoft.Portable.WebClient
             if (!result.IsSuccessful)
             {
                 if (result.StatusCode == 0)
-                    throw new NoServerResponseException(result.StatusCode, result.ErrorMessage, result.ErrorException);
+                    throw new NoServerResponseException(result.ErrorMessage, result.ErrorException);
                 else if (result.StatusCode != System.Net.HttpStatusCode.OK)
-                    throw new Exception(result.StatusDescription);
+                    throw new ServerResponseFailureException(result.StatusCode, result.ErrorMessage, result.ErrorException);
             }
 
             if (result.Data.Success == false)
-                throw new Exception(result.Data.Message);
+                throw new DataResponseFailureException(result.Data.Message);
 
             return result.Data;
         }
@@ -180,15 +180,15 @@ namespace DSoft.Portable.WebClient
             if (!result.IsSuccessful)
             {
                 if (result.StatusCode == 0)
-                    throw new NoServerResponseException(result.StatusCode, result.ErrorMessage, result.ErrorException);
+                    throw new NoServerResponseException(result.ErrorMessage, result.ErrorException);
 
                else if (result.StatusCode != System.Net.HttpStatusCode.OK)
-                    throw new Exception(result.StatusDescription);
+                    throw new ServerResponseFailureException(result.StatusCode, result.ErrorMessage, result.ErrorException);
             }
 
             if (!result.Data.Success)
             {
-                throw new Exception(result.Data.Message);
+                throw new DataResponseFailureException(result.Data.Message);
             }
 
             return result.Data;
