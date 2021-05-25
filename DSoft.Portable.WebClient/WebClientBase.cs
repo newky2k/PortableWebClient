@@ -42,11 +42,16 @@ namespace DSoft.Portable.WebClient
         }
 
         #endregion
+
+        #region Constructors
+
         public WebClientBase(string baseUrl)
         {
             _baseUrl = baseUrl;
 
         }
+
+        #endregion
 
         #region Methods
 

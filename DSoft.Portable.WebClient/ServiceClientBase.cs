@@ -25,7 +25,7 @@ namespace DSoft.Portable.WebClient
         /// <value>
         /// The rest client.
         /// </value>
-        public RestClient RestClient
+        protected RestClient RestClient
         {
             get
             {
@@ -37,19 +37,13 @@ namespace DSoft.Portable.WebClient
         /// Gets the name of the Web Api Controller.
         /// </summary>
         /// <value>The name of the controller.</value>
-        public abstract string ControllerName { get; }
+        protected abstract string ControllerName { get; }
 
         /// <summary>
         /// Optional api module name if the api has been modularized  /api/module/controller
         /// </summary>
         /// <value>The module.</value>
-        public virtual string Module
-        {
-            get
-            {
-                return null;
-            }
-        }
+        protected virtual string Module { get; }
 
         /// <summary>
         /// Gets the API prefix inserted before the controller name E.g. api/controller/method
@@ -57,27 +51,33 @@ namespace DSoft.Portable.WebClient
         /// <value>
         /// The api prefix - default: api
         /// </value>
-        public virtual string ApiPrefix => "api";
+        protected virtual string ApiPrefix => "api";
 
+        /// <summary>
+        /// Returns a collection of custom headers.
+        /// </summary>
+        /// <value>
+        /// The custom headers.
+        /// </value>
+        protected virtual ICollection<KeyValuePair<string, string>> CustomHeaders { get;  }
+
+        public WebClientBase WebClient => _client;
         #endregion
 
-
-
+        #region Constructors
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ServiceClientBase"/> class.
+        /// </summary>
+        /// <param name="client">The client.</param>
         public ServiceClientBase(WebClientBase client)
         {
             _client = client;
 
         }
 
-        #region Methods
+        #endregion
 
-        public WebClientBase WebClient
-        {
-            get
-            {
-                return _client;
-            }
-        }
+        #region Methods
 
         /// <summary>
         /// Access a typed version of the client
@@ -121,7 +121,11 @@ namespace DSoft.Portable.WebClient
         /// <returns></returns>
         protected RestRequest BuildPostRequest(string methodName, DataFormat type = DataFormat.Json)
         {
-            return new RestRequest(CalculateUrlForMethod(methodName), Method.POST, type);
+            var request = new RestRequest(CalculateUrlForMethod(methodName), Method.POST, type);
+
+            ApplyHeaders(request);
+
+            return request;
         }
 
         /// <summary>
@@ -132,7 +136,11 @@ namespace DSoft.Portable.WebClient
         /// <returns></returns>
         protected RestRequest BuildGetRequest(string methodName, DataFormat type = DataFormat.Json)
         {
-            return new RestRequest(CalculateUrlForMethod(methodName), Method.GET, type);
+            var request = new RestRequest(CalculateUrlForMethod(methodName), Method.GET, type);
+
+            ApplyHeaders(request);
+
+            return request;
         }
 
         /// <summary>
@@ -199,6 +207,13 @@ namespace DSoft.Portable.WebClient
             _client = null;
         }
 
+        public void ApplyHeaders(IRestRequest request)
+        {
+            if (CustomHeaders != null && CustomHeaders.Count > 0)
+            {
+                request.AddHeaders(CustomHeaders);
+            }
+        }
         #endregion
 
     }
