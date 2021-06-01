@@ -17,6 +17,8 @@ namespace DSoft.Portable.WebClient
         {
             var request = new RestRequest(target.CalculateUrlForMethod(action), Method.POST, DataFormat.Json);
 
+            target.ApplyHeaders(request);
+
             request.AddJsonBody(target.CreateUserRequest(data,tokenId, encryptionToken));
 
             return request;
@@ -25,6 +27,8 @@ namespace DSoft.Portable.WebClient
         public static RestRequest BuildEmptyUserPostRequest(this ServiceClientBase target, string action, string tokenId, string encryptionToken)
         {
             var request = new RestRequest(target.CalculateUrlForMethod(action), Method.POST, DataFormat.Json);
+
+            target.ApplyHeaders(request);
 
             request.AddJsonBody(target.CreateEmptyUserRequest(tokenId, encryptionToken));
 
@@ -35,6 +39,8 @@ namespace DSoft.Portable.WebClient
         {
             var request = new RestRequest(target.CalculateUrlForMethod(action), Method.POST, DataFormat.Json);
 
+            target.ApplyHeaders(request);
+
             request.AddJsonBody(target.CreateUserBinaryRequest(data, binary,tokenId, encryptionToken));
 
             return request;
@@ -43,6 +49,8 @@ namespace DSoft.Portable.WebClient
         public static RestRequest BuildSecurePostRequest(this ServiceClientBase target, string action, object data, string tokenId, string encryptionToken)
         {
             var request = new RestRequest(target.CalculateUrlForMethod(action), Method.POST, DataFormat.Json);
+
+            target.ApplyHeaders(request);
 
             var fReq = new SecureRequest()
             {
@@ -103,6 +111,8 @@ namespace DSoft.Portable.WebClient
         {
             var request = target.BuildUserPostRequest(methodName, data, tokenId, encryptionToken);
 
+            target.ApplyHeaders(request);
+
             var result = await target.ExecuteRequestAsync<SecureResponse>(request);
 
             if (result.Success == false)
@@ -112,6 +122,8 @@ namespace DSoft.Portable.WebClient
         public static async Task<T> ExecuteSecureCallAsync<T>(this ServiceClientBase target, string methodName, string tokenId, string encryptionToken)
         {
             var request = target.BuildEmptyUserPostRequest(methodName, tokenId, encryptionToken);
+
+            target.ApplyHeaders(request);
 
             var result = await target.ExecuteRequestAsync<SecureResponse>(request);
 
@@ -127,6 +139,8 @@ namespace DSoft.Portable.WebClient
         {
             var request = target.BuildUserPostRequest(methodName, data, tokenId, encryptionToken);
 
+            target.ApplyHeaders(request);
+
             var result = await target.ExecuteRequestAsync<SecureResponse>(request);
 
             if (result.Success == false)
@@ -141,6 +155,8 @@ namespace DSoft.Portable.WebClient
         {
             var request = target.BuildUserBinaryPostRequest(methodName, data, binary, tokenId, encryptionToken);
 
+            target.ApplyHeaders(request);
+
             var result = await target.ExecuteRequestAsync<SecureResponse>(request);
 
             if (result.Success == false)
@@ -150,6 +166,8 @@ namespace DSoft.Portable.WebClient
         public static async Task<(string FileName, string MimeType, byte[] Binary)> ExecuteSecureDownloadServiceCallAsync(this ServiceClientBase target, string methodName, object data, string tokenId, string encryptionToken)
         {
             var request = target.BuildUserPostRequest(methodName, data, tokenId, encryptionToken);
+
+            target.ApplyHeaders(request);
 
             var result = await target.ExecuteRequestAsync<SecureBinaryResponse>(request);
 
