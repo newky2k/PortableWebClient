@@ -14,5 +14,13 @@ namespace DSoft.Portable.WebClient.Encryption
 
             Payload = new SecurePayload();
         }
+
+        public void SetPayLoad(string data)
+        {
+            if (Payload == null)
+                throw new Exception("Payload is not set");
+
+            Payload.Data = data;
+        }
     }
 }
