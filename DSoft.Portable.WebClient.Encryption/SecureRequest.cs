@@ -8,6 +8,8 @@ namespace DSoft.Portable.WebClient.Encryption
     {
         public string Id { get; set; }
 
+        public string TokenId { get; set; }
+
         public SecurePayload Payload { get; set; }
 
         public SecureRequest()
@@ -48,5 +50,6 @@ namespace DSoft.Portable.WebClient.Encryption
             if (!Payload.Validate(timeout))
                 throw new Exception("Payload has timed out");
         }
+
     }
 }
