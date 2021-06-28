@@ -5,25 +5,23 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Authors>newky2k</Authors>
-    <Description>Extensions to the Rest to RestServiceClientBase
-    </Description>
-    <Copyright>Copyright © 2021 DSoft</Copyright>
-    <PackageLicenseFile></PackageLicenseFile>
+    <Company>newky2k</Company>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Description>Encrypted payload communications classes for the Rest client</Description>
     <PackageProjectUrl>https://github.com/newky2k/PortableWebClient</PackageProjectUrl>
     <RepositoryUrl>https://github.com/newky2k/PortableWebClient</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>Web Client RestFul</PackageTags>
-    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <PackageTags>Web Client</PackageTags>
+    <PackageReleaseNotes>Initial commit
+    </PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>DSoft.snk</AssemblyOriginatorKeyFile>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <DelaySign>false</DelaySign>
+    <Copyright>Copyright © 2020 DSoft</Copyright>
   </PropertyGroup>
-
 
   <ItemGroup>
     <ProjectReference Include="..\DSoft.Portable.WebClient.Encryption\DSoft.Portable.WebClient.Encryption.csproj" />
-    <ProjectReference Include="..\DSoft.Portable.WebClient.Rest.Encryption\DSoft.Portable.WebClient.Rest.Encryption.csproj" />
-    <ProjectReference Include="..\DSoft.Portable.WebClient.Rest\DSoft.Portable.WebClient.Rest.csproj" />
   </ItemGroup>
 
 </Project>

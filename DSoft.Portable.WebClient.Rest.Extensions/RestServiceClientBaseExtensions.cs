@@ -1,4 +1,5 @@
 ﻿using DSoft.Portable.WebClient.Encryption;
+using DSoft.Portable.WebClient.Rest.Encryption;
 using RestSharp;
 using System;
 using System.Collections.Generic;

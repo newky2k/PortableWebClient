@@ -1,7 +1,7 @@
 ﻿using DSoft.Portable.WebClient.Encryption.Helpers;
 using System;
 
-namespace DSoft.Portable.WebClient.Encryption
+namespace DSoft.Portable.WebClient.Rest.Encryption
 {
     public class SecurePayload
     {

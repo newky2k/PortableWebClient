@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "DSoft.Portable.WebClient.Grpc.Encryption";
+
+package portableclientencryption;
+
+
+message SecureRequestRpc {
+	string id = 1;
+	string clientVersionNo = 2;
+	SecurePayloadRpc payload = 3;
+	string tokenId = 4;
+}
+
+message SecureResponseRpc { 
+  bool success = 1;
+  string message = 2;
+  SecurePayloadRpc payload = 3;
+}
+
+message SecurePayloadRpc
+{
+	google.protobuf.Timestamp Timestamp = 1;
+	bytes Data = 2;
+
+}

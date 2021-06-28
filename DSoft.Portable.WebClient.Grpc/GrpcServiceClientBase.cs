@@ -6,6 +6,10 @@ using System.Net.Http;
 
 namespace DSoft.Portable.WebClient.Grpc
 {
+    /// <summary>
+    /// Base Grpc Service class
+    /// </summary>
+    /// <seealso cref="System.IDisposable" />
     public abstract class GrpcServiceClientBase : IDisposable
     {
         private IWebClient _client;
@@ -18,7 +22,7 @@ namespace DSoft.Portable.WebClient.Grpc
         /// <value>
         /// The RPC channel.
         /// </value>
-        protected GrpcChannel RPCChannel => GrpcChannel.ForAddress(_client.BaseUrl, new GrpcChannelOptions
+        internal protected GrpcChannel RPCChannel => GrpcChannel.ForAddress(_client.BaseUrl, new GrpcChannelOptions
         {
             HttpHandler = new GrpcWebHandler(new HttpClientHandler())
         });
@@ -30,9 +34,9 @@ namespace DSoft.Portable.WebClient.Grpc
             _client = client;
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
-
+            
         }
     }
 
