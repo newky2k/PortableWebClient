@@ -1,19 +1,20 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Authors>newky2k</Authors>
-    <Description>Web Client base library for interacting with ASP.NET MVC and ASP.NET Core Web Apis
-</Description>
-    <Copyright>Copyright © 2020 DSoft</Copyright>
+    <Description>
+      Restful client library for interacting with ASP.NET MVC and ASP.NET Core Web Apis
+    </Description>
+    <Copyright>Copyright © 2021 DSoft</Copyright>
     <PackageLicenseFile></PackageLicenseFile>
     <PackageProjectUrl>https://github.com/newky2k/PortableWebClient</PackageProjectUrl>
     <RepositoryUrl>https://github.com/newky2k/PortableWebClient</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>Web Client</PackageTags>
-    <PackageReleaseNotes>Updated to use Core types package and added Execute methods to ServiceClientBase and removed .Net framework target</PackageReleaseNotes>
+    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>DSoft.snk</AssemblyOriginatorKeyFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -26,7 +27,5 @@
   <ItemGroup>
     <ProjectReference Include="..\DSoft.Portable.WebClient.Core\DSoft.Portable.WebClient.Core.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Update="NETStandard.Library" Version="2.0.3" />
-  </ItemGroup>
+
 </Project>

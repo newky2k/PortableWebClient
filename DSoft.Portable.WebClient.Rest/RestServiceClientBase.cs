@@ -6,19 +6,22 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DSoft.Portable.WebClient
+namespace DSoft.Portable.WebClient.Rest
 {
 
     /// <summary>
     /// Base Service Client  class for consuming services provided by ASP.NET ApiControllers
     /// </summary>
-    public abstract class ServiceClientBase : IDisposable
+    public abstract class RestServiceClientBase : IDisposable
     {
         #region Fields
         private IWebClient _client;
         #endregion
 
         #region Properties
+
+        protected string ClientVersionNo => WebClient.ClientVersionNo;
+
         /// <summary>
         /// Gets the rest client.
         /// </summary>
@@ -61,15 +64,21 @@ namespace DSoft.Portable.WebClient
         /// </value>
         protected virtual ICollection<KeyValuePair<string, string>> CustomHeaders { get;  }
 
+        /// <summary>
+        /// Gets the WebCient instancee.
+        /// </summary>
+        /// <value>
+        /// The web client.
+        /// </value>
         public IWebClient WebClient => _client;
         #endregion
 
         #region Constructors
         /// <summary>
-        /// Initializes a new instance of the <see cref="ServiceClientBase"/> class.
+        /// Initializes a new instance of the <see cref="RestServiceClientBase"/> class.
         /// </summary>
         /// <param name="client">The client.</param>
-        public ServiceClientBase(IWebClient client)
+        public RestServiceClientBase(IWebClient client)
         {
             _client = client;
 
@@ -213,7 +222,7 @@ namespace DSoft.Portable.WebClient
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <seealso cref="System.IDisposable" />
-    public abstract class ServiceClientBase<T> : ServiceClientBase where T : IWebClient
+    public abstract class RestServiceClientBase<T> : RestServiceClientBase where T : IWebClient
     {
         /// <summary>
         /// Access a typed version of the client
@@ -222,9 +231,10 @@ namespace DSoft.Portable.WebClient
         /// <returns>T.</returns>
         protected T Client<T>() => (T)WebClient;
 
-        protected ServiceClientBase(T client) : base(client)
+        protected RestServiceClientBase(T client) : base(client)
         {
 
         }
-    }
+    } 
+
 }

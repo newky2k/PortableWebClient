@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Authors>newky2k</Authors>
+    <Description>
+      Grpc client library for interacting with ASP.NET MVC and ASP.NET Core Web Apis
+    </Description>
+    <Copyright>Copyright © 2021 DSoft</Copyright>
+    <PackageLicenseFile></PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/newky2k/PortableWebClient</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/newky2k/PortableWebClient</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Web Client</PackageTags>
+    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>DSoft.snk</AssemblyOriginatorKeyFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.Net.Client" Version="2.38.0" />
+    <PackageReference Include="Grpc.Net.Client.Web" Version="2.38.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DSoft.Portable.WebClient.Core\DSoft.Portable.WebClient.Core.csproj" />
+  </ItemGroup>
+  
+</Project>
