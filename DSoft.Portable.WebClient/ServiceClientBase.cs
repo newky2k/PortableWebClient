@@ -15,7 +15,7 @@ namespace DSoft.Portable.WebClient
     public abstract class ServiceClientBase : IDisposable
     {
         #region Fields
-        private WebClientBase _client;
+        private IWebClient _client;
         #endregion
 
         #region Properties
@@ -25,7 +25,7 @@ namespace DSoft.Portable.WebClient
         /// <value>
         /// The rest client.
         /// </value>
-        protected RestClient RestClient
+        protected IRestClient RestClient
         {
             get
             {
@@ -61,7 +61,7 @@ namespace DSoft.Portable.WebClient
         /// </value>
         protected virtual ICollection<KeyValuePair<string, string>> CustomHeaders { get;  }
 
-        public WebClientBase WebClient => _client;
+        public IWebClient WebClient => _client;
         #endregion
 
         #region Constructors
@@ -69,7 +69,7 @@ namespace DSoft.Portable.WebClient
         /// Initializes a new instance of the <see cref="ServiceClientBase"/> class.
         /// </summary>
         /// <param name="client">The client.</param>
-        public ServiceClientBase(WebClientBase client)
+        public ServiceClientBase(IWebClient client)
         {
             _client = client;
 
@@ -78,16 +78,6 @@ namespace DSoft.Portable.WebClient
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Access a typed version of the client
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns>T.</returns>
-        protected T Client<T>() where T : WebClientBase
-        {
-            return (T)_client;
-        }
 
         /// <summary>
         /// Calculates the URL for method based on BaseUrl of the Client, the controller name and the method name
@@ -216,5 +206,28 @@ namespace DSoft.Portable.WebClient
         }
         #endregion
 
+    }
+
+    /// <summary>
+    /// Generic Typed version of the ServiceClientBase type
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <seealso cref="System.IDisposable" />
+    public abstract class ServiceClientBase<T> : ServiceClientBase
+    {
+        /// <summary>
+        /// Access a typed version of the client
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>T.</returns>
+        protected T Client<T>() where T : IWebClient
+        {
+            return (T)WebClient;
+        }
+
+        protected ServiceClientBase(IWebClient client) : base(client)
+        {
+
+        }
     }
 }
