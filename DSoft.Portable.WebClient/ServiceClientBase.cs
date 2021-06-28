@@ -213,19 +213,16 @@ namespace DSoft.Portable.WebClient
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <seealso cref="System.IDisposable" />
-    public abstract class ServiceClientBase<T> : ServiceClientBase
+    public abstract class ServiceClientBase<T> : ServiceClientBase where T : IWebClient
     {
         /// <summary>
         /// Access a typed version of the client
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns>T.</returns>
-        protected T Client<T>() where T : IWebClient
-        {
-            return (T)WebClient;
-        }
+        protected T Client<T>() => (T)WebClient;
 
-        protected ServiceClientBase(IWebClient client) : base(client)
+        protected ServiceClientBase(T client) : base(client)
         {
 
         }
