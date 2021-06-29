@@ -11,14 +11,13 @@
     <PackageProjectUrl>https://github.com/newky2k/PortableWebClient</PackageProjectUrl>
     <RepositoryUrl>https://github.com/newky2k/PortableWebClient</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>Web Client</PackageTags>
-    <PackageReleaseNotes>
-      Initial commit
-    </PackageReleaseNotes>
+    <PackageTags>Web Client Grpc</PackageTags>
+    <PackageReleaseNotes>Initial commit
+</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>DSoft.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
-    <Copyright>Copyright © 2020 DSoft</Copyright>
+    <Copyright>Copyright © 2021 DSoft</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
@@ -41,5 +40,4 @@
   <ItemGroup>
     <ProjectReference Include="..\DSoft.Portable.WebClient.Encryption\DSoft.Portable.WebClient.Encryption.csproj" />
   </ItemGroup>
-
 </Project>
