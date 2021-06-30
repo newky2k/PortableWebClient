@@ -11,19 +11,13 @@
     <DevelopmentDependency>true</DevelopmentDependency>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <PackageId>DSoft.Portable.WebClient.Grpc.Encryption.Tools</PackageId>
-    <Authors>The gRPC Authors</Authors>
-    <Copyright>Copyright 2018 The gRPC Authors</Copyright>
-    <Description>
-      gRPC and Protocol Buffer compiler for managed C# and native C++ projects.
-
-      Add this package to a project that contains .proto files to be compiled to code.
-      It contains the compilers, include files and project system integration for gRPC
-      and Protocol buffer service description files necessary to build them on Windows,
-      Linux and MacOS. Managed runtime is supplied separately in the Grpc.Core package.
+    <Authors>newky2k</Authors>
+    <Copyright>Copyright © 2021 DSoft</Copyright>
+    <Description>Include files for DSoft.Portable.WebClient.Grpc.Encryption
     </Description>
-    <PackageIconUrl>https://github.com/grpc/grpc.github.io/raw/master/img/grpc_square_reverse_4x.png</PackageIconUrl>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/grpc/grpc</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/newky2k/PortableWebClient</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/newky2k/PortableWebClient</RepositoryUrl>
     <PackageTags>gRPC RPC HTTP/2</PackageTags>
   </PropertyGroup>
 
@@ -31,9 +25,9 @@
     <None Pack="true" PackagePath="build\" Include="build\**\*.xml; build\**\*.props; build\**\*.targets;" />
 
     <!-- Protobuf assets (for Google.Protobuf.Tools) -->
-    <_ProtoAssetName Include="any;api;descriptor;duration;empty;field_mask;
-                              source_context;struct;timestamp;type;wrappers" />
-    <_Asset PackagePath="build/native/include/google/protobuf/" Include="@(_ProtoAssetName->'$(Assets_ProtoInclude)%(Identity).proto')" />
+    <_ProtoAssetName Include="securetypes;" />
+    <_Asset PackagePath="build/native/include/DSoft_Portable_WebClient/proto/" Include="@(_ProtoAssetName->'$(Assets_ProtoInclude)%(Identity).proto')" />
 
+    <None Include="@(_Asset)" Pack="true" Visible="false" />
   </ItemGroup>
 </Project>
