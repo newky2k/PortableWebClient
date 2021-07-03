@@ -224,12 +224,7 @@ namespace DSoft.Portable.WebClient.Rest
     /// <seealso cref="System.IDisposable" />
     public abstract class RestServiceClientBase<T> : RestServiceClientBase where T : IWebClient
     {
-        /// <summary>
-        /// Access a typed version of the client
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns>T.</returns>
-        protected T Client<T>() => (T)WebClient;
+        protected T Client => (T)WebClient;
 
         protected RestServiceClientBase(T client) : base(client)
         {

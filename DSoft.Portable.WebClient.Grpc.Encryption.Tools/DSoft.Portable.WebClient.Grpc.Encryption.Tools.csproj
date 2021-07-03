@@ -22,7 +22,7 @@
   </PropertyGroup>
 
   <ItemGroup Label="NuGet package assets">
-    <None Pack="true" PackagePath="build\" Include="build\**\*.xml; build\**\*.props; build\**\*.targets;" />
+    <None Pack="true" PackagePath="build\native\" Include="build\**\*.xml; build\**\*.props; build\**\*.targets;" />
 
     <!-- Protobuf assets (for Google.Protobuf.Tools) -->
     <_ProtoAssetName Include="securetypes;" />
