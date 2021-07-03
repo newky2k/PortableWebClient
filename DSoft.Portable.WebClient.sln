@@ -13,9 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSoft.Portable.Server.Secur
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleWebApp", "SampleWebApp\SampleWebApp.csproj", "{CE562255-458B-48AC-82FF-1F06BC0F26EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSoft.Portable.WebClient.Rest", "DSoft.Portable.WebClient.Rest\DSoft.Portable.WebClient.Rest.csproj", "{E66A83CD-53F7-4535-A283-0B2B92D28C6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSoft.Portable.WebClient.Rest", "DSoft.Portable.WebClient.Rest\DSoft.Portable.WebClient.Rest.csproj", "{E66A83CD-53F7-4535-A283-0B2B92D28C6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSoft.Portable.WebClient.Grpc", "DSoft.Portable.WebClient.Grpc\DSoft.Portable.WebClient.Grpc.csproj", "{2AD72637-490D-4FE8-8E2E-32BAA0D25906}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSoft.Portable.WebClient.Grpc", "DSoft.Portable.WebClient.Grpc\DSoft.Portable.WebClient.Grpc.csproj", "{2AD72637-490D-4FE8-8E2E-32BAA0D25906}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EntityFramework", "EntityFramework", "{693FBD0E-4A86-4337-A96C-D929837F0884}"
 EndProject
@@ -23,13 +23,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Rest", "Rest", "{4035DFAD-8
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Grpc", "Grpc", "{8A853961-CB8F-4FDB-92E1-21D3B23D3648}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSoft.Portable.WebClient.Rest.Extensions", "DSoft.Portable.WebClient.Rest.Extensions\DSoft.Portable.WebClient.Rest.Extensions.csproj", "{0A21B4BE-81C4-4C13-A868-B5B5804566BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSoft.Portable.WebClient.Rest.Extensions", "DSoft.Portable.WebClient.Rest.Extensions\DSoft.Portable.WebClient.Rest.Extensions.csproj", "{0A21B4BE-81C4-4C13-A868-B5B5804566BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSoft.Portable.WebClient.Rest.Encryption", "DSoft.Portable.WebClient.Rest.Encryption\DSoft.Portable.WebClient.Rest.Encryption.csproj", "{94634FEB-7FD0-4A69-B05B-DB92ED06563F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSoft.Portable.WebClient.Rest.Encryption", "DSoft.Portable.WebClient.Rest.Encryption\DSoft.Portable.WebClient.Rest.Encryption.csproj", "{94634FEB-7FD0-4A69-B05B-DB92ED06563F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSoft.Portable.WebClient.Grpc.Encryption", "DSoft.Portable.WebClient.Grpc.Encryption\DSoft.Portable.WebClient.Grpc.Encryption.csproj", "{3A3BC0AF-988A-4D9C-8BED-9C00F890CA68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSoft.Portable.WebClient.Grpc.Encryption", "DSoft.Portable.WebClient.Grpc.Encryption\DSoft.Portable.WebClient.Grpc.Encryption.csproj", "{3A3BC0AF-988A-4D9C-8BED-9C00F890CA68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSoft.Portable.WebClient.Grpc.Encryption.Tools", "DSoft.Portable.WebClient.Grpc.Encryption.Tools\DSoft.Portable.WebClient.Grpc.Encryption.Tools.csproj", "{95C169F2-2C8A-4BFA-8B55-799D750294BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSoft.Portable.WebClient.Grpc.Encryption.Tools", "DSoft.Portable.WebClient.Grpc.Encryption.Tools\DSoft.Portable.WebClient.Grpc.Encryption.Tools.csproj", "{95C169F2-2C8A-4BFA-8B55-799D750294BC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{433DB1D7-3167-482E-865A-5339661663BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -88,6 +90,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{480304DA-678A-4800-826C-FAE051AF24D5} = {693FBD0E-4A86-4337-A96C-D929837F0884}
 		{D25B4F31-0C72-40BF-B426-EF2F49D0AA02} = {693FBD0E-4A86-4337-A96C-D929837F0884}
+		{CE562255-458B-48AC-82FF-1F06BC0F26EB} = {433DB1D7-3167-482E-865A-5339661663BE}
 		{E66A83CD-53F7-4535-A283-0B2B92D28C6A} = {4035DFAD-8D04-48EC-AEEB-9F0344CBCC87}
 		{2AD72637-490D-4FE8-8E2E-32BAA0D25906} = {8A853961-CB8F-4FDB-92E1-21D3B23D3648}
 		{0A21B4BE-81C4-4C13-A868-B5B5804566BC} = {4035DFAD-8D04-48EC-AEEB-9F0344CBCC87}
