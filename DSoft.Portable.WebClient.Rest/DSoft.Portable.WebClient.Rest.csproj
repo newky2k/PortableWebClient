@@ -6,7 +6,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Authors>newky2k</Authors>
     <Description>
-      Restful client library for interacting with ASP.NET MVC and ASP.NET Core Web Apis
+      RESTful client class library for interacting with ASP.NET Core RESTful Web Apis
     </Description>
     <Copyright>Copyright © 2021 DSoft</Copyright>
     <PackageLicenseFile></PackageLicenseFile>

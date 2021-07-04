@@ -7,7 +7,7 @@
     <Authors>newky2k</Authors>
     <Company>newky2k</Company>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Description>Encrypted payload communications classes for the Rest client</Description>
+    <Description>Encrypted communications classes for the RESRful web api client</Description>
     <PackageProjectUrl>https://github.com/newky2k/PortableWebClient</PackageProjectUrl>
     <RepositoryUrl>https://github.com/newky2k/PortableWebClient</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

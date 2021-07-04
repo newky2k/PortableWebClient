@@ -13,7 +13,7 @@
     <PackageId>DSoft.Portable.WebClient.Grpc.Encryption.Tools</PackageId>
     <Authors>newky2k</Authors>
     <Copyright>Copyright © 2021 DSoft</Copyright>
-    <Description>Include files for DSoft.Portable.WebClient.Grpc.Encryption
+    <Description>Grpc comnpiler Include files for DSoft.Portable.WebClient.Grpc.Encryption
     </Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/newky2k/PortableWebClient</PackageProjectUrl>
@@ -22,7 +22,7 @@
   </PropertyGroup>
 
   <ItemGroup Label="NuGet package assets">
-    <None Pack="true" PackagePath="build\native\" Include="build\**\*.xml; build\**\*.props; build\**\*.targets;" />
+    <None Pack="true" PackagePath="build\" Include="build\**\*.xml; build\**\*.props; build\**\*.targets;" />
 
     <!-- Protobuf assets (for Google.Protobuf.Tools) -->
     <_ProtoAssetName Include="securetypes;" />
