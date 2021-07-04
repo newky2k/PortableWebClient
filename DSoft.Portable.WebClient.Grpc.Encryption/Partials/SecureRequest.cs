@@ -4,21 +4,21 @@ using System.Text;
 
 namespace DSoft.Portable.WebClient.Grpc.Encryption
 {
-    public partial class SecureRequestRpc
+    public partial class SecureRequest
     {
         partial void OnConstruction()
         {
-            Payload = new SecurePayloadRpc();
+            Payload = new SecurePayload();
         }
 
-        public SecureRequestRpc(string clientVersionNo, string data) : base()
+        public SecureRequest(string clientVersionNo, string data) : base()
         {
             ClientVersionNo = clientVersionNo;
 
             Payload.Data = Google.Protobuf.ByteString.CopyFromUtf8(data);
         }
 
-        public SecureRequestRpc(string clientVersionNo, string data, string id) : this(clientVersionNo, data)
+        public SecureRequest(string clientVersionNo, string data, string id) : this(clientVersionNo, data)
         {
             Id = id;
         }

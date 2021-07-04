@@ -30,11 +30,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Protos\SharedTypes.proto" />
+    <None Remove="Protos\securetypes.proto" />
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\SharedTypes.proto" GrpcServices="Both" />
+    <Protobuf Include="Protos\securetypes.proto" GrpcServices="Both" />
   </ItemGroup>
 
   <ItemGroup>
