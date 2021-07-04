@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Label="NuGet package definition" Condition=" '$(Configuration)' == 'Release' ">
+    <!-- TODO(kkm): Change to "build\" after splitting. -->
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <BuildOutputTargetFolder>build\_protobuf\</BuildOutputTargetFolder>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <PackageId>DSoft.Portable.WebClient.Grpc.Encryption.Tools</PackageId>
+    <Authors>newky2k</Authors>
+    <Copyright>Copyright © 2021 DSoft</Copyright>
+    <Description>Include files for DSoft.Portable.WebClient.Grpc.Encryption
+    </Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/newky2k/PortableWebClient</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/newky2k/PortableWebClient</RepositoryUrl>
+    <PackageTags>gRPC RPC HTTP/2 Web client</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup Label="NuGet package assets">
+    <None Pack="true" PackagePath="build\native\" Include="build\**\*.xml; build\**\*.props; build\**\*.targets;" />
+
+    <!-- Protobuf assets (for Google.Protobuf.Tools) -->
+    <_ProtoAssetName Include="securetypes;" />
+    <_Asset PackagePath="build/native/include/DSoft_Portable_WebClient/proto/" Include="@(_ProtoAssetName->'$(Assets_ProtoInclude)%(Identity).proto')" />
+
+    <None Include="@(_Asset)" Pack="true" Visible="false" />
+  </ItemGroup>
+</Project>

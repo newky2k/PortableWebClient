@@ -6,26 +6,29 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DSoft.Portable.WebClient
+namespace DSoft.Portable.WebClient.Rest
 {
 
     /// <summary>
     /// Base Service Client  class for consuming services provided by ASP.NET ApiControllers
     /// </summary>
-    public abstract class ServiceClientBase : IDisposable
+    public abstract class RestServiceClientBase : IDisposable
     {
         #region Fields
-        private WebClientBase _client;
+        private IWebClient _client;
         #endregion
 
         #region Properties
+
+        protected string ClientVersionNo => WebClient.ClientVersionNo;
+
         /// <summary>
         /// Gets the rest client.
         /// </summary>
         /// <value>
         /// The rest client.
         /// </value>
-        protected RestClient RestClient
+        protected IRestClient RestClient
         {
             get
             {
@@ -61,15 +64,21 @@ namespace DSoft.Portable.WebClient
         /// </value>
         protected virtual ICollection<KeyValuePair<string, string>> CustomHeaders { get;  }
 
-        public WebClientBase WebClient => _client;
+        /// <summary>
+        /// Gets the WebCient instancee.
+        /// </summary>
+        /// <value>
+        /// The web client.
+        /// </value>
+        public IWebClient WebClient => _client;
         #endregion
 
         #region Constructors
         /// <summary>
-        /// Initializes a new instance of the <see cref="ServiceClientBase"/> class.
+        /// Initializes a new instance of the <see cref="RestServiceClientBase"/> class.
         /// </summary>
         /// <param name="client">The client.</param>
-        public ServiceClientBase(WebClientBase client)
+        public RestServiceClientBase(IWebClient client)
         {
             _client = client;
 
@@ -78,16 +87,6 @@ namespace DSoft.Portable.WebClient
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Access a typed version of the client
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns>T.</returns>
-        protected T Client<T>() where T : WebClientBase
-        {
-            return (T)_client;
-        }
 
         /// <summary>
         /// Calculates the URL for method based on BaseUrl of the Client, the controller name and the method name
@@ -217,4 +216,20 @@ namespace DSoft.Portable.WebClient
         #endregion
 
     }
+
+    /// <summary>
+    /// Generic Typed version of the ServiceClientBase type
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <seealso cref="System.IDisposable" />
+    public abstract class RestServiceClientBase<T> : RestServiceClientBase where T : IWebClient
+    {
+        protected T Client => (T)WebClient;
+
+        protected RestServiceClientBase(T client) : base(client)
+        {
+
+        }
+    } 
+
 }

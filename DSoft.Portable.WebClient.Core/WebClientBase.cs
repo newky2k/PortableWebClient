@@ -8,7 +8,7 @@ namespace DSoft.Portable.WebClient
     /// <summary>
     /// Base Web Client class for connecting to an Web API application
     /// </summary>
-    public abstract class WebClientBase : IDisposable
+    public abstract class WebClientBase : IWebClient
     {
         #region Fields
         private Version _appVersion;
@@ -149,7 +149,7 @@ namespace DSoft.Portable.WebClient
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T Service<T>() where T : ServiceClientBase
+        public T Service<T>() where T : IWebClient
         {
             return (T)Activator.CreateInstance(typeof(T), this);
         }
