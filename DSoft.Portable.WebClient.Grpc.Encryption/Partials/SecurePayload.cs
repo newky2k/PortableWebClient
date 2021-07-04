@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DSoft.Portable.WebClient.Grpc.Encryption
 {
-    public partial class SecurePayloadRpc
+    public partial class SecurePayload
     {
         partial void OnConstruction()
         {

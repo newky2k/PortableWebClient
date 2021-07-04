@@ -4,12 +4,12 @@ using System.Text;
 
 namespace DSoft.Portable.WebClient.Grpc.Encryption
 {
-    public partial class SecureResponseRpc
+    public partial class SecureResponse
     {
 
         partial void OnConstruction()
         {
-            Payload = new SecurePayloadRpc()
+            Payload = new SecurePayload()
             {
                 Timestamp = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(DateTime.UtcNow),
             };
