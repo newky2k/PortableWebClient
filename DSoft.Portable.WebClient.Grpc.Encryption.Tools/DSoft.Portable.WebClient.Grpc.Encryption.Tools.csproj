@@ -26,7 +26,7 @@
 
     <!-- Protobuf assets (for Google.Protobuf.Tools) -->
     <_ProtoAssetName Include="securetypes;" />
-    <_Asset PackagePath="build/native/include/dsoft/proto/" Include="@(_ProtoAssetName->'$(Assets_ProtoInclude)%(Identity).proto')" />
+    <_Asset PackagePath="build/native/include/dsoft/protobuf/" Include="@(_ProtoAssetName->'$(Assets_ProtoInclude)%(Identity).proto')" />
 
     <None Include="@(_Asset)" Pack="true" Visible="false" />
   </ItemGroup>
