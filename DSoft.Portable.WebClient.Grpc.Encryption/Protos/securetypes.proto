@@ -26,3 +26,20 @@ message SecurePayload
 	bytes Data = 2;
 
 }
+
+message SecureBinaryRequest {
+	string id = 1;
+	string clientVersionNo = 2;
+	SecurePayload payload = 3;
+	string tokenId = 4;
+	bytes BinaryObject = 5;
+}
+
+message SecureBinaryResponse { 
+  bool success = 1;
+  string message = 2;
+  SecurePayload payload = 3;
+  string FileName = 4;
+  string MimeType = 5;
+  bytes Data = 6;
+}

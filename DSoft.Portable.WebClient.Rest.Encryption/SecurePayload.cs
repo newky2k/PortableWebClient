@@ -1,9 +1,10 @@
-﻿using DSoft.Portable.WebClient.Encryption.Helpers;
+﻿using DSoft.Portable.WebClient.Encryption;
+using DSoft.Portable.WebClient.Encryption.Helpers;
 using System;
 
 namespace DSoft.Portable.WebClient.Rest.Encryption
 {
-    public class SecurePayload
+    public class SecurePayload : ISecurePayload
     {
         #region Properties
 
@@ -50,19 +51,5 @@ namespace DSoft.Portable.WebClient.Rest.Encryption
         #endregion
     }
 
-    public class EmptyPayLoad
-    {
-        public string Data { get; set; }
-
-        public static EmptyPayLoad Empty
-        {
-            get
-            {
-                return new EmptyPayLoad()
-                {
-                    Data = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-                };
-            }
-        }
-    }
+    
 }

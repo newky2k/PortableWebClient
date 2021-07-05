@@ -1,10 +1,11 @@
-﻿using System;
+﻿using DSoft.Portable.WebClient.Encryption;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace DSoft.Portable.WebClient.Rest.Encryption
 {
-    public class SecureRequest : RequestBase
+    public class SecureRequest : RequestBase, ISecureRequest<SecurePayload>
     {
         public string Id { get; set; }
 
@@ -47,8 +48,16 @@ namespace DSoft.Portable.WebClient.Rest.Encryption
             if (Payload == null)
                 throw new Exception("No payload in request");
 
-            if (!Payload.Validate(timeout))
+            if (Payload.Timestamp == null || !Payload.Validate(timeout))
                 throw new Exception("Payload has timed out");
+        }
+
+        public TData ExtractPayload<TData>(string passKey)
+        {
+            if (Payload == null)
+                throw new Exception("No data");
+
+            return Payload.Extract<TData>(passKey);
         }
 
     }
