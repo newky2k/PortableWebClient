@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DSoft.Portable.WebClient.Encryption\DSoft.Portable.WebClient.Encryption.csproj" />
+    <ProjectReference Include="..\DSoft.Portable.WebClient.Rest\DSoft.Portable.WebClient.Rest.csproj" />
   </ItemGroup>
 
 </Project>
