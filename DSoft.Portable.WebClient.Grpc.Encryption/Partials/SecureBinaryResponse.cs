@@ -1,12 +1,14 @@
 ﻿using DSoft.Portable.WebClient.Encryption;
+using Google.Protobuf;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace DSoft.Portable.WebClient.Grpc.Encryption
 {
-    public partial class SecureResponse : ISecureResponse<SecurePayload>
+    public partial class SecureBinaryResponse : ISecureBinaryResponse<SecurePayload, ByteString>
     {
+        byte[] AsByteArray => Data?.ToByteArray();
 
         partial void OnConstruction()
         {
