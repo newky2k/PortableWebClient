@@ -18,7 +18,7 @@ namespace DSoft.Portable.WebClient.Grpc.Encryption
             Data = Google.Protobuf.ByteString.CopyFromUtf8(PayloadManager.EncryptPayload(dataValue, passKey));
         }
 
-        public SecurePayload(string passKey) : this(EmptyPayLoad.Empty, passKey)
+        public SecurePayload(string passKey) : this(EmptyPayload.Empty, passKey)
         {
 
         }

@@ -27,7 +27,7 @@ namespace DSoft.Portable.WebClient.Rest.Encryption
             Data = PayloadManager.EncryptPayload(dataValue, passKey);
         }
 
-        public SecurePayload(string passKey) : this(EmptyPayLoad.Empty, passKey)
+        public SecurePayload(string passKey) : this(EmptyPayload.Empty, passKey)
         {
 
         }

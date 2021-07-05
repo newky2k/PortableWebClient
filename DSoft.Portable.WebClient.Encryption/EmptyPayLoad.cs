@@ -4,15 +4,15 @@ using System.Text;
 
 namespace DSoft.Portable.WebClient.Encryption
 {
-    public class EmptyPayLoad
+    public class EmptyPayload
     {
         public string Data { get; set; }
 
-        public static EmptyPayLoad Empty
+        public static EmptyPayload Empty
         {
             get
             {
-                return new EmptyPayLoad()
+                return new EmptyPayload()
                 {
                     Data = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ",
                 };

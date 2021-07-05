@@ -18,12 +18,12 @@ namespace DSoft.Portable.WebClient.Grpc.Encryption
         }
 
         
-        public void SetPayLoad(string data)
+        public void SetPayload(string data)
         {
             Payload.Data = Google.Protobuf.ByteString.CopyFromUtf8(data);
         }
 
-        public void SetPayLoad(object data, string passKey) => SetPayLoad(PayloadManager.EncryptPayload(data, passKey));
+        public void SetPayload(object data, string passKey) => SetPayload(PayloadManager.EncryptPayload(data, passKey));
 
         public TData Extract<TData>(string passKey)
         {

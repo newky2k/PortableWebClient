@@ -17,7 +17,7 @@ namespace DSoft.Portable.WebClient.Rest.Encryption
             Payload = new SecurePayload();
         }
 
-        public void SetPayLoad(string data)
+        public void SetPayload(string data)
         {
             if (Payload == null)
                 throw new Exception("Payload is not set");
@@ -25,7 +25,7 @@ namespace DSoft.Portable.WebClient.Rest.Encryption
             Payload.Data = data;
         }
 
-        public void SetPayLoad(object data, string passKey) => SetPayLoad(PayloadManager.EncryptPayload(data, passKey));
+        public void SetPayload(object data, string passKey) => SetPayload(PayloadManager.EncryptPayload(data, passKey));
 
         public TData Extract<TData>(string passKey)
         {
