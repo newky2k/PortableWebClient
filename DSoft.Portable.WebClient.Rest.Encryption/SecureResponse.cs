@@ -1,4 +1,5 @@
 ﻿using DSoft.Portable.WebClient.Encryption;
+using DSoft.Portable.WebClient.Encryption.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,6 +25,8 @@ namespace DSoft.Portable.WebClient.Rest.Encryption
             Payload.Data = data;
         }
 
+        public void SetPayLoad(object data, string passKey) => SetPayLoad(PayloadManager.EncryptPayload(data, passKey));
+
         public TData Extract<TData>(string passKey)
         {
             if (Payload == null)
@@ -31,5 +34,7 @@ namespace DSoft.Portable.WebClient.Rest.Encryption
 
             return Payload.Extract<TData>(passKey);
         }
+
+        
     }
 }

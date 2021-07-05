@@ -21,6 +21,12 @@ namespace DSoft.Portable.WebClient
 
         public string BaseUrl => _baseUrl;
 
+        /// <summary>
+        /// Gets or sets the time out
+        /// </summary>
+        /// <value>
+        /// The time out.
+        /// </value>
         public int TimeOut { get => _defaultTimeOutSeconds; set => _defaultTimeOutSeconds = value; }
 
         public bool CanConnect => CheckCanConnect(TimeOut);
@@ -45,6 +51,10 @@ namespace DSoft.Portable.WebClient
 
         #region Constructors
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WebClientBase"/> class.
+        /// </summary>
+        /// <param name="baseUrl">The base URL.</param>
         public WebClientBase(string baseUrl)
         {
             _baseUrl = baseUrl;

@@ -1,4 +1,5 @@
 ﻿using DSoft.Portable.WebClient.Encryption;
+using DSoft.Portable.WebClient.Encryption.Helpers;
 using Google.Protobuf;
 using System;
 using System.Collections.Generic;
@@ -30,5 +31,7 @@ namespace DSoft.Portable.WebClient.Grpc.Encryption
 
             return Payload.Extract<TData>(passKey);
         }
+
+        public void SetPayLoad(object data, string passKey) => SetPayLoad(PayloadManager.EncryptPayload(data, passKey));
     }
 }
