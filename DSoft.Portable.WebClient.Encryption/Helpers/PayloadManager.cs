@@ -31,7 +31,7 @@ namespace DSoft.Portable.WebClient.Encryption.Helpers
         /// <returns></returns>
         public static T DecryptPayload<T>(string payload, string passkey)
         {
-            var decryptedPayload = EncryptionHelper.DecryptString(payload, passkey);
+            var decryptedPayload = EncryptionProviderFactory.Build().DecryptString(payload, passkey);
 
             var outPut = JsonSerializer.Deserialize<T>(decryptedPayload);
 
@@ -48,7 +48,7 @@ namespace DSoft.Portable.WebClient.Encryption.Helpers
         {
             var payloadString = JsonSerializer.Serialize(payload, payload.GetType());
 
-            return EncryptionHelper.EncryptString(payloadString, passkey);
+            return EncryptionProviderFactory.Build().EncryptString(payloadString, passkey);
         }
 
 
