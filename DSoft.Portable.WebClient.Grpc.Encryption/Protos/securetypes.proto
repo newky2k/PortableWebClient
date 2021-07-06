@@ -12,6 +12,7 @@ message SecureRequest {
 	string clientVersionNo = 2;
 	SecurePayload payload = 3;
 	string tokenId = 4;
+    string Context = 5;
 }
 
 message SecureResponse { 
@@ -24,8 +25,6 @@ message SecurePayload
 {
 	google.protobuf.Timestamp Timestamp = 1;
 	string Data = 2;
-	string Context = 3;
-
 }
 
 message SecureBinaryRequest {
@@ -33,7 +32,8 @@ message SecureBinaryRequest {
 	string clientVersionNo = 2;
 	SecurePayload payload = 3;
 	string tokenId = 4;
-	bytes BinaryObject = 5;
+	string Context = 5;
+	bytes BinaryObject = 6;
 }
 
 message SecureBinaryResponse { 
