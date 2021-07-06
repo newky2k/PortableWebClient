@@ -16,7 +16,7 @@ namespace DSoft.Portable.WebClient.Grpc.Encryption
         {
             ClientVersionNo = clientVersionNo;
 
-            Payload.Data = Google.Protobuf.ByteString.CopyFromUtf8(data);
+            Payload.Data = data;
         }
 
         public SecureRequest(string clientVersionNo, string data, string id) : this(clientVersionNo, data)

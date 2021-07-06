@@ -8,6 +8,8 @@ namespace DSoft.Portable.WebClient.Rest.Encryption
     {
         #region Properties
 
+        public string Context { get; set; }
+
         public DateTime Timestamp { get; set; }
 
         public string Data { get; set; }

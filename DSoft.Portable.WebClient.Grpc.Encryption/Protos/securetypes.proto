@@ -23,7 +23,8 @@ message SecureResponse {
 message SecurePayload
 {
 	google.protobuf.Timestamp Timestamp = 1;
-	bytes Data = 2;
+	string Data = 2;
+	string Context = 3;
 
 }
 

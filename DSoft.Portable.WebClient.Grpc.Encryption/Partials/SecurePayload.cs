@@ -15,7 +15,7 @@ namespace DSoft.Portable.WebClient.Grpc.Encryption
 
         public SecurePayload(object dataValue, string passKey) : this()
         {
-            Data = Google.Protobuf.ByteString.CopyFromUtf8(PayloadManager.EncryptPayload(dataValue, passKey));
+            Data = PayloadManager.EncryptPayload(dataValue, passKey);
         }
 
         public SecurePayload(string passKey) : this(EmptyPayload.Empty, passKey)
@@ -34,7 +34,7 @@ namespace DSoft.Portable.WebClient.Grpc.Encryption
 
         public T Extract<T>(string passKey)
         {
-            return PayloadManager.DecryptPayload<T>(Data.ToStringUtf8(), passKey);
+            return PayloadManager.DecryptPayload<T>(Data, passKey);
         }
 
         
