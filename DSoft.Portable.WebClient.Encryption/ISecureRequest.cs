@@ -10,6 +10,8 @@ namespace DSoft.Portable.WebClient.Encryption
 
         string TokenId { get; set; }
 
+        string Context { get; set; }
+
         T Payload { get; set; }
 
         void Validate(TimeSpan timeout);

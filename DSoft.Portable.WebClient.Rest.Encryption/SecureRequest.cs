@@ -13,6 +13,8 @@ namespace DSoft.Portable.WebClient.Rest.Encryption
 
         public SecurePayload Payload { get; set; }
 
+        public string Context { get; set; }
+
         public SecureRequest()
         {
             Payload = new SecurePayload();
