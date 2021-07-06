@@ -20,7 +20,7 @@ namespace DSoft.Portable.WebClient.Grpc.Encryption
         
         public void SetPayload(string data)
         {
-            Payload.Data = Google.Protobuf.ByteString.CopyFromUtf8(data);
+            Payload.Data = data;
         }
 
         public void SetPayload(object data, string passKey) => SetPayload(PayloadManager.EncryptPayload(data, passKey));

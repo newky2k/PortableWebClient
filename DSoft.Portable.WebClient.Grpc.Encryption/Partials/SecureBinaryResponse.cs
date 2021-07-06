@@ -21,7 +21,7 @@ namespace DSoft.Portable.WebClient.Grpc.Encryption
 
         public void SetPayload(string data)
         {
-            Payload.Data = Google.Protobuf.ByteString.CopyFromUtf8(data);
+            Payload.Data = data;
         }
 
         public TData Extract<TData>(string passKey)
