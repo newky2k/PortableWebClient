@@ -47,7 +47,7 @@ namespace DSoft.Portable.WebClient.Grpc.Encryption
 
         public void SetBinaryObject(byte[] data, string passKey)
         {
-            BinaryObject = ByteString.CopyFrom(EncryptionHelper.EncryptBytes(data, passKey));
+            BinaryObject = ByteString.CopyFrom(EncryptionProviderFactory.Build().EncryptBytes(data, passKey));
         }
 
         public byte[] GetBinaryObject(string passKey)
@@ -55,7 +55,7 @@ namespace DSoft.Portable.WebClient.Grpc.Encryption
             if (BinaryObject == null)
                 throw new Exception("Binary Object is empty");
 
-            return EncryptionHelper.DecryptBytes(BinaryObject.ToByteArray(), passKey);
+            return EncryptionProviderFactory.Build().DecryptBytes(BinaryObject.ToByteArray(), passKey);
         }
     }
 }

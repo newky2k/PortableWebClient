@@ -4,38 +4,45 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace DSoft.Portable.WebClient.Encryption.Helpers
+namespace DSoft.Portable.WebClient.Encryption.Providers
 {
-    public static class EncryptionHelper
+
+    /// <summary>
+    /// Authentication provider using Aes CBC
+    /// </summary>
+    /// <seealso cref="DSoft.Portable.WebClient.Encryption.EncryptionProviderBase" />
+    internal class AesEncryptionProvider : EncryptionProviderBase
     {
-        // This size of the IV (in bytes) must = (keysize / 8).  Default keysize is 256, so the IV must be
-        // 32 bytes long.  Using a 16 character string here gives us 32 bytes when converted to a byte array.
-        private const string initVector = "xDRWrrCrvxioNFUv";
 
-        // This constant is used to determine the keysize of the encryption algorithm.
-        private const int keysize = 256;
+        private byte[] InitVectorBytes => Encoding.UTF8.GetBytes(_initVector);
 
-        private static byte[] InitVectorBytes => Encoding.UTF8.GetBytes(initVector);
-        private static SymmetricAlgorithm EncryptionAlogitm => new AesManaged() { Mode = CipherMode.CBC };
+        private SymmetricAlgorithm EncryptionAlogitm => new AesManaged() { Mode = CipherMode.CBC };
 
-        private static byte[] GetPasswordBytes(string passPhrase)
+        public AesEncryptionProvider(string initVector, KeySize keySize) : base(initVector, keySize)
         {
-            PasswordDeriveBytes password = new PasswordDeriveBytes(passPhrase, null);
-            byte[] keyBytes = password.GetBytes(keysize / 8);
+
+        }
+
+        #region Private Methods
+
+        private byte[] GetPasswordBytes(string passPhrase)
+        {
+            var password = new PasswordDeriveBytes(passPhrase, null);
+            byte[] keyBytes = password.GetBytes((int)_keysize / 8);
 
             return keyBytes;
         }
 
-        private static ICryptoTransform CreateEncryptor(string passPhrase)
+        private ICryptoTransform CreateEncryptor(string passPhrase)
         {
             byte[] keyBytes = GetPasswordBytes(passPhrase);
 
-            ICryptoTransform encryptor = EncryptionAlogitm.CreateEncryptor(keyBytes, InitVectorBytes);
+            var encryptor = EncryptionAlogitm.CreateEncryptor(keyBytes, InitVectorBytes);
 
             return encryptor;
         }
 
-        private static ICryptoTransform CreateDecryptor(string passPhrase)
+        private ICryptoTransform CreateDecryptor(string passPhrase)
         {
             byte[] keyBytes = GetPasswordBytes(passPhrase);
 
@@ -44,7 +51,7 @@ namespace DSoft.Portable.WebClient.Encryption.Helpers
             return encryptor;
         }
 
-        private static byte[] Encrypt(string passPhrase, byte[] data)
+        private byte[] Encrypt(string passPhrase, byte[] data)
         {
             ICryptoTransform encryptor = CreateEncryptor(passPhrase);
 
@@ -59,7 +66,7 @@ namespace DSoft.Portable.WebClient.Encryption.Helpers
             return cipherTextBytes;
         }
 
-        private static (byte[] data, int byteCount) Decrypt(string passPhrase, byte[] data)
+        private (byte[] data, int byteCount) Decrypt(string passPhrase, byte[] data)
         {
             ICryptoTransform decryptor = CreateDecryptor(passPhrase);
 
@@ -73,6 +80,8 @@ namespace DSoft.Portable.WebClient.Encryption.Helpers
             return (plainTextBytes, decryptedByteCount);
         }
 
+        #endregion
+
         #region Public Methods
         /// <summary>
         /// Encrypt a string
@@ -80,7 +89,7 @@ namespace DSoft.Portable.WebClient.Encryption.Helpers
         /// <param name="plainText">string to encrypt</param>
         /// <param name="passPhrase">password</param>
         /// <returns></returns>
-        public static string EncryptString(string plainText, string passPhrase)
+        public override string EncryptString(string plainText, string passPhrase)
         {
             byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
 
@@ -95,7 +104,7 @@ namespace DSoft.Portable.WebClient.Encryption.Helpers
         /// <param name="data">byte[] to encrypt</param>
         /// <param name="passPhrase">password</param>
         /// <returns></returns>
-        public static byte[] EncryptBytes(byte[] data, string passPhrase)
+        public override byte[] EncryptBytes(byte[] data, string passPhrase)
         {
             return Encrypt(passPhrase, data); ;
         }
@@ -106,7 +115,7 @@ namespace DSoft.Portable.WebClient.Encryption.Helpers
 		/// <param name="cipherText">Encrypted text</param>
 		/// <param name="passPhrase">password</param>
 		/// <returns></returns>
-        public static string DecryptString(string cipherText, string passPhrase)
+        public override string DecryptString(string cipherText, string passPhrase)
         {
             byte[] cipherTextBytes = Convert.FromBase64String(cipherText);
 
@@ -121,7 +130,7 @@ namespace DSoft.Portable.WebClient.Encryption.Helpers
         /// <param name="data">Encrypted byte[]</param>
         /// <param name="passPhrase">password</param>
         /// <returns></returns>
-        public static byte[] DecryptBytes(byte[] data, string passPhrase)
+        public override byte[] DecryptBytes(byte[] data, string passPhrase)
         {
             var result = Decrypt(passPhrase, data);
 
@@ -131,4 +140,3 @@ namespace DSoft.Portable.WebClient.Encryption.Helpers
         #endregion
     }
 }
-

@@ -18,7 +18,7 @@ namespace DSoft.Portable.WebClient.Rest.Encryption
 
         public void SetBinaryObject(byte[] data, string passKey)
         {
-            BinaryObject = EncryptionHelper.EncryptBytes(data, passKey);
+            BinaryObject = EncryptionProviderFactory.Build().EncryptBytes(data, passKey);
         }
 
         public byte[] GetBinaryObject(string passKey)
@@ -26,7 +26,7 @@ namespace DSoft.Portable.WebClient.Rest.Encryption
             if (BinaryObject == null)
                 throw new Exception("Binary Object is empty");
 
-            return EncryptionHelper.DecryptBytes(BinaryObject, passKey);
+            return EncryptionProviderFactory.Build().DecryptBytes(BinaryObject, passKey);
         }
 
         public SecureBinaryRequest()
