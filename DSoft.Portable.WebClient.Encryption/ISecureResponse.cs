@@ -8,7 +8,9 @@ namespace DSoft.Portable.WebClient.Encryption
     {
         T Payload { get; set; }
 
-        void SetPayLoad(string data);
+        void SetPayload(object data, string passKey);
+
+        void SetPayload(string data);
 
         TData Extract<TData>(string passKey);
     }
