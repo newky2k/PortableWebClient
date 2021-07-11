@@ -24,8 +24,8 @@ The libary provides base level, bootstrap base classes to simplify the building 
   - Uses 256-bit AES encryption by default
 
 ## Build status
+[![Build Status](https://dev.azure.com/humbatt/Daves%20Projects/_apis/build/status/PortableWebClient/PortableWebClient%20-%20Release?branchName=master)](https://dev.azure.com/humbatt/Daves%20Projects/_build/latest?definitionId=49&branchName=master)
 
-![alt-text](https://dev.azure.com/humbatt/Daves%20Projects/_apis/build/status/PortableWebClient/PortableWebClient%20Build "DevOps")
 
 ## Packages
 
