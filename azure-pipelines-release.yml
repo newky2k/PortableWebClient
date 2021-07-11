@@ -10,7 +10,8 @@ trigger:
     - master
   paths:
     exclude:
-    - '*.yml, *.md'
+    - azure-pipelines-release.yml
+    - readme.md
 
 pool:
   vmImage: 'windows-latest'
