@@ -10,7 +10,7 @@ trigger:
     - master
   paths:
     exclude:
-    - '*.yml'
+    - '*.yml, *.md'
 
 pool:
   vmImage: 'windows-latest'
