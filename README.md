@@ -23,6 +23,13 @@ The libary provides base level, bootstrap base classes to simplify the building 
 - Integrated encryption, with abiltiy provide override with custom implementations.
   - Uses 256-bit AES encryption by default
 
+## V3.x breaking changes
+With the move to v3 some of the classes have been renamed and moved into different packages, such as `ServiceClientBase` which now exists in `DSoft.Portable.WebClient.Rest` as is now named `RestServiceClientBase`.  
+
+Addtionally you know have to set an InitVector key of your own on `EncryptionProviderFactory` before encrption and decryption will function.
+
+We will add a detailed migration guide to the Wiki before going stable
+
 ## Build status
 [![Build Status](https://dev.azure.com/humbatt/Daves%20Projects/_apis/build/status/PortableWebClient/PortableWebClient%20-%20Release?branchName=master)](https://dev.azure.com/humbatt/Daves%20Projects/_build/latest?definitionId=49&branchName=master)
 
