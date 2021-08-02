@@ -27,7 +27,6 @@ namespace DSoft.Portable.WebClient
         /// </value>
         public string BaseUrl => _baseUrl;
 
-
         /// <summary>
         /// Returns the Url to be added to the base url for connection testing.  
         /// </summary>
