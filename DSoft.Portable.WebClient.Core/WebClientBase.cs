@@ -19,7 +19,21 @@ namespace DSoft.Portable.WebClient
 
         #region Properties
 
+        /// <summary>
+        /// Gets the base Url for the connection
+        /// </summary>
+        /// <value>
+        /// The base URL.
+        /// </value>
         public string BaseUrl => _baseUrl;
+
+
+        /// <summary>
+        /// Returns the Url to be added to the base url for connection testing.  
+        /// </summary>
+        protected virtual string ConnectionTestSubUrl => string.Empty;
+
+        private string TestUrl => $"{BaseUrl}/{ConnectionTestSubUrl}";
 
         /// <summary>
         /// Gets or sets the time out
@@ -29,8 +43,20 @@ namespace DSoft.Portable.WebClient
         /// </value>
         public int TimeOut { get => _defaultTimeOutSeconds; set => _defaultTimeOutSeconds = value; }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance can connect to the server
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance can connect; otherwise, <c>false</c>.
+        /// </value>
         public bool CanConnect => CheckCanConnect(TimeOut);
 
+        /// <summary>
+        /// Gets the client version no, from the assemblt
+        /// </summary>
+        /// <value>
+        /// The client version no.
+        /// </value>
         public string ClientVersionNo
         {
             get
@@ -77,10 +103,15 @@ namespace DSoft.Portable.WebClient
                 var client = new System.Net.Http.HttpClient();
                 client.Timeout = TimeSpan.FromSeconds(timeout);
 
-                var thing = await client.GetAsync(BaseUrl);
+                var thing = await client.GetAsync(TestUrl);
 
                 if (thing.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    if (throwException == true)
+                        throw new Exception("Not found");
+
                     return false;
+                }
 
                 return true;
             }
@@ -110,44 +141,8 @@ namespace DSoft.Portable.WebClient
         /// Checks that the connection can be made
         /// </summary>
         /// <returns></returns>
-        public bool CheckCanConnect(int timeout = 1, bool throwException = false)
-        {
-            try
-            {
-                var client = new System.Net.Http.HttpClient();
-                client.Timeout = TimeSpan.FromSeconds(timeout);
-
-                var thing = client.GetAsync(BaseUrl).Result;
-
-                if (thing.StatusCode == System.Net.HttpStatusCode.NotFound)
-                    return false;
-
-                return true;
-            }
-            catch (WebException)
-            {
-                if (throwException == true)
-                    throw;
-
-                // handle web exception
-                return false;
-            }
-            catch (TaskCanceledException)
-            {
-                if (throwException == true)
-                    throw;
-
-                return false;
-            }
-            catch (Exception)
-            {
-                if (throwException == true)
-                    throw;
-
-                return false;
-            }
-
-        }
+        public bool CheckCanConnect(int timeout = 1, bool throwException = false) => CheckCanConnectAsync(timeout, throwException).GetAwaiter().GetResult();
+       
 
         public virtual void Dispose()
         {
