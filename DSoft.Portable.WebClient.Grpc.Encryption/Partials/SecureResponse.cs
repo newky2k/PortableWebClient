@@ -11,6 +11,8 @@ namespace DSoft.Portable.WebClient.Grpc.Encryption
 
         partial void OnConstruction()
         {
+            Success = true;
+
             Payload = new SecurePayload()
             {
                 Timestamp = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(DateTime.UtcNow),
