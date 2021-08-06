@@ -12,7 +12,7 @@ namespace DSoft.Portable.WebClient.Grpc.Encryption
             Payload = new SecurePayload();
         }
 
-        public SecureRequest(string clientVersionNo, string data) : base()
+        public SecureRequest(string clientVersionNo, string data) : this()
         {
             ClientVersionNo = clientVersionNo;
 
