@@ -16,7 +16,7 @@ namespace DSoft.Portable.WebClient.Grpc.Encryption
             
         }
 
-        public SecureBinaryRequest(string clientVersionNo, string data) : base()
+        public SecureBinaryRequest(string clientVersionNo, string data) : this()
         {
             ClientVersionNo = clientVersionNo;
 
