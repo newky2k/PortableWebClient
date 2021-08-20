@@ -24,7 +24,7 @@ The libary provides base level, bootstrap base classes to simplify the building 
   - Uses 256-bit AES encryption by default
 
 ## V3.x breaking changes
-With the move to v3 some of the classes have been renamed and moved into different packages, such as `ServiceClientBase` which now exists in `DSoft.Portable.WebClient.Rest` as is now named `RestServiceClientBase`.  
+With the move to v3 some of the classes have been renamed and moved into different packages, such as `ServiceClientBase` which now exists in `DSoft.Portable.WebClient.Rest` and is now named `RestServiceClientBase`.  
 
 Addtionally you know have to set an InitVector key of your own on `EncryptionProviderFactory` before encrption and decryption will function.
 
