@@ -32,7 +32,7 @@ namespace DSoft.Portable.WebClient.Rest
         {
             get
             {
-                return new RestClient { BaseUrl = new Uri(_client.BaseUrl) };
+                return new RestClient { BaseUrl = new Uri(_client.BaseUrl), Timeout = _client.TimeOut };
             }
         }
 
