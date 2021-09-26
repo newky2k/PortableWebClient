@@ -33,12 +33,12 @@ namespace DSoft.Portable.WebClient.Grpc.Encryption
                 throw new Exception("Payload has timed out");
         }
 
-        public TData ExtractPayload<TData>(string passKey)
+        public TData ExtractPayload<TData>(string passKey, string initVector, KeySize keySize = KeySize.TwoFiftySix)
         {
             if (Payload == null)
                 throw new Exception("No data");
 
-            return Payload.Extract<TData>(passKey);
+            return Payload.Extract<TData>(passKey, initVector, keySize);
         }
     }
 }

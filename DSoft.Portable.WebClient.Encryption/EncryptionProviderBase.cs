@@ -13,7 +13,7 @@ namespace DSoft.Portable.WebClient.Encryption
         protected string _initVector;
 
         // This constant is used to determine the keysize of the encryption algorithm.
-        protected KeySize _keysize = KeySize.TwoFiftySize;
+        protected KeySize _keysize = KeySize.TwoFiftySix;
 
         public EncryptionProviderBase(string initVector, KeySize keySize)
         {

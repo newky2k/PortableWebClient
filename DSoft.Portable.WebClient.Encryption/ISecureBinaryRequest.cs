@@ -8,8 +8,8 @@ namespace DSoft.Portable.WebClient.Encryption
     {
         T2 BinaryObject { get; set; }
 
-        void SetBinaryObject(byte[] data, string passKey);
+        void SetBinaryObject(byte[] data, string passKey, string initVector, KeySize keySize = KeySize.TwoFiftySix);
 
-        byte[] GetBinaryObject(string passKey);
+        byte[] GetBinaryObject(string passKey, string initVector, KeySize keySize = KeySize.TwoFiftySix);
     }
 }
