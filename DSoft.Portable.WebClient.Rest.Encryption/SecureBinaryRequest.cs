@@ -16,17 +16,17 @@ namespace DSoft.Portable.WebClient.Rest.Encryption
         public byte[] BinaryObject { get; set; }
 
 
-        public void SetBinaryObject(byte[] data, string passKey)
+        public void SetBinaryObject(byte[] data, string passKey, string initVector, KeySize keySize = KeySize.TwoFiftySix)
         {
-            BinaryObject = EncryptionProviderFactory.Build().EncryptBytes(data, passKey);
+            BinaryObject = EncryptionProviderFactory.Build(initVector, keySize).EncryptBytes(data, passKey);
         }
 
-        public byte[] GetBinaryObject(string passKey)
+        public byte[] GetBinaryObject(string passKey, string initVector, KeySize keySize = KeySize.TwoFiftySix)
         {
             if (BinaryObject == null)
                 throw new Exception("Binary Object is empty");
 
-            return EncryptionProviderFactory.Build().DecryptBytes(BinaryObject, passKey);
+            return EncryptionProviderFactory.Build(initVector, keySize).DecryptBytes(BinaryObject, passKey);
         }
 
         public SecureBinaryRequest()

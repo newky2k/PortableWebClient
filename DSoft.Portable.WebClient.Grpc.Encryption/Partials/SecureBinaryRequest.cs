@@ -37,25 +37,25 @@ namespace DSoft.Portable.WebClient.Grpc.Encryption
                 throw new Exception("Payload has timed out");
         }
 
-        public TData ExtractPayload<TData>(string passKey)
+        public TData ExtractPayload<TData>(string passKey, string initVector, KeySize keySize = KeySize.TwoFiftySix)
         {
             if (Payload == null)
                 throw new Exception("No data");
 
-            return Payload.Extract<TData>(passKey);
+            return Payload.Extract<TData>(passKey, initVector, keySize);
         }
 
-        public void SetBinaryObject(byte[] data, string passKey)
+        public void SetBinaryObject(byte[] data, string passKey, string initVector, KeySize keySize = KeySize.TwoFiftySix)
         {
-            BinaryObject = ByteString.CopyFrom(EncryptionProviderFactory.Build().EncryptBytes(data, passKey));
+            BinaryObject = ByteString.CopyFrom(EncryptionProviderFactory.Build(initVector, keySize).EncryptBytes(data, passKey));
         }
 
-        public byte[] GetBinaryObject(string passKey)
+        public byte[] GetBinaryObject(string passKey, string initVector, KeySize keySize = KeySize.TwoFiftySix)
         {
             if (BinaryObject == null)
                 throw new Exception("Binary Object is empty");
 
-            return EncryptionProviderFactory.Build().DecryptBytes(BinaryObject.ToByteArray(), passKey);
+            return EncryptionProviderFactory.Build(initVector, keySize).DecryptBytes(BinaryObject.ToByteArray(), passKey);
         }
     }
 }

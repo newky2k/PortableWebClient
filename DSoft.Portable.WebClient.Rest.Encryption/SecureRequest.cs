@@ -20,27 +20,27 @@ namespace DSoft.Portable.WebClient.Rest.Encryption
             Payload = new SecurePayload();
         }
 
-        public SecureRequest(string passKey)
+        public SecureRequest(string passKey, string initVector, KeySize keySize = KeySize.TwoFiftySix)
         {
-            Payload = new SecurePayload(passKey);
+            Payload = new SecurePayload(passKey, initVector, keySize);
         }
 
-        public SecureRequest(string passKey, object data)
+        public SecureRequest(string passKey, object data, string initVector, KeySize keySize = KeySize.TwoFiftySix)
         {
-            Payload = new SecurePayload(data, passKey);
+            Payload = new SecurePayload(data, passKey, initVector, keySize);
         }
 
-        public SecureRequest(string passKey, DateTime timestamp) : this(passKey)
+        public SecureRequest(string passKey, DateTime timestamp, string initVector, KeySize keySize = KeySize.TwoFiftySix) : this(passKey, initVector, keySize)
         {
             Payload.Timestamp = timestamp;
         }
 
-        public SecureRequest(string passKey, string clientVersionNumber) : this(passKey)
+        public SecureRequest(string passKey, string clientVersionNumber, string initVector, KeySize keySize = KeySize.TwoFiftySix) : this(passKey, initVector, keySize)
         {
             ClientVersionNo = clientVersionNumber;
         }
 
-        public SecureRequest(string passKey, string clientVersionNumber, DateTime timestamp) : this(passKey, clientVersionNumber)
+        public SecureRequest(string passKey, string clientVersionNumber, DateTime timestamp, string initVector, KeySize keySize = KeySize.TwoFiftySix) : this(passKey, clientVersionNumber, initVector, keySize)
         {
             Payload.Timestamp = timestamp;
         }
@@ -54,12 +54,12 @@ namespace DSoft.Portable.WebClient.Rest.Encryption
                 throw new Exception("Payload has timed out");
         }
 
-        public TData ExtractPayload<TData>(string passKey)
+        public TData ExtractPayload<TData>(string passKey, string initVector, KeySize keySize = KeySize.TwoFiftySix)
         {
             if (Payload == null)
                 throw new Exception("No data");
 
-            return Payload.Extract<TData>(passKey);
+            return Payload.Extract<TData>(passKey, initVector, keySize);
         }
 
     }

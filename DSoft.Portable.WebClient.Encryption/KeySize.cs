@@ -6,6 +6,6 @@ namespace DSoft.Portable.WebClient.Encryption
 {
     public enum KeySize : int
     {
-        TwoFiftySize = 256,
+        TwoFiftySix = 256,
     }
 }

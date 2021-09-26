@@ -13,7 +13,7 @@ namespace DSoft.Portable.WebClient.Rest
         #region Rest Request Builders
 
 
-        public static RestRequest BuildUserPostRequest(this RestServiceClientBase target, string action, object data, string tokenId, string encryptionToken)
+        public static RestRequest BuildUserPostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken)
         {
             var request = new RestRequest(target.CalculateUrlForMethod(action), Method.POST, DataFormat.Json);
 
@@ -24,7 +24,7 @@ namespace DSoft.Portable.WebClient.Rest
             return request;
         }
 
-        public static RestRequest BuildEmptyUserPostRequest(this RestServiceClientBase target, string action, string tokenId, string encryptionToken)
+        public static RestRequest BuildEmptyUserPostRequest(this RestServiceSecureClientBase target, string action, string tokenId, string encryptionToken)
         {
             var request = new RestRequest(target.CalculateUrlForMethod(action), Method.POST, DataFormat.Json);
 
@@ -35,7 +35,7 @@ namespace DSoft.Portable.WebClient.Rest
             return request;
         }
 
-        public static RestRequest BuildUserBinaryPostRequest(this RestServiceClientBase target, string action, object data, byte[] binary, string tokenId, string encryptionToken)
+        public static RestRequest BuildUserBinaryPostRequest(this RestServiceSecureClientBase target, string action, object data, byte[] binary, string tokenId, string encryptionToken)
         {
             var request = new RestRequest(target.CalculateUrlForMethod(action), Method.POST, DataFormat.Json);
 
@@ -46,7 +46,7 @@ namespace DSoft.Portable.WebClient.Rest
             return request;
         }
 
-        public static RestRequest BuildSecurePostRequest(this RestServiceClientBase target, string action, object data, string tokenId, string encryptionToken)
+        public static RestRequest BuildSecurePostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken)
         {
             var request = new RestRequest(target.CalculateUrlForMethod(action), Method.POST, DataFormat.Json);
 
@@ -56,7 +56,7 @@ namespace DSoft.Portable.WebClient.Rest
             {
                 ClientVersionNo = target.WebClient.ClientVersionNo,
                 Id = tokenId,
-                Payload = new SecurePayload(data, encryptionToken),
+                Payload = new SecurePayload(data, encryptionToken, target.InitVector, target.KeySize),
             };
 
             request.AddJsonBody(fReq);
@@ -69,36 +69,36 @@ namespace DSoft.Portable.WebClient.Rest
         #region SecureRequest Builders
 
 
-        public static SecureRequest CreateEmptyUserRequest(this RestServiceClientBase target, string tokenId, string encryptionToken)
+        public static SecureRequest CreateEmptyUserRequest(this RestServiceSecureClientBase target, string tokenId, string encryptionToken)
         {
             return new SecureRequest()
             {
                 ClientVersionNo = target.WebClient.ClientVersionNo,
                 Id = tokenId,
-                Payload = new SecurePayload(encryptionToken),
+                Payload = new SecurePayload(encryptionToken, target.InitVector, target.KeySize),
             };
         }
 
-        public static SecureRequest CreateUserRequest(this RestServiceClientBase target, object data, string tokenId, string encryptionToken)
+        public static SecureRequest CreateUserRequest(this RestServiceSecureClientBase target, object data, string tokenId, string encryptionToken)
         {
             return new SecureRequest()
             {
                 ClientVersionNo = target.WebClient.ClientVersionNo,
                 Id = tokenId,
-                Payload = new SecurePayload(data, encryptionToken),
+                Payload = new SecurePayload(data, encryptionToken, target.InitVector, target.KeySize),
             };
         }
 
-        public static SecureBinaryRequest CreateUserBinaryRequest(this RestServiceClientBase target, object data, byte[] binary, string tokenId, string encryptionToken)
+        public static SecureBinaryRequest CreateUserBinaryRequest(this RestServiceSecureClientBase target, object data, byte[] binary, string tokenId, string encryptionToken)
         {
             var request = new SecureBinaryRequest()
             {
                 ClientVersionNo = target.WebClient.ClientVersionNo,
                 Id = tokenId,
-                Payload = new SecurePayload(data, encryptionToken),
+                Payload = new SecurePayload(data, encryptionToken, target.InitVector, target.KeySize),
             };
 
-            request.SetBinaryObject(binary, encryptionToken);
+            request.SetBinaryObject(binary, encryptionToken, target.InitVector, target.KeySize);
 
             return request;
         }
@@ -107,7 +107,7 @@ namespace DSoft.Portable.WebClient.Rest
 
         #region Request execution methods
 
-        public static async Task ExecuteSecureCallAsync(this RestServiceClientBase target, string methodName, object data, string tokenId, string encryptionToken)
+        public static async Task ExecuteSecureCallAsync(this RestServiceSecureClientBase target, string methodName, object data, string tokenId, string encryptionToken)
         {
             var request = target.BuildUserPostRequest(methodName, data, tokenId, encryptionToken);
 
@@ -119,7 +119,7 @@ namespace DSoft.Portable.WebClient.Rest
                 throw new Exception(result.Message);
         }
 
-        public static async Task<T> ExecuteSecureCallAsync<T>(this RestServiceClientBase target, string methodName, string tokenId, string encryptionToken)
+        public static async Task<T> ExecuteSecureCallAsync<T>(this RestServiceSecureClientBase target, string methodName, string tokenId, string encryptionToken)
         {
             var request = target.BuildEmptyUserPostRequest(methodName, tokenId, encryptionToken);
 
@@ -130,12 +130,12 @@ namespace DSoft.Portable.WebClient.Rest
             if (result.Success == false)
                 throw new Exception(result.Message);
 
-            var payload = result.Payload.Extract<T>(encryptionToken);
+            var payload = result.Payload.Extract<T>(encryptionToken, target.InitVector, target.KeySize);
 
             return payload;
         }
 
-        public static async Task<T> ExecuteSecureCallAsync<T>(this RestServiceClientBase target, string methodName, object data, string tokenId, string encryptionToken)
+        public static async Task<T> ExecuteSecureCallAsync<T>(this RestServiceSecureClientBase target, string methodName, object data, string tokenId, string encryptionToken)
         {
             var request = target.BuildUserPostRequest(methodName, data, tokenId, encryptionToken);
 
@@ -146,12 +146,12 @@ namespace DSoft.Portable.WebClient.Rest
             if (result.Success == false)
                 throw new Exception(result.Message);
 
-            var payload = result.Payload.Extract<T>(encryptionToken);
+            var payload = result.Payload.Extract<T>(encryptionToken, target.InitVector, target.KeySize);
 
             return payload;
         }
 
-        public static async Task ExecuteSecureBinaryCallAsync(this RestServiceClientBase target, string methodName, object data, byte[] binary, string tokenId, string encryptionToken)
+        public static async Task ExecuteSecureBinaryCallAsync(this RestServiceSecureClientBase target, string methodName, object data, byte[] binary, string tokenId, string encryptionToken)
         {
             var request = target.BuildUserBinaryPostRequest(methodName, data, binary, tokenId, encryptionToken);
 
@@ -163,7 +163,7 @@ namespace DSoft.Portable.WebClient.Rest
                 throw new Exception(result.Message);
         }
 
-        public static async Task<(string FileName, string MimeType, byte[] Binary)> ExecuteSecureDownloadServiceCallAsync(this RestServiceClientBase target, string methodName, object data, string tokenId, string encryptionToken)
+        public static async Task<(string FileName, string MimeType, byte[] Binary)> ExecuteSecureDownloadServiceCallAsync(this RestServiceSecureClientBase target, string methodName, object data, string tokenId, string encryptionToken)
         {
             var request = target.BuildUserPostRequest(methodName, data, tokenId, encryptionToken);
 

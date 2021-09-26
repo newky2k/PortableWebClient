@@ -13,12 +13,12 @@ namespace DSoft.Portable.WebClient.Grpc.Encryption
             Timestamp = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(DateTime.UtcNow);
         }
 
-        public SecurePayload(object dataValue, string passKey) : this()
+        public SecurePayload(object dataValue, string passKey, string initVector, KeySize keySize = KeySize.TwoFiftySix) : this()
         {
-            Data = PayloadManager.EncryptPayload(dataValue, passKey);
+            Data = PayloadManager.EncryptPayload(dataValue, passKey, initVector, keySize);
         }
 
-        public SecurePayload(string passKey) : this(EmptyPayload.Empty, passKey)
+        public SecurePayload(string passKey, string initVector, KeySize keySize = KeySize.TwoFiftySix) : this(EmptyPayload.Empty, passKey, initVector, keySize)
         {
 
         }
@@ -32,9 +32,9 @@ namespace DSoft.Portable.WebClient.Grpc.Encryption
             return (diff < timeSpan);
         }
 
-        public T Extract<T>(string passKey)
+        public T Extract<T>(string passKey, string initVector, KeySize keySize = KeySize.TwoFiftySix)
         {
-            return PayloadManager.DecryptPayload<T>(Data, passKey);
+            return PayloadManager.DecryptPayload<T>(Data, passKey, initVector, keySize);
         }
 
         

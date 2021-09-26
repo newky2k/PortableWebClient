@@ -24,14 +24,16 @@ namespace DSoft.Portable.WebClient.Grpc.Encryption
             Payload.Data = data;
         }
 
-        public TData Extract<TData>(string passKey)
+        public TData Extract<TData>(string passKey,  string initVector, KeySize keySize = KeySize.TwoFiftySix)
         {
             if (Payload == null)
                 throw new Exception("No data");
 
-            return Payload.Extract<TData>(passKey);
+            return Payload.Extract<TData>(passKey, initVector, keySize);
         }
 
-        public void SetPayload(object data, string passKey) => SetPayload(PayloadManager.EncryptPayload(data, passKey));
+        public void SetPayload(object data, string passKey, string initVector, KeySize keySize = KeySize.TwoFiftySix) => SetPayload(PayloadManager.EncryptPayload(data, passKey, initVector, keySize));
+
+
     }
 }

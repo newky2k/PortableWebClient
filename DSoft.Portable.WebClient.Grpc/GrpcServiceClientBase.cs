@@ -66,7 +66,9 @@ namespace DSoft.Portable.WebClient.Grpc
         }
     }
 
-    public abstract class GrpcServiceClientBase<T> : GrpcServiceClientBase where T : ClientBase
+    public abstract class GrpcServiceClientBase<T, T2> : GrpcServiceClientBase 
+        where T : ClientBase
+        where T2 : IWebClient
     {
 
 
@@ -80,7 +82,7 @@ namespace DSoft.Portable.WebClient.Grpc
             }
         }
 
-        protected GrpcServiceClientBase(IWebClient client) : base(client)
+        protected GrpcServiceClientBase(T2 client) : base(client)
         {
 
         }

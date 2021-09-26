@@ -16,6 +16,6 @@ namespace DSoft.Portable.WebClient.Encryption
 
         void Validate(TimeSpan timeout);
 
-        TData ExtractPayload<TData>(string passKey);
+        TData ExtractPayload<TData>(string passKey, string initVector, KeySize keySize = KeySize.TwoFiftySix);
     }
 }

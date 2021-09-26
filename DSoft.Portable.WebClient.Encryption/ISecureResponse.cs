@@ -8,10 +8,10 @@ namespace DSoft.Portable.WebClient.Encryption
     {
         T Payload { get; set; }
 
-        void SetPayload(object data, string passKey);
+        void SetPayload(object data, string passKey, string initVector, KeySize keySize = KeySize.TwoFiftySix);
 
         void SetPayload(string data);
 
-        TData Extract<TData>(string passKey);
+        TData Extract<TData>(string passKey, string initVector, KeySize keySize = KeySize.TwoFiftySix);
     }
 }

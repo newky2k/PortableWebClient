@@ -39,5 +39,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DSoft.Portable.WebClient.Encryption\DSoft.Portable.WebClient.Encryption.csproj" />
+    <ProjectReference Include="..\DSoft.Portable.WebClient.Grpc\DSoft.Portable.WebClient.Grpc.csproj" />
   </ItemGroup>
 </Project>

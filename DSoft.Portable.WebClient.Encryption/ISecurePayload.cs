@@ -10,6 +10,6 @@ namespace DSoft.Portable.WebClient.Encryption
 
         bool Validate(TimeSpan timeSpan);
 
-        T Extract<T>(string passKey);
+        T Extract<T>(string passKey, string initVector, KeySize keySize = KeySize.TwoFiftySix);
     }
 }

@@ -12,5 +12,7 @@ namespace DSoft.Portable.WebClient
 
         bool CanConnect { get; }
 
+        int TimeOut { get; }
+
     }
 }

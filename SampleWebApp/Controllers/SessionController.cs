@@ -25,13 +25,14 @@ namespace SampleWebApp.Controllers
             {
                 //calculate the encryption Hash
                 var initKey = "1234567890";
+                var ivKey = "xRFg8Ctp1sEqWfVp";
 
                 //try and extract the empty payload, will fail if the key is wrong
-                var payload = ExtractPayload<EmptyPayload>(request, initKey);
+                var payload = ExtractPayload<EmptyPayload>(request, initKey, ivKey);
 
                 await Task.Delay(10);
 
-                result.Payload.Data = PayloadManager.EncryptPayload(EmptyPayload.Empty, initKey);
+                result.Payload.Data = PayloadManager.EncryptPayload(EmptyPayload.Empty, initKey, ivKey);
 
 
 
@@ -46,9 +47,9 @@ namespace SampleWebApp.Controllers
             return result;
         }
 
-        public static T ExtractPayload<T>(SecureRequest request, string encryptionToken)
+        public static T ExtractPayload<T>(SecureRequest request, string encryptionToken, string ivKey)
         {
-            var payLoad = request.Payload.Extract<T>(encryptionToken);
+            var payLoad = request.Payload.Extract<T>(encryptionToken, ivKey);
 
             return payLoad;
         }
