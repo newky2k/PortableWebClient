@@ -21,7 +21,7 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   netVersion: '5.0.x'
-  releaseSuffix: ''
+  releaseSuffix: '-prereleaae'
 
 name: 3.0.$(date:yyMM).$(date:dd)$(rev:r)
 steps:
