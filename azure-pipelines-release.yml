@@ -29,6 +29,9 @@ steps:
 #  inputs:
 #    packageType: 'sdk'
 #    version: '$(netVersion)'
+  
+- task: NuGetToolInstaller@1
+  displayName: Install Latest Nuget
 
 - task: NuGetCommand@2
   displayName: Nuget Restore
