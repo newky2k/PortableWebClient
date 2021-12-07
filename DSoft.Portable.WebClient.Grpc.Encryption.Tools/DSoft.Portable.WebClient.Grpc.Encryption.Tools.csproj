@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+      <TargetFrameworks>netstandard2.0; net6.0;</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet package definition" Condition=" '$(Configuration)' == 'Release' ">
@@ -29,5 +29,6 @@
     <_Asset PackagePath="build/native/include/dsoft/protobuf/" Include="@(_ProtoAssetName->'$(Assets_ProtoInclude)%(Identity).proto')" />
 
     <None Include="@(_Asset)" Pack="true" Visible="false" />
+	  <None Include="securetypes.proto" />
   </ItemGroup>
 </Project>

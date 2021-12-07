@@ -50,7 +50,7 @@ namespace DSoft.Portable.WebClient.Rest.Encryption
             if (Payload == null)
                 throw new Exception("No payload in request");
 
-            if (Payload.Timestamp == null || !Payload.Validate(timeout))
+            if (Payload.Timestamp == default || !Payload.Validate(timeout))
                 throw new Exception("Payload has timed out");
         }
 
