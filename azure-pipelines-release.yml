@@ -14,22 +14,22 @@ trigger:
     - readme.md
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'windows-2022'
 
 variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  netVersion: '5.0.x'
+  netVersion: '6.0.x'
   releaseSuffix: '-prereleaae'
 
 name: 3.0.$(date:yyMM).$(date:dd)$(rev:r)
 steps:
-- task: UseDotNet@2
-  displayName: Install .Net 5.x
-  inputs:
-    packageType: 'sdk'
-    version: '$(netVersion)'
+#- task: UseDotNet@2
+#  displayName: Install .Net 6.x
+#  inputs:
+#    packageType: 'sdk'
+#    version: '$(netVersion)'
 
 - task: NuGetCommand@2
   displayName: Nuget Restore

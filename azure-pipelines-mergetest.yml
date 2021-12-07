@@ -6,7 +6,7 @@
 trigger: none
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'windows-2022'
 
 variables:
   solution: '**/*.sln'
@@ -14,11 +14,11 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: UseDotNet@2
-  displayName: Install .Net 5.x
-  inputs:
-    packageType: 'sdk'
-    version: '5.0.x'
+#- task: UseDotNet@2
+#  displayName: Install .Net 5.x
+#  inputs:
+#    packageType: 'sdk'
+#    version: '5.0.x'
   
 - task: NuGetToolInstaller@1
   displayName: Install Latest Nuget
