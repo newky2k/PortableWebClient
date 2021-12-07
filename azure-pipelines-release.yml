@@ -20,7 +20,6 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  netVersion: '6.0.x'
   releaseSuffix: '-prereleaae'
 
 name: 3.0.$(date:yyMM).$(date:dd)$(rev:r)
