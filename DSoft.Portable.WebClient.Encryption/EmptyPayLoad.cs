@@ -28,7 +28,7 @@ namespace DSoft.Portable.WebClient.Encryption
 
                 var data = new byte[size];
 
-                var rng = new RNGCryptoServiceProvider();
+                var rng = RandomNumberGenerator.Create();
                 rng.GetBytes(data);
 
                 var str = Encoding.UTF8.GetString(data);

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29009.5
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSoft.Portable.WebClient.Encryption", "DSoft.Portable.WebClient.Encryption\DSoft.Portable.WebClient.Encryption.csproj", "{D9568668-52C6-41CE-907C-7A3857981288}"
 EndProject
@@ -32,6 +32,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSoft.Portable.WebClient.Grpc.Encryption.Tools", "DSoft.Portable.WebClient.Grpc.Encryption.Tools\DSoft.Portable.WebClient.Grpc.Encryption.Tools.csproj", "{95C169F2-2C8A-4BFA-8B55-799D750294BC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{433DB1D7-3167-482E-865A-5339661663BE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_ci", "_ci", "{C58688C6-E10D-465E-A38E-6AE12718B06E}"
+	ProjectSection(SolutionItems) = preProject
+		azure-pipelines-mergetest.yml = azure-pipelines-mergetest.yml
+		azure-pipelines-release.yml = azure-pipelines-release.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

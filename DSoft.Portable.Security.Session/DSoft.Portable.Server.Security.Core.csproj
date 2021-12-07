@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+	  <TargetFrameworks>netstandard2.0;net6.0;</TargetFrameworks>
     <AssemblyName>DSoft.Portable.Server.Security.Core</AssemblyName>
     <RootNamespace>DSoft.Portable.Server.Security.Core</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

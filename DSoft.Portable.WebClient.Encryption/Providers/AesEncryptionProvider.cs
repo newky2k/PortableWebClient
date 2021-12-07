@@ -72,12 +72,20 @@ namespace DSoft.Portable.WebClient.Encryption.Providers
 
             MemoryStream memoryStream = new MemoryStream(data);
             CryptoStream cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read);
-            byte[] plainTextBytes = new byte[data.Length];
-            int decryptedByteCount = cryptoStream.Read(plainTextBytes, 0, plainTextBytes.Length);
+
+            byte[] plainTextBytes;
+
+            var binaryReader = new BinaryReader(cryptoStream);
+
+            plainTextBytes = binaryReader.ReadBytes(data.Length);
+
+            binaryReader.Close();
+
+
             memoryStream.Close();
             cryptoStream.Close();
 
-            return (plainTextBytes, decryptedByteCount);
+            return (plainTextBytes, plainTextBytes.Length);
         }
 
         #endregion
