@@ -122,6 +122,9 @@ namespace DSoft.Portable.WebClient.Rest
         {
             var request = new RestRequest(CalculateUrlForMethod(methodName), Method.POST, type);
 
+            
+            request.Timeout = 60000;
+
             ApplyHeaders(request);
 
             return request;

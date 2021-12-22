@@ -41,7 +41,7 @@ namespace SampleWebApp.Controllers
                     Token = Guid.NewGuid().ToString(),
                 };
 
-                result.Payload.Data = PayloadManager.EncryptPayload(EmptyPayload.Empty, initKey, ivKey);
+                result.Payload.Data = PayloadManager.EncryptPayload(session, initKey, ivKey);
 
 
 

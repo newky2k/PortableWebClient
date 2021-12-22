@@ -19,4 +19,9 @@
     <Folder Include="Models\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="DSoft.System.Mvvm" Version="2.4.2109.301" />
+    <PackageReference Include="DSoft.System.Mvvm.Ui" Version="2.4.2109.301" />
+  </ItemGroup>
+
 </Project>
