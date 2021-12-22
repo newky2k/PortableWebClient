@@ -17,18 +17,9 @@ namespace DSoft.Portable.WebClient.Encryption.Providers
         private byte[] InitVectorBytes => Encoding.UTF8.GetBytes(_initVector);
 
 
-        //private SymmetricAlgorithm EncryptionAlgorithm => new AesManaged() { Mode = CipherMode.CBC };
-        private SymmetricAlgorithm EncryptionAlgorithm
-        {
-            get
-            {
-                var aes = Aes.Create();
+        private SymmetricAlgorithm EncryptionAlgorithm => new AesManaged() { Mode = CipherMode.CBC };
 
-                aes.Mode = CipherMode.CBC;
 
-                return aes;
-            }
-        }
         public AesEncryptionProvider(string initVector, KeySize keySize) : base(initVector, keySize)
         {
 
@@ -91,7 +82,6 @@ namespace DSoft.Portable.WebClient.Encryption.Providers
             plainTextBytes = binaryReader.ReadBytes(data.Length);
 
             binaryReader.Close();
-
 
             memoryStream.Close();
             cryptoStream.Close();
