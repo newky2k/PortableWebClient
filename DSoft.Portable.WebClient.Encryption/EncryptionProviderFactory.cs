@@ -25,7 +25,7 @@ namespace DSoft.Portable.WebClient.Encryption
         public static IEncryptionProvider Build(string initVector, KeySize keySize = KeySize.TwoFiftySix)
         {
             if (string.IsNullOrWhiteSpace(initVector))
-                throw new ArgumentNullException("InitVector cannot be null or empty");
+                throw new ArgumentNullException(nameof(initVector), "InitVector cannot be null or empty");
 
 
             if (_implementationType == null)

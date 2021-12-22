@@ -16,8 +16,19 @@ namespace DSoft.Portable.WebClient.Encryption.Providers
 
         private byte[] InitVectorBytes => Encoding.UTF8.GetBytes(_initVector);
 
-        private SymmetricAlgorithm EncryptionAlogitm => new AesManaged() { Mode = CipherMode.CBC };
 
+        //private SymmetricAlgorithm EncryptionAlgorithm => new AesManaged() { Mode = CipherMode.CBC };
+        private SymmetricAlgorithm EncryptionAlgorithm
+        {
+            get
+            {
+                var aes = Aes.Create();
+
+                aes.Mode = CipherMode.CBC;
+
+                return aes;
+            }
+        }
         public AesEncryptionProvider(string initVector, KeySize keySize) : base(initVector, keySize)
         {
 
@@ -37,7 +48,7 @@ namespace DSoft.Portable.WebClient.Encryption.Providers
         {
             byte[] keyBytes = GetPasswordBytes(passPhrase);
 
-            var encryptor = EncryptionAlogitm.CreateEncryptor(keyBytes, InitVectorBytes);
+            var encryptor = EncryptionAlgorithm.CreateEncryptor(keyBytes, InitVectorBytes);
 
             return encryptor;
         }
@@ -46,7 +57,7 @@ namespace DSoft.Portable.WebClient.Encryption.Providers
         {
             byte[] keyBytes = GetPasswordBytes(passPhrase);
 
-            ICryptoTransform encryptor = EncryptionAlogitm.CreateDecryptor(keyBytes, InitVectorBytes);
+            ICryptoTransform encryptor = EncryptionAlgorithm.CreateDecryptor(keyBytes, InitVectorBytes);
 
             return encryptor;
         }
