@@ -7,6 +7,7 @@ using DSoft.Portable.WebClient.Encryption.Helpers;
 using DSoft.Portable.WebClient.Rest.Encryption;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PortableClient.Models;
 
 namespace SampleWebApp.Controllers
 {
@@ -32,7 +33,15 @@ namespace SampleWebApp.Controllers
 
                 await Task.Delay(10);
 
-                result.Payload.Data = PayloadManager.EncryptPayload(EmptyPayload.Empty, initKey, ivKey);
+                var session = new SessionDto()
+                {
+                    Id = Guid.NewGuid(),
+                    Expires = DateTime.UtcNow.AddHours(1),
+                    Timestamp = DateTime.UtcNow,
+                    Token = Guid.NewGuid().ToString(),
+                };
+
+                result.Payload.Data = PayloadManager.EncryptPayload(session, initKey, ivKey);
 
 
 

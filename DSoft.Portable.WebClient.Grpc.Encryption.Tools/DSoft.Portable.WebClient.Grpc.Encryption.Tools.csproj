@@ -19,7 +19,16 @@
     <PackageProjectUrl>https://github.com/newky2k/PortableWebClient</PackageProjectUrl>
     <RepositoryUrl>https://github.com/newky2k/PortableWebClient</RepositoryUrl>
     <PackageTags>gRPC RPC HTTP/2 Web client</PackageTags>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
+	  <PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
   </PropertyGroup>
+
+  <ItemGroup>
+	  <None Include="..\README.md">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
+	  </None>
+  </ItemGroup>
 
   <ItemGroup Label="NuGet package assets">
     <None Pack="true" PackagePath="build\" Include="build\**\*.xml; build\**\*.props; build\**\*.targets;" />

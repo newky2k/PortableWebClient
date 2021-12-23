@@ -13,7 +13,7 @@ namespace DSoft.Portable.WebClient
         #region Fields
         private Version _appVersion;
         private string _baseUrl;
-        private int _defaultTimeOutSeconds = 1;
+        private int _defaultTimeOutSeconds = 0; //same as RestClient default
 
         #endregion
 
