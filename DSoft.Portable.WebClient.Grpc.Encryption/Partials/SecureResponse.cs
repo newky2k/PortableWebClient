@@ -11,7 +11,7 @@ namespace DSoft.Portable.WebClient.Grpc.Encryption
 
         partial void OnConstruction()
         {
-            Success = true;
+            //Success = true;
 
             Payload = new SecurePayload()
             {
