@@ -1,16 +1,17 @@
 # Portable Web Client
 
-Cross platform web client framework for calling ASP.NET Core RESTful Web Apis and Grpc services
+Cross platform web client framework for calling ASP.NET Core RESTful Web Apis and gRPC services
 
 ## Functionality
 
-The libary provides base level, bootstrap base classes to simplify the building of client libraries for use with ASP.NET Core Web Apis and now Grpc services too.
+The libary provides low level, bootstrapped base classes to simplify the building of client libraries for use with ASP.NET Core Web Apis and now gRPC services too.
 
-- Base web service client classes for RESTful Web APIs and Grpc service clients
+- Base web service client classes for RESTful Web APIs and gRPC service clients
   - Core Web Client functionality
   - Stores Url
   - Can check for connectivity
   - Stores Default Timeout
+  - Supports gRPC fpr Web
 - Base service client classes for both RESTFul and Grpc services
   - Handles RestClient and Grpc channel management functionality
   - Helper methods for Get and Post method calls
@@ -23,10 +24,15 @@ The libary provides base level, bootstrap base classes to simplify the building 
 - Integrated encryption, with abiltiy provide override with custom implementations.
   - Uses 256-bit AES encryption by default
 
-## V3.x breaking changes
+## V3.x and v3.1 breaking changes
 With the move to v3 some of the classes have been renamed and moved into different packages, such as `ServiceClientBase` which now exists in `DSoft.Portable.WebClient.Rest` and is now named `RestServiceClientBase`.  
 
-Addtionally you know have to set an InitVector key of your own on `EncryptionProviderFactory` before encrption and decryption will function.
+### Encryption changes 
+**v3.0 only!**  
+You know have to set an InitVector key of your own on `EncryptionProviderFactory` before encrption and decryption will function.  
+
+**v3.1 and Above**  
+In v3.1 and above the InitVector key is passed explicilty to the `IEncryptionProvider` implementation when returned by `EncryptionProviderFactory.Build`.  This allows for calls to multiple services using multiple IVs.  Check out the test harness for an example.
 
 We will add a detailed migration guide to the Wiki before going stable
 
