@@ -28,13 +28,7 @@ namespace DSoft.Portable.WebClient.Rest
         /// <value>
         /// The rest client.
         /// </value>
-        protected IRestClient RestClient
-        {
-            get
-            {
-                return new RestClient { BaseUrl = new Uri(_client.BaseUrl), Timeout = _client.TimeOut };
-            }
-        }
+        protected IRestClient RestClient => new RestClient { BaseUrl = new Uri(_client.BaseUrl), Timeout = _client.TimeOut };
 
         /// <summary>
         /// Gets the name of the Web Api Controller.
@@ -121,9 +115,6 @@ namespace DSoft.Portable.WebClient.Rest
         protected RestRequest BuildPostRequest(string methodName, DataFormat type = DataFormat.Json)
         {
             var request = new RestRequest(CalculateUrlForMethod(methodName), Method.POST, type);
-
-            
-            request.Timeout = 60000;
 
             ApplyHeaders(request);
 
