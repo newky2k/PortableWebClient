@@ -131,7 +131,7 @@ namespace DSoft.Portable.WebClient.Grpc
         protected GrpcServiceClientBase(IWebClient client, GrpcClientOptions options)
         {
             
-            if (_client == null)
+            if (client == null)
                 throw new ArgumentNullException("client");
 
             _client = client;    
