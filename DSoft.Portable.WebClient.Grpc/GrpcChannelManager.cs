@@ -15,7 +15,7 @@ namespace DSoft.Portable.WebClient.Grpc
 	/// <seealso cref="DSoft.Portable.WebClient.Grpc.IGrpcChannelManager" />
 	public class GrpcChannelManager : IGrpcChannelManager
 	{
-		private readonly Dictionary<string, GrpcChannel> channels = new Dictionary<string, GrpcChannel>();
+		private readonly Dictionary<string, (GrpcChannel Channel, HttpMode Mode)> channels = new Dictionary<string, (GrpcChannel channel, HttpMode mode)>();
 
 		/// <summary>
 		/// Clears the channel for the specified address.
@@ -26,9 +26,9 @@ namespace DSoft.Portable.WebClient.Grpc
 		{
 			if (channels.ContainsKey(address))
 			{
-				var channel = channels[address];
+				var data = channels[address];
 
-				await channel.ShutdownAsync();
+				await data.Channel.ShutdownAsync();
 
 				channels.Remove(address);
 
@@ -46,7 +46,15 @@ namespace DSoft.Portable.WebClient.Grpc
 		public GrpcChannel ForAddress(string address, GrpcClientOptions options)
 		{
 			if (channels.ContainsKey(address))
-				return channels[address];
+			{
+				var data = channels[address];
+
+				if (options.GrpcMode == data.Mode)
+					return channels[address].Channel;
+				else
+					channels.Remove(address);
+			}
+				
 
 			GrpcChannel channel = null;
 
@@ -127,7 +135,7 @@ namespace DSoft.Portable.WebClient.Grpc
 
 			}
 
-			channels.Add(address, channel);
+			channels.Add(address, new (channel, options.GrpcMode));
 
 			return channel;
 		}
