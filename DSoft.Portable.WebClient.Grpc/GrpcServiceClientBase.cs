@@ -2,6 +2,7 @@
 using Grpc.Net.Client;
 using Grpc.Net.Client.Web;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 
 namespace DSoft.Portable.WebClient.Grpc
@@ -12,11 +13,19 @@ namespace DSoft.Portable.WebClient.Grpc
     /// <seealso cref="System.IDisposable" />
     public abstract class GrpcServiceClientBase : IDisposable
     {
+        #region Fields
         private IWebClient _client;
-
-
         private GrpcClientOptions _options;
-        protected IWebClient WebClient => _client;
+        private GrpcChannel _RPCChannel;
+		#endregion
+
+		#region Properties
+
+		/// <summary>
+		/// Gets the web client.
+		/// </summary>
+		/// <value>The web client.</value>
+		protected IWebClient WebClient => _client;
 
         /// <summary>
         /// Gets the RPC channel.
@@ -28,97 +37,106 @@ namespace DSoft.Portable.WebClient.Grpc
         {
             get
             {
-                switch (_options.GrpcMode)
+                if (_RPCChannel == null)
                 {
-                    case HttpMode.Http_1_1:
-                        {
-                            //if a custom validator has be provided use that
-                            if (_options.ServerCertificateCustomValidationCallback != null)
-                            {
-                                var httpClientHandlerCustom = new HttpClientHandler();
-                                httpClientHandlerCustom.ServerCertificateCustomValidationCallback = _options.ServerCertificateCustomValidationCallback;
+					switch (_options.GrpcMode)
+					{
+						case HttpMode.Http_1_1:
+							{
+								//if a custom validator has be provided use that
+								if (_options.ServerCertificateCustomValidationCallback != null)
+								{
+									var httpClientHandlerCustom = new HttpClientHandler();
+									httpClientHandlerCustom.ServerCertificateCustomValidationCallback = _options.ServerCertificateCustomValidationCallback;
 
-                                return GrpcChannel.ForAddress(_client.BaseUrl, new GrpcChannelOptions
-                                {
-                                    HttpHandler = new GrpcWebHandler(httpClientHandlerCustom)
-                                });
-                            }
-
-
-                            if (_options.DisableSSLCertValidation)
-                            {
-                                //return channel with SSL cert validation disabled
-                                var httpClientHandler = new HttpClientHandler();
+									_RPCChannel = GrpcChannel.ForAddress(_client.BaseUrl, new GrpcChannelOptions
+									{
+										HttpHandler = new GrpcWebHandler(httpClientHandlerCustom)
+									});
+								}
+								else if (_options.DisableSSLCertValidation)
+								{
+									//return channel with SSL cert validation disabled
+									var httpClientHandler = new HttpClientHandler();
 #if NET6_0_OR_GREATER
-                                httpClientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+									httpClientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
 #else
-                                httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
+                                    httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
 #endif
 
-                                return GrpcChannel.ForAddress(_client.BaseUrl, new GrpcChannelOptions
-                                {
-                                    HttpHandler = new GrpcWebHandler(httpClientHandler)
-                                });
-                            }
+									_RPCChannel = GrpcChannel.ForAddress(_client.BaseUrl, new GrpcChannelOptions
+									{
+										HttpHandler = new GrpcWebHandler(httpClientHandler)
+									});
+								}
+								else
+								{
+									//if disable SSL certifiate validation has not been set them return standard channel generator
+									_RPCChannel = GrpcChannel.ForAddress(_client.BaseUrl, new GrpcChannelOptions
+									{
+										HttpHandler = new GrpcWebHandler(new HttpClientHandler())
+									});
+								}
+								break;
+							}
+						case HttpMode.Http_2_0:
+							{
+								//if a custom validator has be provided use that
+								if (_options.ServerCertificateCustomValidationCallback != null)
+								{
+									var httpClientHandlerCustom = new HttpClientHandler();
+									httpClientHandlerCustom.ServerCertificateCustomValidationCallback = _options.ServerCertificateCustomValidationCallback;
 
-
-                            //if disable SSL certifiate validation has not been set them return standard channel generator
-                            return GrpcChannel.ForAddress(_client.BaseUrl, new GrpcChannelOptions
-                            {
-                                HttpHandler = new GrpcWebHandler(new HttpClientHandler())
-                            });
-
-
-                        }
-                    case HttpMode.Http_2_0:
-                        {
-                            //if a custom validator has be provided use that
-                            if (_options.ServerCertificateCustomValidationCallback != null)
-                            {
-                                var httpClientHandlerCustom = new HttpClientHandler();
-                                httpClientHandlerCustom.ServerCertificateCustomValidationCallback = _options.ServerCertificateCustomValidationCallback;
-
-                                return GrpcChannel.ForAddress(_client.BaseUrl, new GrpcChannelOptions() { HttpClient = new HttpClient(httpClientHandlerCustom) });
-                            }
-
-
-                            if (_options.DisableSSLCertValidation)
-                            {
-                                //return channel with SSL cert validation disabled
-                                var httpClientHandler = new HttpClientHandler();
+									_RPCChannel = GrpcChannel.ForAddress(_client.BaseUrl, new GrpcChannelOptions() { HttpClient = new HttpClient(httpClientHandlerCustom) });
+								}
+								else if (_options.DisableSSLCertValidation)
+								{
+									//return channel with SSL cert validation disabled
+									var httpClientHandler = new HttpClientHandler();
 #if NET6_0_OR_GREATER
-                                httpClientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+									httpClientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
 #else
-                                httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
+                                    httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
 #endif
-                                var httpClient = new HttpClient(httpClientHandler);
+									var httpClient = new HttpClient(httpClientHandler);
 
-                                return GrpcChannel.ForAddress(_client.BaseUrl, new GrpcChannelOptions() { HttpClient = httpClient });
-                            }
+									_RPCChannel = GrpcChannel.ForAddress(_client.BaseUrl, new GrpcChannelOptions() { HttpClient = httpClient });
+								}
+								else
+								{
+									//if disable SSL certifiate validation has not been set them return standard channel generator
+									_RPCChannel = GrpcChannel.ForAddress(_client.BaseUrl);
+								}
+								break;
+							}
+						default:
+							throw new Exception("Unexpected HTTP mode for Grpc Channel");
 
 
 
-                            //if disable SSL certifiate validation has not been set them return standard channel generator
-                            return GrpcChannel.ForAddress(_client.BaseUrl);
-                        }
-                    default:
-                        throw new Exception("Unexpected HTTP mode for Grpc Channel");
+					}
+				}
 
+				return _RPCChannel;
 
-
-                }
-            }
+			}
         }
 
-        internal protected string ClientVersionNo => _client.ClientVersionNo;
+		/// <summary>
+		/// Gets the client version no.
+		/// </summary>
+		/// <value>The client version no.</value>
+		internal protected string ClientVersionNo => _client.ClientVersionNo;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GrpcServiceClientBase"/> class.
-        /// </summary>
-        /// <param name="client">The web client.</param>
-        /// <param name="httpMode">The HTTP mode.</param>
-        /// <param name="disbaleSSLCertCheck">Disable SSL cert validation</param>
-        protected GrpcServiceClientBase(IWebClient client, HttpMode httpMode = HttpMode.Http_1_1, bool disableSSLCertCheck = false) : this(client, new GrpcClientOptions() { GrpcMode = httpMode, DisableSSLCertValidation = disableSSLCertCheck })
+		#endregion
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="GrpcServiceClientBase"/> class.
+		/// </summary>
+		/// <param name="client">The web client.</param>
+		/// <param name="httpMode">The HTTP mode.</param>
+		/// <param name="disableSSLCertCheck">Disable SSL cert validation</param>
+		protected GrpcServiceClientBase(IWebClient client, HttpMode httpMode = HttpMode.Http_1_1, bool disableSSLCertCheck = false) : this(client, new GrpcClientOptions() { GrpcMode = httpMode, DisableSSLCertValidation = disableSSLCertCheck })
         {
 
         }
@@ -140,19 +158,33 @@ namespace DSoft.Portable.WebClient.Grpc
             _options = (options == null) ? new GrpcClientOptions() : options;
         }
 
-        public virtual void Dispose()
+		/// <summary>
+		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+		/// </summary>
+		public virtual void Dispose()
         {
             
         }
     }
 
-    public abstract class GrpcServiceClientBase<T, T2> : GrpcServiceClientBase 
+	/// <summary>
+	/// Base Grpc Service class generics.
+	/// Implements the <see cref="DSoft.Portable.WebClient.Grpc.GrpcServiceClientBase" />
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <typeparam name="T2">The type of the t2.</typeparam>
+	/// <seealso cref="DSoft.Portable.WebClient.Grpc.GrpcServiceClientBase" />
+	public abstract class GrpcServiceClientBase<T, T2> : GrpcServiceClientBase 
         where T : ClientBase
         where T2 : IWebClient
     {
 
 
-        protected T Client
+		/// <summary>
+		/// Gets the typed client.
+		/// </summary>
+		/// <value>The client.</value>
+		protected T Client
         {
             get
             {
@@ -162,7 +194,11 @@ namespace DSoft.Portable.WebClient.Grpc
             }
         }
 
-        protected GrpcServiceClientBase(T2 client) : base(client)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="GrpcServiceClientBase{T, T2}"/> class.
+		/// </summary>
+		/// <param name="client">The client.</param>
+		protected GrpcServiceClientBase(T2 client) : base(client)
         {
 
         }

@@ -9,85 +9,81 @@ using System.Threading.Tasks;
 namespace DSoft.Portable.WebClient.Rest
 {
 
-    /// <summary>
-    /// Base Service Client  class for consuming services provided by ASP.NET ApiControllers
-    /// </summary>
-    public abstract class RestServiceClientBase : IDisposable
+	/// <summary>
+	/// Base Service Client  class for consuming services provided by ASP.NET ApiControllers
+	/// </summary>
+	public abstract class RestServiceClientBase : IDisposable
     {
         #region Fields
         private IWebClient _client;
-        #endregion
+		#endregion
 
-        #region Properties
+		#region Properties
 
-        protected string ClientVersionNo => WebClient.ClientVersionNo;
+		/// <summary>
+		/// Gets the client version no.
+		/// </summary>
+		/// <value>The client version no.</value>
+		protected string ClientVersionNo => WebClient.ClientVersionNo;
 
-        /// <summary>
-        /// Gets the rest client.
-        /// </summary>
-        /// <value>
-        /// The rest client.
-        /// </value>
-        protected IRestClient RestClient => new RestClient { BaseUrl = new Uri(_client.BaseUrl), Timeout = _client.TimeOut };
+		/// <summary>
+		/// Gets the rest client.
+		/// </summary>
+		/// <value>The rest client.</value>
+		protected IRestClient RestClient => new RestClient { BaseUrl = new Uri(_client.BaseUrl), Timeout = _client.TimeOut };
 
-        /// <summary>
-        /// Gets the name of the Web Api Controller.
-        /// </summary>
-        /// <value>The name of the controller.</value>
-        protected abstract string ControllerName { get; }
+		/// <summary>
+		/// Gets the name of the Web Api Controller.
+		/// </summary>
+		/// <value>The name of the controller.</value>
+		protected abstract string ControllerName { get; }
 
-        /// <summary>
-        /// Optional api module name if the api has been modularized  /api/module/controller
-        /// </summary>
-        /// <value>The module.</value>
-        protected virtual string Module { get; }
+		/// <summary>
+		/// Optional api module name if the api has been modularized  /api/module/controller
+		/// </summary>
+		/// <value>The module.</value>
+		protected virtual string Module { get; }
 
-        /// <summary>
-        /// Gets the API prefix inserted before the controller name E.g. api/controller/method
-        /// </summary>
-        /// <value>
-        /// The api prefix - default: api
-        /// </value>
-        protected virtual string ApiPrefix => "api";
+		/// <summary>
+		/// Gets the API prefix inserted before the controller name E.g. api/controller/method
+		/// </summary>
+		/// <value>The api prefix - default: api</value>
+		protected virtual string ApiPrefix => "api";
 
-        /// <summary>
-        /// Returns a collection of custom headers.
-        /// </summary>
-        /// <value>
-        /// The custom headers.
-        /// </value>
-        protected virtual ICollection<KeyValuePair<string, string>> CustomHeaders { get;  }
+		/// <summary>
+		/// Returns a collection of custom headers.
+		/// </summary>
+		/// <value>The custom headers.</value>
+		protected virtual ICollection<KeyValuePair<string, string>> CustomHeaders { get;  }
 
-        /// <summary>
-        /// Gets the WebCient instancee.
-        /// </summary>
-        /// <value>
-        /// The web client.
-        /// </value>
-        public IWebClient WebClient => _client;
-        #endregion
+		/// <summary>
+		/// Gets the WebCient instancee.
+		/// </summary>
+		/// <value>The web client.</value>
+		public IWebClient WebClient => _client;
+		#endregion
 
-        #region Constructors
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RestServiceClientBase"/> class.
-        /// </summary>
-        /// <param name="client">The client.</param>
-        public RestServiceClientBase(IWebClient client)
+		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the <see cref="RestServiceClientBase" /> class.
+		/// </summary>
+		/// <param name="client">The client.</param>
+		public RestServiceClientBase(IWebClient client)
         {
             _client = client;
 
         }
 
-        #endregion
+		#endregion
 
-        #region Methods
+		#region Methods
 
-        /// <summary>
-        /// Calculates the URL for method based on BaseUrl of the Client, the controller name and the method name
-        /// </summary>
-        /// <param name="methodName">Name of the method.</param>
-        /// <returns></returns>
-        public string CalculateUrlForMethod(string methodName)
+		/// <summary>
+		/// Calculates the URL for method based on BaseUrl of the Client, the controller name and the method name
+		/// </summary>
+		/// <param name="methodName">Name of the method.</param>
+		/// <returns>System.String.</returns>
+		public string CalculateUrlForMethod(string methodName)
         {
             var apiPrefix = ApiPrefix;
 
@@ -106,13 +102,13 @@ namespace DSoft.Portable.WebClient.Rest
             return url;
         }
 
-        /// <summary>
-        /// Builds a Post Request for the method 
-        /// </summary>
-        /// <param name="methodName">Name of the method.</param>
-        /// <param name="type">The data format.</param>
-        /// <returns></returns>
-        protected RestRequest BuildPostRequest(string methodName, DataFormat type = DataFormat.Json)
+		/// <summary>
+		/// Builds a Post Request for the method
+		/// </summary>
+		/// <param name="methodName">Name of the method.</param>
+		/// <param name="type">The data format.</param>
+		/// <returns>RestRequest.</returns>
+		protected RestRequest BuildPostRequest(string methodName, DataFormat type = DataFormat.Json)
         {
             var request = new RestRequest(CalculateUrlForMethod(methodName), Method.POST, type);
 
@@ -121,13 +117,13 @@ namespace DSoft.Portable.WebClient.Rest
             return request;
         }
 
-        /// <summary>
-        /// Builds a Get Request for the method
-        /// </summary>
-        /// <param name="methodName">Name of the method.</param>
-        /// <param name="type">The data format</param>
-        /// <returns></returns>
-        protected RestRequest BuildGetRequest(string methodName, DataFormat type = DataFormat.Json)
+		/// <summary>
+		/// Builds a Get Request for the method
+		/// </summary>
+		/// <param name="methodName">Name of the method.</param>
+		/// <param name="type">The data format</param>
+		/// <returns>RestRequest.</returns>
+		protected RestRequest BuildGetRequest(string methodName, DataFormat type = DataFormat.Json)
         {
             var request = new RestRequest(CalculateUrlForMethod(methodName), Method.GET, type);
 
@@ -136,13 +132,16 @@ namespace DSoft.Portable.WebClient.Rest
             return request;
         }
 
-        /// <summary>
-        /// Execute a Request asynchronously
-        /// </summary>
-        /// <typeparam name="T">Response type</typeparam>
-        /// <param name="request">Request</param>
-        /// <returns></returns>
-        public async Task<T> ExecuteRequestAsync<T>(IRestRequest request) where T : ResponseBase
+		/// <summary>
+		/// Execute a Request asynchronously
+		/// </summary>
+		/// <typeparam name="T">Response type</typeparam>
+		/// <param name="request">Request</param>
+		/// <returns>A Task&lt;T&gt; representing the asynchronous operation.</returns>
+		/// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.NoServerResponseException"></exception>
+		/// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.ServerResponseFailureException"></exception>
+		/// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.DataResponseFailureException"></exception>
+		public async Task<T> ExecuteRequestAsync<T>(IRestRequest request) where T : ResponseBase
         {
             var result = await RestClient.ExecuteAsync<T>(request);
 
@@ -160,14 +159,17 @@ namespace DSoft.Portable.WebClient.Rest
             return result.Data;
         }
 
-        /// <summary>
-        /// Execute a Post request asynchronously
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="actionName">Controller action name</param>
-        /// <param name="packetBuilder">Function to buile request body object</param>
-        /// <returns></returns>
-        public async Task<T> ExecutePostRequestAsync<T>(string actionName, Func<object> packetBuilder) where T : ResponseBase
+		/// <summary>
+		/// Execute a Post request asynchronously
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="actionName">Controller action name</param>
+		/// <param name="packetBuilder">Function to buile request body object</param>
+		/// <returns>A Task&lt;T&gt; representing the asynchronous operation.</returns>
+		/// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.NoServerResponseException"></exception>
+		/// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.ServerResponseFailureException"></exception>
+		/// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.DataResponseFailureException"></exception>
+		public async Task<T> ExecutePostRequestAsync<T>(string actionName, Func<object> packetBuilder) where T : ResponseBase
         {
             var request = BuildPostRequest(actionName);
 
@@ -195,12 +197,19 @@ namespace DSoft.Portable.WebClient.Rest
             return result.Data;
         }
 
-        public virtual void Dispose()
+		/// <summary>
+		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+		/// </summary>
+		public virtual void Dispose()
         {
             _client = null;
         }
 
-        public void ApplyHeaders(IRestRequest request)
+		/// <summary>
+		/// Applies the headers.
+		/// </summary>
+		/// <param name="request">The request.</param>
+		public void ApplyHeaders(IRestRequest request)
         {
             if (CustomHeaders != null && CustomHeaders.Count > 0)
             {
@@ -211,16 +220,24 @@ namespace DSoft.Portable.WebClient.Rest
 
     }
 
-    /// <summary>
-    /// Generic Typed version of the ServiceClientBase type
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <seealso cref="System.IDisposable" />
-    public abstract class RestServiceClientBase<T> : RestServiceClientBase where T : IWebClient
+	/// <summary>
+	/// Generic Typed version of the ServiceClientBase type
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <seealso cref="System.IDisposable" />
+	public abstract class RestServiceClientBase<T> : RestServiceClientBase where T : IWebClient
     {
-        protected T Client => (T)WebClient;
+		/// <summary>
+		/// Gets the client.
+		/// </summary>
+		/// <value>The client.</value>
+		protected T Client => (T)WebClient;
 
-        protected RestServiceClientBase(T client) : base(client)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="RestServiceClientBase{T}"/> class.
+		/// </summary>
+		/// <param name="client">The client.</param>
+		protected RestServiceClientBase(T client) : base(client)
         {
 
         }

@@ -5,20 +5,22 @@ using System.Text;
 
 namespace DSoft.Portable.WebClient.Encryption
 {
-    /// <summary>
-    /// Empty variable legnth payload object for response without data
-    /// </summary>
-    public class EmptyPayload
+	/// <summary>
+	/// Empty variable legnth payload object for response without data
+	/// </summary>
+	public class EmptyPayload
     {
-        public string Data { get; set; }
+		/// <summary>
+		/// Gets or sets the data.
+		/// </summary>
+		/// <value>The data.</value>
+		public string Data { get; set; }
 
-        /// <summary>
-        /// Gets an instance of EmptyPayload with a random payload
-        /// </summary>
-        /// <value>
-        /// The empty.
-        /// </value>
-        public static EmptyPayload Empty
+		/// <summary>
+		/// Gets an instance of EmptyPayload with a random payload
+		/// </summary>
+		/// <value>The empty.</value>
+		public static EmptyPayload Empty
         {
             get
             {

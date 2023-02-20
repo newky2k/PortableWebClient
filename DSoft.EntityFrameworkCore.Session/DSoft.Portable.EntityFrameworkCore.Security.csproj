@@ -2,19 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Authors>newky2k</Authors>
-    <Copyright>Copyright © 2021 DSoft</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/newky2k/PortableWebClient</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/newky2k/PortableWebClient</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
     <PackageTags>Web client security entity framework</PackageTags>
 	  <PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
     <Description>Security database context classes for entity framework</Description>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>DSoft.snk</AssemblyOriginatorKeyFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 

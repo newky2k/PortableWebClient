@@ -4,9 +4,18 @@ using System.Text;
 
 namespace DSoft.Portable.WebClient.Grpc
 {
-    public enum HttpMode
+	/// <summary>
+	/// Enum HttpMode
+	/// </summary>
+	public enum HttpMode
     {
-        Http_1_1,
-        Http_2_0,
+		/// <summary>
+		/// The HTTP 1.1
+		/// </summary>
+		Http_1_1,
+		/// <summary>
+		/// The HTTP 2.0
+		/// </summary>
+		Http_2_0,
     }
 }

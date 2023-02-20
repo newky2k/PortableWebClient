@@ -8,12 +8,24 @@ using System.Threading.Tasks;
 
 namespace DSoft.Portable.WebClient.Rest
 {
-    public static class RestServiceClientBaseExtensions
+	/// <summary>
+	/// RestServiceClientBaseExtensions.
+	/// </summary>
+	public static class RestServiceClientBaseExtensions
     {
-        #region Rest Request Builders
+		#region Rest Request Builders
 
 
-        public static RestRequest BuildUserPostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken)
+		/// <summary>
+		/// Builds the user post request.
+		/// </summary>
+		/// <param name="target">The target.</param>
+		/// <param name="action">The action.</param>
+		/// <param name="data">The data.</param>
+		/// <param name="tokenId">The token identifier.</param>
+		/// <param name="encryptionToken">The encryption token.</param>
+		/// <returns>RestRequest.</returns>
+		public static RestRequest BuildUserPostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken)
         {
             var request = new RestRequest(target.CalculateUrlForMethod(action), Method.POST, DataFormat.Json);
 
@@ -24,7 +36,15 @@ namespace DSoft.Portable.WebClient.Rest
             return request;
         }
 
-        public static RestRequest BuildEmptyUserPostRequest(this RestServiceSecureClientBase target, string action, string tokenId, string encryptionToken)
+		/// <summary>
+		/// Builds the empty user post request.
+		/// </summary>
+		/// <param name="target">The target.</param>
+		/// <param name="action">The action.</param>
+		/// <param name="tokenId">The token identifier.</param>
+		/// <param name="encryptionToken">The encryption token.</param>
+		/// <returns>RestRequest.</returns>
+		public static RestRequest BuildEmptyUserPostRequest(this RestServiceSecureClientBase target, string action, string tokenId, string encryptionToken)
         {
             var request = new RestRequest(target.CalculateUrlForMethod(action), Method.POST, DataFormat.Json);
 
@@ -35,7 +55,17 @@ namespace DSoft.Portable.WebClient.Rest
             return request;
         }
 
-        public static RestRequest BuildUserBinaryPostRequest(this RestServiceSecureClientBase target, string action, object data, byte[] binary, string tokenId, string encryptionToken)
+		/// <summary>
+		/// Builds the user binary post request.
+		/// </summary>
+		/// <param name="target">The target.</param>
+		/// <param name="action">The action.</param>
+		/// <param name="data">The data.</param>
+		/// <param name="binary">The binary.</param>
+		/// <param name="tokenId">The token identifier.</param>
+		/// <param name="encryptionToken">The encryption token.</param>
+		/// <returns>RestRequest.</returns>
+		public static RestRequest BuildUserBinaryPostRequest(this RestServiceSecureClientBase target, string action, object data, byte[] binary, string tokenId, string encryptionToken)
         {
             var request = new RestRequest(target.CalculateUrlForMethod(action), Method.POST, DataFormat.Json);
 
@@ -46,7 +76,16 @@ namespace DSoft.Portable.WebClient.Rest
             return request;
         }
 
-        public static RestRequest BuildSecurePostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken)
+		/// <summary>
+		/// Builds the secure post request.
+		/// </summary>
+		/// <param name="target">The target.</param>
+		/// <param name="action">The action.</param>
+		/// <param name="data">The data.</param>
+		/// <param name="tokenId">The token identifier.</param>
+		/// <param name="encryptionToken">The encryption token.</param>
+		/// <returns>RestRequest.</returns>
+		public static RestRequest BuildSecurePostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken)
         {
             var request = new RestRequest(target.CalculateUrlForMethod(action), Method.POST, DataFormat.Json);
 
@@ -64,12 +103,19 @@ namespace DSoft.Portable.WebClient.Rest
             return request;
         }
 
-        #endregion
+		#endregion
 
-        #region SecureRequest Builders
+		#region SecureRequest Builders
 
 
-        public static SecureRequest CreateEmptyUserRequest(this RestServiceSecureClientBase target, string tokenId, string encryptionToken)
+		/// <summary>
+		/// Creates the empty user request.
+		/// </summary>
+		/// <param name="target">The target.</param>
+		/// <param name="tokenId">The token identifier.</param>
+		/// <param name="encryptionToken">The encryption token.</param>
+		/// <returns>SecureRequest.</returns>
+		public static SecureRequest CreateEmptyUserRequest(this RestServiceSecureClientBase target, string tokenId, string encryptionToken)
         {
             return new SecureRequest()
             {
@@ -79,7 +125,15 @@ namespace DSoft.Portable.WebClient.Rest
             };
         }
 
-        public static SecureRequest CreateUserRequest(this RestServiceSecureClientBase target, object data, string tokenId, string encryptionToken)
+		/// <summary>
+		/// Creates the user request.
+		/// </summary>
+		/// <param name="target">The target.</param>
+		/// <param name="data">The data.</param>
+		/// <param name="tokenId">The token identifier.</param>
+		/// <param name="encryptionToken">The encryption token.</param>
+		/// <returns>SecureRequest.</returns>
+		public static SecureRequest CreateUserRequest(this RestServiceSecureClientBase target, object data, string tokenId, string encryptionToken)
         {
             return new SecureRequest()
             {
@@ -89,7 +143,16 @@ namespace DSoft.Portable.WebClient.Rest
             };
         }
 
-        public static SecureBinaryRequest CreateUserBinaryRequest(this RestServiceSecureClientBase target, object data, byte[] binary, string tokenId, string encryptionToken)
+		/// <summary>
+		/// Creates the user binary request.
+		/// </summary>
+		/// <param name="target">The target.</param>
+		/// <param name="data">The data.</param>
+		/// <param name="binary">The binary.</param>
+		/// <param name="tokenId">The token identifier.</param>
+		/// <param name="encryptionToken">The encryption token.</param>
+		/// <returns>SecureBinaryRequest.</returns>
+		public static SecureBinaryRequest CreateUserBinaryRequest(this RestServiceSecureClientBase target, object data, byte[] binary, string tokenId, string encryptionToken)
         {
             var request = new SecureBinaryRequest()
             {
@@ -103,11 +166,21 @@ namespace DSoft.Portable.WebClient.Rest
             return request;
         }
 
-        #endregion
+		#endregion
 
-        #region Request execution methods
+		#region Request execution methods
 
-        public static async Task ExecuteSecureCallAsync(this RestServiceSecureClientBase target, string methodName, object data, string tokenId, string encryptionToken)
+		/// <summary>
+		/// Execute secure call as an asynchronous operation.
+		/// </summary>
+		/// <param name="target">The target.</param>
+		/// <param name="methodName">Name of the method.</param>
+		/// <param name="data">The data.</param>
+		/// <param name="tokenId">The token identifier.</param>
+		/// <param name="encryptionToken">The encryption token.</param>
+		/// <returns>A Task representing the asynchronous operation.</returns>
+		/// <exception cref="System.Exception"></exception>
+		public static async Task ExecuteSecureCallAsync(this RestServiceSecureClientBase target, string methodName, object data, string tokenId, string encryptionToken)
         {
             var request = target.BuildUserPostRequest(methodName, data, tokenId, encryptionToken);
 
@@ -119,7 +192,17 @@ namespace DSoft.Portable.WebClient.Rest
                 throw new Exception(result.Message);
         }
 
-        public static async Task<T> ExecuteSecureCallAsync<T>(this RestServiceSecureClientBase target, string methodName, string tokenId, string encryptionToken)
+		/// <summary>
+		/// Execute secure call as an asynchronous operation.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="target">The target.</param>
+		/// <param name="methodName">Name of the method.</param>
+		/// <param name="tokenId">The token identifier.</param>
+		/// <param name="encryptionToken">The encryption token.</param>
+		/// <returns>A Task&lt;T&gt; representing the asynchronous operation.</returns>
+		/// <exception cref="System.Exception"></exception>
+		public static async Task<T> ExecuteSecureCallAsync<T>(this RestServiceSecureClientBase target, string methodName, string tokenId, string encryptionToken)
         {
             var request = target.BuildEmptyUserPostRequest(methodName, tokenId, encryptionToken);
 
@@ -135,7 +218,18 @@ namespace DSoft.Portable.WebClient.Rest
             return payload;
         }
 
-        public static async Task<T> ExecuteSecureCallAsync<T>(this RestServiceSecureClientBase target, string methodName, object data, string tokenId, string encryptionToken)
+		/// <summary>
+		/// Execute secure call as an asynchronous operation.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="target">The target.</param>
+		/// <param name="methodName">Name of the method.</param>
+		/// <param name="data">The data.</param>
+		/// <param name="tokenId">The token identifier.</param>
+		/// <param name="encryptionToken">The encryption token.</param>
+		/// <returns>A Task&lt;T&gt; representing the asynchronous operation.</returns>
+		/// <exception cref="System.Exception"></exception>
+		public static async Task<T> ExecuteSecureCallAsync<T>(this RestServiceSecureClientBase target, string methodName, object data, string tokenId, string encryptionToken)
         {
             var request = target.BuildUserPostRequest(methodName, data, tokenId, encryptionToken);
 
@@ -151,7 +245,18 @@ namespace DSoft.Portable.WebClient.Rest
             return payload;
         }
 
-        public static async Task ExecuteSecureBinaryCallAsync(this RestServiceSecureClientBase target, string methodName, object data, byte[] binary, string tokenId, string encryptionToken)
+		/// <summary>
+		/// Execute secure binary call as an asynchronous operation.
+		/// </summary>
+		/// <param name="target">The target.</param>
+		/// <param name="methodName">Name of the method.</param>
+		/// <param name="data">The data.</param>
+		/// <param name="binary">The binary.</param>
+		/// <param name="tokenId">The token identifier.</param>
+		/// <param name="encryptionToken">The encryption token.</param>
+		/// <returns>A Task representing the asynchronous operation.</returns>
+		/// <exception cref="System.Exception"></exception>
+		public static async Task ExecuteSecureBinaryCallAsync(this RestServiceSecureClientBase target, string methodName, object data, byte[] binary, string tokenId, string encryptionToken)
         {
             var request = target.BuildUserBinaryPostRequest(methodName, data, binary, tokenId, encryptionToken);
 
@@ -163,7 +268,17 @@ namespace DSoft.Portable.WebClient.Rest
                 throw new Exception(result.Message);
         }
 
-        public static async Task<(string FileName, string MimeType, byte[] Binary)> ExecuteSecureDownloadServiceCallAsync(this RestServiceSecureClientBase target, string methodName, object data, string tokenId, string encryptionToken)
+		/// <summary>
+		/// Execute secure download service call as an asynchronous operation.
+		/// </summary>
+		/// <param name="target">The target.</param>
+		/// <param name="methodName">Name of the method.</param>
+		/// <param name="data">The data.</param>
+		/// <param name="tokenId">The token identifier.</param>
+		/// <param name="encryptionToken">The encryption token.</param>
+		/// <returns>A Task&lt;System.ValueTuple&gt; representing the asynchronous operation.</returns>
+		/// <exception cref="System.Exception"></exception>
+		public static async Task<(string FileName, string MimeType, byte[] Binary)> ExecuteSecureDownloadServiceCallAsync(this RestServiceSecureClientBase target, string methodName, object data, string tokenId, string encryptionToken)
         {
             var request = target.BuildUserPostRequest(methodName, data, tokenId, encryptionToken);
 
