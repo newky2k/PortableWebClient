@@ -42,6 +42,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_ci", "_ci", "{C58688C6-E10
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestHarness", "TestHarness\TestHarness.csproj", "{CB6E1FAA-597A-4EA7-9834-3DC940E95483}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSoft.Portable.WebClient.Grpc.Extensions", "DSoft.Portable.WebClient.Grpc.Extensions\DSoft.Portable.WebClient.Grpc.Extensions.csproj", "{E2DC2210-5A25-4903-8CF6-40FADAC05F86}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,6 +98,10 @@ Global
 		{CB6E1FAA-597A-4EA7-9834-3DC940E95483}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB6E1FAA-597A-4EA7-9834-3DC940E95483}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB6E1FAA-597A-4EA7-9834-3DC940E95483}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2DC2210-5A25-4903-8CF6-40FADAC05F86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2DC2210-5A25-4903-8CF6-40FADAC05F86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2DC2210-5A25-4903-8CF6-40FADAC05F86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2DC2210-5A25-4903-8CF6-40FADAC05F86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -111,6 +117,7 @@ Global
 		{3A3BC0AF-988A-4D9C-8BED-9C00F890CA68} = {8A853961-CB8F-4FDB-92E1-21D3B23D3648}
 		{95C169F2-2C8A-4BFA-8B55-799D750294BC} = {8A853961-CB8F-4FDB-92E1-21D3B23D3648}
 		{CB6E1FAA-597A-4EA7-9834-3DC940E95483} = {433DB1D7-3167-482E-865A-5339661663BE}
+		{E2DC2210-5A25-4903-8CF6-40FADAC05F86} = {8A853961-CB8F-4FDB-92E1-21D3B23D3648}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {33017CF5-0FA4-4988-BEAB-383E9E5E4698}
