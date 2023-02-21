@@ -104,7 +104,7 @@ namespace DSoft.Portable.WebClient.Grpc
 						//if a custom validator has be provided use that
 						if (options.ServerCertificateCustomValidationCallback != null)
 						{
-							var httpClientHandlerCustom = new HttpClientHandler();
+							var httpClientHandlerCustom = new HttpClientHandler();   
 
 							httpClientHandlerCustom.ServerCertificateCustomValidationCallback = options.ServerCertificateCustomValidationCallback;
 
