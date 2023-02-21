@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option csharp_namespace = "SampleRpc";
+
+package samplerpc;
+
+service SampleContract {
+
+	rpc Find(SimpleRequest) returns (SimpleResponse);
+}
+
+message SimpleRequest {
+	string id = 1;
+}
+
+message SimpleResponse { 
+  bool success = 1;
+  string message = 2;
+}
+
+

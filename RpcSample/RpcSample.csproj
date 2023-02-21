@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.1;net7.0;</TargetFrameworks>
+    <SignAssembly>false</SignAssembly>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Google.Protobuf" Version="3.22.0" />
+		<PackageReference Include="Grpc.Core" Version="2.46.6" />
+		<PackageReference Include="Grpc.Core.Api" Version="2.51.0" />
+		<PackageReference Include="Grpc.Tools" Version="2.51.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Remove="Protos\Sample.proto" />
+	</ItemGroup>
+
+	<ItemGroup>
+    <ProjectReference Include="..\DSoft.Portable.WebClient.Grpc.Encryption.Tools\DSoft.Portable.WebClient.Grpc.Encryption.Tools.csproj" />
+	  <ProjectReference Include="..\DSoft.Portable.WebClient.Grpc.Encryption\DSoft.Portable.WebClient.Grpc.Encryption.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Protobuf Include="Protos\Sample.proto" GrpcServices="Both" />
+	</ItemGroup>
+
+</Project>
