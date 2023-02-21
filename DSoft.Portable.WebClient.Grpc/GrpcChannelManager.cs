@@ -87,6 +87,7 @@ namespace DSoft.Portable.WebClient.Grpc
 							{
 								HttpHandler = new GrpcWebHandler(httpClientHandler)
 							});
+							
 						}
 						else
 						{
@@ -104,6 +105,7 @@ namespace DSoft.Portable.WebClient.Grpc
 						if (options.ServerCertificateCustomValidationCallback != null)
 						{
 							var httpClientHandlerCustom = new HttpClientHandler();
+
 							httpClientHandlerCustom.ServerCertificateCustomValidationCallback = options.ServerCertificateCustomValidationCallback;
 
 							channel = GrpcChannel.ForAddress(address, new GrpcChannelOptions() { HttpClient = new HttpClient(httpClientHandlerCustom) });

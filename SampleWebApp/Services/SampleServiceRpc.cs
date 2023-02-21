@@ -14,7 +14,11 @@ namespace SampleWebApp.Services
 
 		public override Task<SimpleResponse> Find(SimpleRequest request, ServerCallContext context)
 		{
-			return base.Find(request, context);
+			return Task.FromResult(new SimpleResponse()
+			{
+				Success = true,
+				Message = "Hello, World!",
+			});
 		}
 	}
 }

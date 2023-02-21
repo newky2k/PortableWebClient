@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DSoft.Portable.WebClient.Grpc;
+using SampleApiClient;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Mvvm;
@@ -11,6 +13,8 @@ namespace TestHarness
 {
     public class MainViewModel : ViewModel
     {
+		private static IGrpcChannelManager channelManager = new GrpcChannelManager();
+
 		private string _baseUrl;
 
 		public string BaseUrl
@@ -46,6 +50,34 @@ namespace TestHarness
 				});
 			}
 		}
+
+
+
+		public ICommand TestGrpcCommand
+		{
+			get
+			{
+				return new DelegateCommand(async () =>
+				{
+					try
+					{
+						var webClient = new WebClient(BaseUrl);
+
+						var servClient = new SampleServiceClient(webClient, channelManager);
+
+						var result = await servClient.FindAsync(1);
+
+
+					}
+					catch (Exception ex)
+					{
+
+						NotifyErrorOccurred(ex);
+					}
+				});
+			}
+		}
+
 
 
 

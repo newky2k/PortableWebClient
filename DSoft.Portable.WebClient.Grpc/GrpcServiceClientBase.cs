@@ -7,15 +7,15 @@ using System.Net.Http;
 
 namespace DSoft.Portable.WebClient.Grpc
 {
-    /// <summary>
-    /// Base Grpc Service class
-    /// </summary>
-    /// <seealso cref="System.IDisposable" />
-    public abstract class GrpcServiceClientBase : IDisposable
-    {
-        #region Fields
-        private IWebClient _client;
-        private GrpcClientOptions _options;
+	/// <summary>
+	/// Base Grpc Service class
+	/// </summary>
+	/// <seealso cref="System.IDisposable" />
+	public abstract class GrpcServiceClientBase : IDisposable
+	{
+		#region Fields
+		private IWebClient _client;
+		private GrpcClientOptions _options;
 
 		private readonly IGrpcChannelManager _grpcChannelManager;
 
@@ -51,10 +51,22 @@ namespace DSoft.Portable.WebClient.Grpc
 		/// <param name="client">The web client.</param>
 		/// <param name="httpMode">The HTTP mode.</param>
 		/// <param name="disableSSLCertCheck">Disable SSL cert validation</param>
-		protected GrpcServiceClientBase(IWebClient client, HttpMode httpMode = HttpMode.Http_1_1, bool disableSSLCertCheck = false) : this(client, new GrpcChannelManager(), new GrpcClientOptions() { GrpcMode = httpMode, DisableSSLCertValidation = disableSSLCertCheck })
-        {
+		protected GrpcServiceClientBase(IWebClient client, HttpMode httpMode = HttpMode.Http_1_1, bool disableSSLCertCheck = false) : this(client, new GrpcChannelManager(), httpMode, disableSSLCertCheck)
+		{
 
-        }
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="GrpcServiceClientBase"/> class.
+		/// </summary>
+		/// <param name="client">The client.</param>
+		/// <param name="grpcChannelManager">The GRPC channel manager.</param>
+		/// <param name="httpMode">The HTTP mode.</param>
+		/// <param name="disableSSLCertCheck">if set to <c>true</c> [disable SSL cert check].</param>
+		protected GrpcServiceClientBase(IWebClient client, IGrpcChannelManager grpcChannelManager, HttpMode httpMode = HttpMode.Http_1_1, bool disableSSLCertCheck = false) : this(client, grpcChannelManager, new GrpcClientOptions() { GrpcMode = httpMode, DisableSSLCertValidation = disableSSLCertCheck })
+		{
+
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="GrpcServiceClientBase"/> class.

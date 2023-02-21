@@ -17,6 +17,7 @@
         <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="0,1,0,0">
             <StackPanel>
                 <Button  Content="Get Session" Command="{Binding GetSessionCommand}"/>
+                <Button  Content="Test GRPC" Command="{Binding TestGrpcCommand}"/>
             </StackPanel>
         </Border>
     </Grid>
