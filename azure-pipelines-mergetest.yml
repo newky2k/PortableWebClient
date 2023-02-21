@@ -14,25 +14,17 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-#- task: UseDotNet@2
-#  displayName: Install .Net 5.x
-#  inputs:
-#    packageType: 'sdk'
-#    version: '5.0.x'
-  
 - task: NuGetToolInstaller@1
   displayName: Install Latest Nuget
 
-- task: NuGetCommand@2
-  displayName: Nuget Restore
+- task: DotNetCoreCLI@2
   inputs:
-    restoreSolution: '$(solution)'
-  
-- task: VSBuild@1
-  displayName: Build Solution
+    command: 'restore'
+    projects: '$(solution)'
+ 
+- task: DotNetCoreCLI@2
+  displayName: dotnet build
   inputs:
-    solution: '$(solution)'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-    
+    projects: '$(solution)'
+    arguments: '--configuration=$(buildConfiguration) /p:Platform="$(buildPlatform)"'
 
