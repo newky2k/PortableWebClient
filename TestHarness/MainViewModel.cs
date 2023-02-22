@@ -63,7 +63,7 @@ namespace TestHarness
 					{
 						var webClient = new WebClient(BaseUrl);
 
-						var servClient = new SampleServiceClient(webClient, channelManager);
+						var servClient = new SampleServiceClient(webClient, channelManager, HttpMode.Http_2_0);
 
 						var result = await servClient.FindAsync(1);
 

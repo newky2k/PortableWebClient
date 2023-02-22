@@ -15,7 +15,7 @@ namespace Microsoft.Extensions.DependencyInjection
 		/// <param name="services">The services.</param>
 		/// <param name="asSingleton">if set to <c>true</c> [as singleton].</param>
 		/// <returns>IServiceCollection.</returns>
-		public static IServiceCollection AddGrpcChannelManager(this IServiceCollection services, bool asSingleton = true)
+		public static IServiceCollection AddGrpcClientChannelManager(this IServiceCollection services, bool asSingleton = true)
 		{
 			if (asSingleton)
 				services.TryAddSingleton<IGrpcChannelManager, GrpcChannelManager>();
