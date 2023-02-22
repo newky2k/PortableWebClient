@@ -22,7 +22,7 @@ variables:
   buildConfiguration: 'Release'
   releaseSuffix: ''
 
-name: 3.1.$(date:yyMM).$(date:dd)$(rev:r)
+name: 3.2.$(date:yyMM).$(date:dd)$(rev:r)
 steps:  
 - task: NuGetToolInstaller@1
   displayName: Install Latest Nuget
