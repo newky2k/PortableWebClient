@@ -2,22 +2,11 @@
 
   <PropertyGroup>
 	  <TargetFrameworks>netstandard2.0;net6.0;</TargetFrameworks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Authors>newky2k</Authors>
     <Description>
       Grpc base class library for interacting with ASP.NET Core Grpc services using Http/2 and Http 1.1
     </Description>
-    <Copyright>Copyright © 2021 DSoft</Copyright>
-    <PackageLicenseFile></PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/newky2k/PortableWebClient</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/newky2k/PortableWebClient</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
     <PackageTags>Web Client</PackageTags>
 	  <PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>DSoft.snk</AssemblyOriginatorKeyFile>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
@@ -29,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grpc.Net.Client" Version="2.45.0" />
-    <PackageReference Include="Grpc.Net.Client.Web" Version="2.45.0" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.51.0" />
+    <PackageReference Include="Grpc.Net.Client.Web" Version="2.51.0" />
   </ItemGroup>
 
   <ItemGroup>

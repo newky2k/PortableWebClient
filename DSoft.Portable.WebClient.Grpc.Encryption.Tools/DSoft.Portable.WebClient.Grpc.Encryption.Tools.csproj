@@ -5,21 +5,14 @@
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet package definition" Condition=" '$(Configuration)' == 'Release' ">
-    <!-- TODO(kkm): Change to "build\" after splitting. -->
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <BuildOutputTargetFolder>build\_protobuf\</BuildOutputTargetFolder>
     <DevelopmentDependency>true</DevelopmentDependency>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <PackageId>DSoft.Portable.WebClient.Grpc.Encryption.Tools</PackageId>
-    <Authors>newky2k</Authors>
-    <Copyright>Copyright © 2021 DSoft</Copyright>
     <Description>Grpc comnpiler Include files for DSoft.Portable.WebClient.Grpc.Encryption
     </Description>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/newky2k/PortableWebClient</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/newky2k/PortableWebClient</RepositoryUrl>
     <PackageTags>gRPC RPC HTTP/2 Web client</PackageTags>
-	<PackageReadmeFile>README.md</PackageReadmeFile>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
   </PropertyGroup>
 

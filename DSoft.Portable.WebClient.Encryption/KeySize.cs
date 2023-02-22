@@ -4,8 +4,14 @@ using System.Text;
 
 namespace DSoft.Portable.WebClient.Encryption
 {
-    public enum KeySize : int
+	/// <summary>
+	/// Enum KeySize
+	/// </summary>
+	public enum KeySize : int
     {
-        TwoFiftySix = 256,
+		/// <summary>
+		/// The two fifty six
+		/// </summary>
+		TwoFiftySix = 256,
     }
 }

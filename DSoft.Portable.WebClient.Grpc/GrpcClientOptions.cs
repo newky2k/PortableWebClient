@@ -7,6 +7,9 @@ using System.Text;
 
 namespace DSoft.Portable.WebClient.Grpc
 {
+	/// <summary>
+	/// Grpc Client Options.
+	/// </summary>
 	public class GrpcClientOptions
 	{
 		/// <summary>

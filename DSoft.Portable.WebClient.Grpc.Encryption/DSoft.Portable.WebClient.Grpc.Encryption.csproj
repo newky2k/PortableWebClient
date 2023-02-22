@@ -2,21 +2,9 @@
 
   <PropertyGroup>
 	  <TargetFrameworks>netstandard2.0;net6.0;</TargetFrameworks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Authors>newky2k</Authors>
-    <Company>newky2k</Company>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Description>Encrypted payload communications classes for the Grpc client</Description>
-    <PackageProjectUrl>https://github.com/newky2k/PortableWebClient</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/newky2k/PortableWebClient</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
     <PackageTags>Web Client Grpc</PackageTags>
 	  <PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>DSoft.snk</AssemblyOriginatorKeyFile>
-    <DelaySign>false</DelaySign>
-    <Copyright>Copyright © 2021 DSoft</Copyright>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
@@ -28,9 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.20.1" />
-    <PackageReference Include="Grpc.Core" Version="2.45.0" />
-    <PackageReference Include="Grpc.Tools" Version="2.45.0">
+    <PackageReference Include="Google.Protobuf" Version="3.22.0" />
+    <PackageReference Include="Grpc.Core" Version="2.46.6" />
+    <PackageReference Include="Grpc.Tools" Version="2.51.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

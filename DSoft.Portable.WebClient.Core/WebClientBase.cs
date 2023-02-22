@@ -86,16 +86,18 @@ namespace DSoft.Portable.WebClient
 
         }
 
-        #endregion
+		#endregion
 
-        #region Methods
+		#region Methods
 
-        /// <summary>
-        /// Checks that the connection can be made, asyncronously
-        /// </summary>
-        /// <param name="timeout">The timeout.</param>
-        /// <returns></returns>
-        public async Task<bool> CheckCanConnectAsync(int timeout = 1, bool throwException = false)
+		/// <summary>
+		/// Checks that the connection can be made, asyncronously
+		/// </summary>
+		/// <param name="timeout">The timeout.</param>
+		/// <param name="throwException">if set to <c>true</c> [throw exception].</param>
+		/// <returns>A Task&lt;System.Boolean&gt; representing the asynchronous operation.</returns>
+		/// <exception cref="System.Exception">Not found</exception>
+		public async Task<bool> CheckCanConnectAsync(int timeout = 1, bool throwException = false)
         {
             try
             {
@@ -141,9 +143,12 @@ namespace DSoft.Portable.WebClient
         /// </summary>
         /// <returns></returns>
         public bool CheckCanConnect(int timeout = 1, bool throwException = false) => CheckCanConnectAsync(timeout, throwException).GetAwaiter().GetResult();
-       
 
-        public virtual void Dispose()
+
+		/// <summary>
+		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+		/// </summary>
+		public virtual void Dispose()
         {
            
         }

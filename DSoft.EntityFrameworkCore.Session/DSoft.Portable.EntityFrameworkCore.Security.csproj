@@ -1,20 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Authors>newky2k</Authors>
-    <Copyright>Copyright © 2021 DSoft</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/newky2k/PortableWebClient</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/newky2k/PortableWebClient</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
+    <TargetFrameworks>net6.0;net7.0;</TargetFrameworks>
     <PackageTags>Web client security entity framework</PackageTags>
-	  <PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
+	  <PackageReleaseNotes>v3.2 - Release</PackageReleaseNotes>
     <Description>Security database context classes for entity framework</Description>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>DSoft.snk</AssemblyOriginatorKeyFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
@@ -25,8 +15,12 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0" />
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('net6.0')) ">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('net7.0')) ">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>

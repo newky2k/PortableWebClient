@@ -2,8 +2,11 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <SignAssembly>false</SignAssembly>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +16,8 @@
   <ItemGroup>
     <ProjectReference Include="..\DSoft.Portable.WebClient.Grpc.Encryption\DSoft.Portable.WebClient.Grpc.Encryption.csproj" />
     <ProjectReference Include="..\DSoft.Portable.WebClient.Rest.Encryption\DSoft.Portable.WebClient.Rest.Encryption.csproj" />
+    <ProjectReference Include="..\RpcSample\RpcSample.csproj" />
+    <ProjectReference Include="..\SampleApiClient\SampleApiClient.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,8 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DSoft.System.Mvvm" Version="2.4.2109.301" />
-    <PackageReference Include="DSoft.System.Mvvm.Ui" Version="2.4.2109.301" />
+    <PackageReference Include="DSoft.System.Mvvm.Ui.Wpf" Version="3.2.2301.91" />
   </ItemGroup>
 
 </Project>

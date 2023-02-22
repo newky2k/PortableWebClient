@@ -2,17 +2,6 @@
 
   <PropertyGroup>
 	  <TargetFrameworks>netstandard2.0;net6.0;</TargetFrameworks>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>DSoft.snk</AssemblyOriginatorKeyFile>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Authors>newky2k</Authors>
-    <Company>newky2k</Company>
-	  <Copyright>Copyright © 2021 DSoft</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/newky2k/PortableWebClient</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/newky2k/PortableWebClient</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
     <PackageTags>Web Client</PackageTags>
     <Description>Core libraries for DSoft.Portable.WebClient</Description>
     <PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
