@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFrameworks>netstandard2.0;net6.0;</TargetFrameworks>
+	  <TargetFrameworks>netstandard2.0;net6.0;net8.0;</TargetFrameworks>
     <Description>
       Grpc base class library for interacting with ASP.NET Core Grpc services using Http/2 and Http 1.1
     </Description>
@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grpc.Net.Client" Version="2.51.0" />
-    <PackageReference Include="Grpc.Net.Client.Web" Version="2.51.0" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.59.0" />
+    <PackageReference Include="Grpc.Net.Client.Web" Version="2.59.0" />
   </ItemGroup>
 
   <ItemGroup>
