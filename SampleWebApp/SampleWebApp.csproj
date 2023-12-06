@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DSoft.Portable.Security.Session\DSoft.Portable.Server.Security.Core.csproj" />
     <ProjectReference Include="..\DSoft.Portable.WebClient.Encryption\DSoft.Portable.WebClient.Encryption.csproj" />
     <ProjectReference Include="..\DSoft.Portable.WebClient.Rest.Extensions\DSoft.Portable.WebClient.Rest.Extensions.csproj" />
     <ProjectReference Include="..\RpcSample\RpcSample.csproj" />
