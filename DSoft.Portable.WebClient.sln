@@ -32,6 +32,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_ci", "_ci", "{C58688C6-E10
 		azure-pipelines-mergetest.yml = azure-pipelines-mergetest.yml
 		azure-pipelines-release.yml = azure-pipelines-release.yml
 		Directory.Build.props = Directory.Build.props
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestHarness", "TestHarness\TestHarness.csproj", "{CB6E1FAA-597A-4EA7-9834-3DC940E95483}"
@@ -42,7 +43,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RpcSample", "RpcSample\RpcS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleApiClient", "SampleApiClient\SampleApiClient.csproj", "{85A9A561-02CD-41E0-A810-5EF89DB7DCEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTester", "UnitTester\UnitTester.csproj", "{950B9031-B89C-41A5-BDE5-EFAE92077EBC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTester", "UnitTester\UnitTester.csproj", "{950B9031-B89C-41A5-BDE5-EFAE92077EBC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
