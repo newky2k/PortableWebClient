@@ -35,7 +35,7 @@ namespace DSoft.Portable.WebClient.Grpc
 		/// </summary>
 		/// <value>The RPC channel.</value>
 		/// <exception cref="System.Exception">Unexpected HTTP mode for Grpc Channel</exception>
-		public GrpcChannel RPCChannel => _grpcChannelManager.ForAddress(_client.BaseUrl, _options);
+		protected GrpcChannel RPCChannel => _grpcChannelManager.ForAddress(_client.BaseUrl, _options);
 
 		/// <summary>
 		/// Gets the client version no.
