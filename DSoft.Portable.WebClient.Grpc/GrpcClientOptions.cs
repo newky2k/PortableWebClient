@@ -27,5 +27,16 @@ namespace DSoft.Portable.WebClient.Grpc
 		/// </summary>
 		public Func<HttpRequestMessage, X509Certificate2, X509Chain, SslPolicyErrors, bool> ServerCertificateCustomValidationCallback { get; set; }
 
-	}
+        /// <summary>
+        /// Gets or sets the optional URL builder (Use for Dependency Injection)
+        /// </summary>
+        /// <value>The URL builder.</value>
+        public Func<string> UrlBuilder { get; set; }
+
+        /// <summary>
+        /// Gets or sets the an optional HTTP message handler. (Use for Unit Testing)
+        /// </summary>
+        /// <value>The HTTP message handler.</value>
+        public HttpMessageHandler HttpMessageHandler { get; set; }
+    }
 }

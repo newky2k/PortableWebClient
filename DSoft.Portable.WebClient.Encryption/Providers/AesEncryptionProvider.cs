@@ -25,7 +25,16 @@ namespace DSoft.Portable.WebClient.Encryption.Providers
 		/// Gets the encryption algorithm.
 		/// </summary>
 		/// <value>The encryption algorithm.</value>
-		private SymmetricAlgorithm EncryptionAlgorithm => new AesManaged() { Mode = CipherMode.CBC };
+		private SymmetricAlgorithm EncryptionAlgorithm
+		{
+			get
+			{
+				var aesAlgorithm = Aes.Create();
+				aesAlgorithm.Mode = CipherMode.CBC;
+
+				return aesAlgorithm;
+            }
+		}
 
 
 		/// <summary>

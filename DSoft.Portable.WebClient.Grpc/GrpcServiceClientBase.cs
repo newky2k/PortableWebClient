@@ -1,6 +1,7 @@
 ﻿using Grpc.Core;
 using Grpc.Net.Client;
 using Grpc.Net.Client.Web;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -16,7 +17,6 @@ namespace DSoft.Portable.WebClient.Grpc
 		#region Fields
 		private IWebClient _client;
 		private GrpcClientOptions _options;
-
 		private readonly IGrpcChannelManager _grpcChannelManager;
 
 		#endregion
@@ -35,7 +35,7 @@ namespace DSoft.Portable.WebClient.Grpc
 		/// </summary>
 		/// <value>The RPC channel.</value>
 		/// <exception cref="System.Exception">Unexpected HTTP mode for Grpc Channel</exception>
-		internal protected GrpcChannel RPCChannel => _grpcChannelManager.ForAddress(_client.BaseUrl, _options);
+		protected GrpcChannel RPCChannel => _grpcChannelManager.ForAddress(_client.BaseUrl, _options);
 
 		/// <summary>
 		/// Gets the client version no.
@@ -78,15 +78,34 @@ namespace DSoft.Portable.WebClient.Grpc
 
 		}
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GrpcServiceClientBase"/> class.
+        /// </summary>
+        /// <param name="client">The web client.</param>
+        /// <param name="options">GrpcClient options client</param>
+        protected GrpcServiceClientBase(IWebClient client, IOptions<GrpcClientOptions> options) : this(client, new GrpcChannelManager(), options.Value)
+        {
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="GrpcServiceClientBase"/> class.
-		/// </summary>
-		/// <param name="client">The client.</param>
-		/// <param name="grpcChannelManager">The GRPC channel manager.</param>
-		/// <param name="options">GrpcClient options client</param>
-		/// <exception cref="System.ArgumentNullException">client</exception>
-		protected GrpcServiceClientBase(IWebClient client, IGrpcChannelManager grpcChannelManager, GrpcClientOptions options)
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GrpcServiceClientBase"/> class.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="grpcChannelManager">The GRPC channel manager.</param>
+        /// <param name="options">The options.</param>
+        protected GrpcServiceClientBase(IWebClient client, IGrpcChannelManager grpcChannelManager, IOptions<GrpcClientOptions> options) : this(client, grpcChannelManager, options.Value)
+        {
+
+		}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GrpcServiceClientBase"/> class.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="grpcChannelManager">The GRPC channel manager.</param>
+        /// <param name="options">GrpcClient options client</param>
+        /// <exception cref="System.ArgumentNullException">client</exception>
+        protected GrpcServiceClientBase(IWebClient client, IGrpcChannelManager grpcChannelManager, GrpcClientOptions options)
 		{
 
 			if (client == null)

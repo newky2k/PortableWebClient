@@ -18,8 +18,6 @@ The libary provides low level, bootstrapped base classes to simplify the buildin
   - Simplifies calls to the services
 - Base request and response classes
 - Generic methods and extensions for calling RESTful Web APIs
-- EF Core session
-  - Secure sessions for users
 - Secure request and response classes using a `SecurePayload`
 - Integrated encryption, with abiltiy provide override with custom implementations.
   - Uses 256-bit AES encryption by default
@@ -33,8 +31,6 @@ You know have to set an InitVector key of your own on `EncryptionProviderFactory
 
 **v3.1 and Above**  
 In v3.1 and above the InitVector key is passed explicilty to the `IEncryptionProvider` implementation when returned by `EncryptionProviderFactory.Build`.  This allows for calls to multiple services using multiple IVs.  Check out the test harness for an example.
-
-We will add a detailed migration guide to the Wiki before going stable
 
 ## Build status
 [![Build Status](https://dev.azure.com/humbatt/Daves%20Projects/_apis/build/status/PortableWebClient/PortableWebClient%20-%20Release?branchName=master)](https://dev.azure.com/humbatt/Daves%20Projects/_build/latest?definitionId=49&branchName=master)
@@ -55,3 +51,15 @@ Rest Extensions          | `DSoft.Portable.WebClient.Rest.Extensions` | [![NuGet
 EF Core Security Entities       | `DSoft.Portable.Server.Security.Core` | [![NuGet](https://img.shields.io/nuget/v/DSoft.Portable.Server.Security.Core.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/DSoft.Portable.Server.Security.Core/) | [![NuGet](https://img.shields.io/nuget/vpre/DSoft.Portable.Server.Security.Core.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/DSoft.Portable.Server.Security.Core/) |
 EF Core Secure Database contexts           | `DSoft.Portable.EntityFrameworkCore.Security` | [![NuGet](https://img.shields.io/nuget/v/DSoft.Portable.EntityFrameworkCore.Security.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/DSoft.Portable.EntityFrameworkCore.Security/) |  [![NuGet](https://img.shields.io/nuget/vpre/DSoft.Portable.EntityFrameworkCore.Security.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/DSoft.Portable.EntityFrameworkCore.Security/) |
   
+## Version History (from 4.0)
+
+- Version 4.0.0
+  	- Added support for .NET 8.0
+  	- Removed EF Core libraries
+	- Updated to last RestSharp
+	- Improved support for Dependency Injecting `GrpcClientOptions`
+	- Added custom HttpHandler to `GrpcClientOptions`
+	- Cleaned up `GrpcChannelManager` code and add support for the custom HttpHandler in `GrpcClientOptions`
+		- This works great for Testing you Grpc Services with WebApplicationFactory
+	- Updated `AesEncryptionProvider` to use Aes.Create
+	- Added Unit Test sample

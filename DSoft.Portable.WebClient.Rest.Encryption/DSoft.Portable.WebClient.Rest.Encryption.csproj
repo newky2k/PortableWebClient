@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFrameworks>netstandard2.0;net6.0;</TargetFrameworks>
+	  <TargetFrameworks>netstandard2.0;net6.0;net8.0;</TargetFrameworks>
     <Description>Encrypted communications classes for the RESRful web api client</Description>
     <PackageTags>Web Client</PackageTags>
     <PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DSoft.Portable.WebClient.Rest
@@ -13,9 +14,9 @@ namespace DSoft.Portable.WebClient.Rest
 	/// Base Service Client  class for consuming services provided by ASP.NET ApiControllers
 	/// </summary>
 	public abstract class RestServiceClientBase : IDisposable
-    {
-        #region Fields
-        private IWebClient _client;
+	{
+		#region Fields
+		private IWebClient _client;
 		#endregion
 
 		#region Properties
@@ -30,7 +31,11 @@ namespace DSoft.Portable.WebClient.Rest
 		/// Gets the rest client.
 		/// </summary>
 		/// <value>The rest client.</value>
-		protected IRestClient RestClient => new RestClient { BaseUrl = new Uri(_client.BaseUrl), Timeout = _client.TimeOut };
+		protected IRestClient RestClient => new RestClient(new Uri(_client.BaseUrl), options =>
+		{
+			options.MaxTimeout = _client.TimeOut;
+
+		});
 
 		/// <summary>
 		/// Gets the name of the Web Api Controller.
@@ -54,7 +59,7 @@ namespace DSoft.Portable.WebClient.Rest
 		/// Returns a collection of custom headers.
 		/// </summary>
 		/// <value>The custom headers.</value>
-		protected virtual ICollection<KeyValuePair<string, string>> CustomHeaders { get;  }
+		protected virtual ICollection<KeyValuePair<string, string>> CustomHeaders { get; }
 
 		/// <summary>
 		/// Gets the WebCient instancee.
@@ -69,10 +74,10 @@ namespace DSoft.Portable.WebClient.Rest
 		/// </summary>
 		/// <param name="client">The client.</param>
 		public RestServiceClientBase(IWebClient client)
-        {
-            _client = client;
+		{
+			_client = client;
 
-        }
+		}
 
 		#endregion
 
@@ -84,53 +89,51 @@ namespace DSoft.Portable.WebClient.Rest
 		/// <param name="methodName">Name of the method.</param>
 		/// <returns>System.String.</returns>
 		public string CalculateUrlForMethod(string methodName)
-        {
-            var apiPrefix = ApiPrefix;
+		{
+			var apiPrefix = ApiPrefix;
 
-            if (!string.IsNullOrEmpty(apiPrefix) && !apiPrefix.EndsWith(@"/"))
-            {
-                apiPrefix = $"{apiPrefix}/";
-            }
+			if (!string.IsNullOrEmpty(apiPrefix) && !apiPrefix.EndsWith(@"/"))
+			{
+				apiPrefix = $"{apiPrefix}/";
+			}
 
-            var url = $"{apiPrefix}{ControllerName}/{methodName}";
+			var url = $"{apiPrefix}{ControllerName}/{methodName}";
 
-            if (!string.IsNullOrWhiteSpace(Module))
-            {
-                url = $"{apiPrefix}{Module}/{ControllerName}/{methodName}";
-            }
+			if (!string.IsNullOrWhiteSpace(Module))
+			{
+				url = $"{apiPrefix}{Module}/{ControllerName}/{methodName}";
+			}
 
-            return url;
-        }
+			return url;
+		}
 
 		/// <summary>
 		/// Builds a Post Request for the method
 		/// </summary>
 		/// <param name="methodName">Name of the method.</param>
-		/// <param name="type">The data format.</param>
 		/// <returns>RestRequest.</returns>
-		protected RestRequest BuildPostRequest(string methodName, DataFormat type = DataFormat.Json)
-        {
-            var request = new RestRequest(CalculateUrlForMethod(methodName), Method.POST, type);
+		protected RestRequest BuildPostRequest(string methodName)
+		{
+			var request = new RestRequest(CalculateUrlForMethod(methodName), Method.Post);
 
-            ApplyHeaders(request);
+			ApplyHeaders(request);
 
-            return request;
-        }
+			return request;
+		}
 
 		/// <summary>
 		/// Builds a Get Request for the method
 		/// </summary>
 		/// <param name="methodName">Name of the method.</param>
-		/// <param name="type">The data format</param>
 		/// <returns>RestRequest.</returns>
-		protected RestRequest BuildGetRequest(string methodName, DataFormat type = DataFormat.Json)
-        {
-            var request = new RestRequest(CalculateUrlForMethod(methodName), Method.GET, type);
+		protected RestRequest BuildGetRequest(string methodName)
+		{
+			var request = new RestRequest(CalculateUrlForMethod(methodName), Method.Get);
 
-            ApplyHeaders(request);
+			ApplyHeaders(request);
 
-            return request;
-        }
+			return request;
+		}
 
 		/// <summary>
 		/// Execute a Request asynchronously
@@ -141,23 +144,23 @@ namespace DSoft.Portable.WebClient.Rest
 		/// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.NoServerResponseException"></exception>
 		/// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.ServerResponseFailureException"></exception>
 		/// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.DataResponseFailureException"></exception>
-		public async Task<T> ExecuteRequestAsync<T>(IRestRequest request) where T : ResponseBase
-        {
-            var result = await RestClient.ExecuteAsync<T>(request);
+		public async Task<T> ExecuteRequestAsync<T>(RestRequest request) where T : ResponseBase
+		{
+			var result = await RestClient.ExecuteAsync<T>(request);
 
-            if (!result.IsSuccessful)
-            {
-                if (result.StatusCode == 0)
-                    throw new NoServerResponseException(result.ErrorMessage, result.ErrorException);
-                else if (result.StatusCode != System.Net.HttpStatusCode.OK)
-                    throw new ServerResponseFailureException(result.StatusCode, result.ErrorMessage, result.ErrorException);
-            }
+			if (!result.IsSuccessful)
+			{
+				if (result.StatusCode == 0)
+					throw new NoServerResponseException(result.ErrorMessage, result.ErrorException);
+				else if (result.StatusCode != System.Net.HttpStatusCode.OK)
+					throw new ServerResponseFailureException(result.StatusCode, result.ErrorMessage, result.ErrorException);
+			}
 
-            if (result.Data.Success == false)
-                throw new DataResponseFailureException(result.Data.Message);
+			if (result.Data.Success == false)
+				throw new DataResponseFailureException(result.Data.Message);
 
-            return result.Data;
-        }
+			return result.Data;
+		}
 
 		/// <summary>
 		/// Execute a Post request asynchronously
@@ -170,55 +173,55 @@ namespace DSoft.Portable.WebClient.Rest
 		/// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.ServerResponseFailureException"></exception>
 		/// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.DataResponseFailureException"></exception>
 		public async Task<T> ExecutePostRequestAsync<T>(string actionName, Func<object> packetBuilder) where T : ResponseBase
-        {
-            var request = BuildPostRequest(actionName);
+		{
+			var request = BuildPostRequest(actionName);
 
-            var body = packetBuilder?.Invoke();
+			var body = packetBuilder?.Invoke();
 
-            if (body != null)
-                request.AddJsonBody(body);
+			if (body != null)
+				request.AddJsonBody(body);
 
-            var result = await RestClient.ExecuteAsync<T>(request);
+			var result = await RestClient.ExecuteAsync<T>(request);
 
-            if (!result.IsSuccessful)
-            {
-                if (result.StatusCode == 0)
-                    throw new NoServerResponseException(result.ErrorMessage, result.ErrorException);
+			if (!result.IsSuccessful)
+			{
+				if (result.StatusCode == 0)
+					throw new NoServerResponseException(result.ErrorMessage, result.ErrorException);
 
-               else if (result.StatusCode != System.Net.HttpStatusCode.OK)
-                    throw new ServerResponseFailureException(result.StatusCode, result.ErrorMessage, result.ErrorException);
-            }
+				else if (result.StatusCode != System.Net.HttpStatusCode.OK)
+					throw new ServerResponseFailureException(result.StatusCode, result.ErrorMessage, result.ErrorException);
+			}
 
-            if (!result.Data.Success)
-            {
-                throw new DataResponseFailureException(result.Data.Message);
-            }
+			if (!result.Data.Success)
+			{
+				throw new DataResponseFailureException(result.Data.Message);
+			}
 
-            return result.Data;
-        }
+			return result.Data;
+		}
 
 		/// <summary>
 		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
 		/// </summary>
 		public virtual void Dispose()
-        {
-            _client = null;
-        }
+		{
+			_client = null;
+		}
 
 		/// <summary>
 		/// Applies the headers.
 		/// </summary>
 		/// <param name="request">The request.</param>
-		public void ApplyHeaders(IRestRequest request)
-        {
-            if (CustomHeaders != null && CustomHeaders.Count > 0)
-            {
-                request.AddHeaders(CustomHeaders);
-            }
-        }
-        #endregion
+		public void ApplyHeaders(RestRequest request)
+		{
+			if (CustomHeaders != null && CustomHeaders.Count > 0)
+			{
+				request.AddHeaders(CustomHeaders);
+			}
+		}
+		#endregion
 
-    }
+	}
 
 	/// <summary>
 	/// Generic Typed version of the ServiceClientBase type
@@ -226,7 +229,7 @@ namespace DSoft.Portable.WebClient.Rest
 	/// <typeparam name="T"></typeparam>
 	/// <seealso cref="System.IDisposable" />
 	public abstract class RestServiceClientBase<T> : RestServiceClientBase where T : IWebClient
-    {
+	{
 		/// <summary>
 		/// Gets the client.
 		/// </summary>
@@ -238,9 +241,9 @@ namespace DSoft.Portable.WebClient.Rest
 		/// </summary>
 		/// <param name="client">The client.</param>
 		protected RestServiceClientBase(T client) : base(client)
-        {
+		{
 
-        }
-    } 
+		}
+	}
 
 }

@@ -55,91 +55,121 @@ namespace DSoft.Portable.WebClient.Grpc
 					channels.Remove(address);
 			}
 				
+			GrpcChannelOptions grpcChannelOptions = BuildOptions(options);
 
-			GrpcChannel channel = null;
-
-			switch (options.GrpcMode)
-			{
-				case HttpMode.Http_1_1:
-					{
-						//if a custom validator has be provided use that
-						if (options.ServerCertificateCustomValidationCallback != null)
-						{
-							var httpClientHandlerCustom = new HttpClientHandler();
-							httpClientHandlerCustom.ServerCertificateCustomValidationCallback = options.ServerCertificateCustomValidationCallback;
-
-							channel = GrpcChannel.ForAddress(address, new GrpcChannelOptions
-							{
-								HttpHandler = new GrpcWebHandler(httpClientHandlerCustom)
-							});
-						}
-						else if (options.DisableSSLCertValidation)
-						{
-							//return channel with SSL cert validation disabled
-							var httpClientHandler = new HttpClientHandler();
-#if NET6_0_OR_GREATER
-							httpClientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
-#else
-                            httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
-#endif
-
-							channel = GrpcChannel.ForAddress(address, new GrpcChannelOptions
-							{
-								HttpHandler = new GrpcWebHandler(httpClientHandler)
-							});
-							
-						}
-						else
-						{
-							//if disable SSL certifiate validation has not been set them return standard channel generator
-							channel = GrpcChannel.ForAddress(address, new GrpcChannelOptions
-							{
-								HttpHandler = new GrpcWebHandler(new HttpClientHandler())
-							});
-						}
-						break;
-					}
-				case HttpMode.Http_2_0:
-					{
-						//if a custom validator has be provided use that
-						if (options.ServerCertificateCustomValidationCallback != null)
-						{
-							var httpClientHandlerCustom = new HttpClientHandler();   
-
-							httpClientHandlerCustom.ServerCertificateCustomValidationCallback = options.ServerCertificateCustomValidationCallback;
-
-							channel = GrpcChannel.ForAddress(address, new GrpcChannelOptions() { HttpClient = new HttpClient(httpClientHandlerCustom) });
-						}
-						else if (options.DisableSSLCertValidation)
-						{
-							//return channel with SSL cert validation disabled
-							var httpClientHandler = new HttpClientHandler();
-#if NET6_0_OR_GREATER
-							httpClientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
-#else
-                            httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
-#endif
-							var httpClient = new HttpClient(httpClientHandler);
-
-							channel = GrpcChannel.ForAddress(address, new GrpcChannelOptions() { HttpClient = httpClient });
-						}
-						else
-						{
-							//if disable SSL certifiate validation has not been set them return standard channel generator
-							channel = GrpcChannel.ForAddress(address);
-						}
-						break;
-					}
-				default:
-					throw new Exception("Unexpected HTTP mode for Grpc Channel");
-
-
-
-			}
-
-			channels.Add(address, new (channel, options.GrpcMode));
+            var channel = GrpcChannel.ForAddress(address, grpcChannelOptions);
+            channels.Add(address, new (channel, options.GrpcMode));
 
 			return channel;
 		}
-	}
+
+		private GrpcChannelOptions BuildOptions(GrpcClientOptions options)
+		{
+            GrpcChannelOptions grpcChannelOptions = null;
+
+            switch (options.GrpcMode)
+            {
+                case HttpMode.Http_1_1:
+                    {
+                        if (options.HttpMessageHandler != null)
+                        {
+                            return new GrpcChannelOptions
+                            {
+                                HttpHandler = new GrpcWebHandler(options.HttpMessageHandler)
+                            };
+                        }
+
+                        //if a custom validator has be provided use that
+                        if (options.ServerCertificateCustomValidationCallback != null)
+                        {
+                            var httpClientHandlerCustom = new HttpClientHandler();
+                            httpClientHandlerCustom.ServerCertificateCustomValidationCallback = options.ServerCertificateCustomValidationCallback;
+
+                            grpcChannelOptions = new GrpcChannelOptions
+                            {
+                                HttpHandler = new GrpcWebHandler(httpClientHandlerCustom)
+                            };
+
+                        }
+                        else if (options.DisableSSLCertValidation)
+                        {
+                            //return channel with SSL cert validation disabled
+                            var httpClientHandler = new HttpClientHandler();
+#if NET6_0_OR_GREATER
+							httpClientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+#else
+                            httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
+#endif
+                            grpcChannelOptions = new GrpcChannelOptions
+                            {
+                                HttpHandler = new GrpcWebHandler(httpClientHandler)
+                            };
+
+                        }
+                        else
+                        {
+                            //if disable SSL certifiate validation has not been set them return standard channel generator
+                            grpcChannelOptions = new GrpcChannelOptions
+                            {
+                                HttpHandler = new GrpcWebHandler(new HttpClientHandler())
+                            };
+
+                        }
+                        break;
+                    }
+                case HttpMode.Http_2_0:
+                    {
+                        if (options.HttpMessageHandler != null)
+                        {
+                            return new GrpcChannelOptions()
+                            {
+                                HttpClient = new HttpClient(options.HttpMessageHandler)
+                            };
+                        }
+
+                        //if a custom validator has be provided use that
+                        if (options.ServerCertificateCustomValidationCallback != null)
+                        {
+                            var httpClientHandlerCustom = new HttpClientHandler();
+
+                            httpClientHandlerCustom.ServerCertificateCustomValidationCallback = options.ServerCertificateCustomValidationCallback;
+
+                            grpcChannelOptions = new GrpcChannelOptions()
+                            {
+                                HttpClient = new HttpClient(httpClientHandlerCustom)
+                            };
+
+                        }
+                        else if (options.DisableSSLCertValidation)
+                        {
+                            //return channel with SSL cert validation disabled
+                            var httpClientHandler = new HttpClientHandler();
+#if NET6_0_OR_GREATER
+							httpClientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+#else
+                            httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
+#endif
+                            grpcChannelOptions = new GrpcChannelOptions()
+                            {
+                                HttpClient = new HttpClient(httpClientHandler)
+                            };
+                        }
+                        else
+                        {
+                            //if disable SSL certifiate validation has not been set them return standard channel generator
+                            grpcChannelOptions = new GrpcChannelOptions();
+                        }
+                        break;
+                    }
+                default:
+                    throw new Exception("Unexpected HTTP mode for Grpc Channel");
+
+
+
+            }
+
+            return grpcChannelOptions;
+        }
+        
+    }
 }

@@ -27,7 +27,7 @@ namespace DSoft.Portable.WebClient.Rest
 		/// <returns>RestRequest.</returns>
 		public static RestRequest BuildUserPostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken)
         {
-            var request = new RestRequest(target.CalculateUrlForMethod(action), Method.POST, DataFormat.Json);
+            var request = new RestRequest(target.CalculateUrlForMethod(action), Method.Post);
 
             target.ApplyHeaders(request);
 
@@ -46,7 +46,7 @@ namespace DSoft.Portable.WebClient.Rest
 		/// <returns>RestRequest.</returns>
 		public static RestRequest BuildEmptyUserPostRequest(this RestServiceSecureClientBase target, string action, string tokenId, string encryptionToken)
         {
-            var request = new RestRequest(target.CalculateUrlForMethod(action), Method.POST, DataFormat.Json);
+            var request = new RestRequest(target.CalculateUrlForMethod(action), Method.Post);
 
             target.ApplyHeaders(request);
 
@@ -67,7 +67,7 @@ namespace DSoft.Portable.WebClient.Rest
 		/// <returns>RestRequest.</returns>
 		public static RestRequest BuildUserBinaryPostRequest(this RestServiceSecureClientBase target, string action, object data, byte[] binary, string tokenId, string encryptionToken)
         {
-            var request = new RestRequest(target.CalculateUrlForMethod(action), Method.POST, DataFormat.Json);
+            var request = new RestRequest(target.CalculateUrlForMethod(action), Method.Post);
 
             target.ApplyHeaders(request);
 
@@ -87,7 +87,7 @@ namespace DSoft.Portable.WebClient.Rest
 		/// <returns>RestRequest.</returns>
 		public static RestRequest BuildSecurePostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken)
         {
-            var request = new RestRequest(target.CalculateUrlForMethod(action), Method.POST, DataFormat.Json);
+            var request = new RestRequest(target.CalculateUrlForMethod(action), Method.Post);
 
             target.ApplyHeaders(request);
 
