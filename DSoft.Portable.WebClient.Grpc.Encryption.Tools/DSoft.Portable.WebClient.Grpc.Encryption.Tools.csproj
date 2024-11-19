@@ -1,36 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-      <TargetFrameworks>netstandard2.0; net6.0;net8.0;</TargetFrameworks>
-  </PropertyGroup>
+	<PropertyGroup>
 
-  <PropertyGroup Label="NuGet package definition" Condition=" '$(Configuration)' == 'Release' ">
-    <BuildOutputTargetFolder>build\_protobuf\</BuildOutputTargetFolder>
-    <DevelopmentDependency>true</DevelopmentDependency>
-    <NoPackageAnalysis>true</NoPackageAnalysis>
-    <PackageId>DSoft.Portable.WebClient.Grpc.Encryption.Tools</PackageId>
-    <Description>Grpc comnpiler Include files for DSoft.Portable.WebClient.Grpc.Encryption
-    </Description>
-    <PackageTags>gRPC RPC HTTP/2 Web client</PackageTags>
-	  <PackageReadmeFile>README.md</PackageReadmeFile>
-	  <PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
-  </PropertyGroup>
+	</PropertyGroup>
 
-  <ItemGroup>
-	  <None Include="..\README.md">
-		  <Pack>True</Pack>
-		  <PackagePath>\</PackagePath>
-	  </None>
-  </ItemGroup>
+	<PropertyGroup Label="NuGet package definition" Condition=" '$(Configuration)' == 'Release' ">
+		<BuildOutputTargetFolder>build\_protobuf\</BuildOutputTargetFolder>
+		<DevelopmentDependency>true</DevelopmentDependency>
+		<NoPackageAnalysis>true</NoPackageAnalysis>
+		<PackageId>DSoft.Portable.WebClient.Grpc.Encryption.Tools</PackageId>
+		<Description>
+			Grpc comnpiler Include files for DSoft.Portable.WebClient.Grpc.Encryption
+		</Description>
+		<PackageTags>gRPC RPC HTTP/2 Web client</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
+	</PropertyGroup>
 
-  <ItemGroup Label="NuGet package assets">
-    <None Pack="true" PackagePath="build\" Include="build\**\*.xml; build\**\*.props; build\**\*.targets;" />
+	<ItemGroup>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
-    <!-- Protobuf assets (for Google.Protobuf.Tools) -->
-    <_ProtoAssetName Include="securetypes;" />
-    <_Asset PackagePath="build/native/include/dsoft/protobuf/" Include="@(_ProtoAssetName->'$(Assets_ProtoInclude)%(Identity).proto')" />
+	<ItemGroup Label="NuGet package assets">
+		<None Pack="true" PackagePath="build\" Include="build\**\*.xml; build\**\*.props; build\**\*.targets;" />
 
-    <None Include="@(_Asset)" Pack="true" Visible="false" />
-	  <None Include="securetypes.proto" />
-  </ItemGroup>
+		<!-- Protobuf assets (for Google.Protobuf.Tools) -->
+		<_ProtoAssetName Include="securetypes;" />
+		<_Asset PackagePath="build/native/include/dsoft/protobuf/" Include="@(_ProtoAssetName->'$(Assets_ProtoInclude)%(Identity).proto')" />
+
+		<None Include="@(_Asset)" Pack="true" Visible="false" />
+		<None Include="securetypes.proto" />
+	</ItemGroup>
 </Project>

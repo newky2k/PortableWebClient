@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFrameworks>net9.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <SignAssembly>false</SignAssembly>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DSoft.System.Mvvm.Ui.Wpf" Version="3.2.2301.91" />
+    <PackageReference Include="DSoft.System.Mvvm.Ui.Wpf" Version="3.4.2411.191" />
   </ItemGroup>
 
 </Project>

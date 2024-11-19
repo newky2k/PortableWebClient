@@ -1,28 +1,31 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-	  <TargetFrameworks>netstandard2.0;net6.0;net8.0;</TargetFrameworks>
-    <Description>
-      RESTful client class library for interacting with ASP.NET Core RESTful Web Apis
-    </Description>
-    <PackageTags>Web Client</PackageTags>
-    <PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
-	  <PackageReadmeFile>README.md</PackageReadmeFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<Description>
+			RESTful client class library for interacting with ASP.NET Core RESTful Web Apis
+		</Description>
+		<PackageTags>Web Client</PackageTags>
+		<PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-	  <None Include="..\README.md">
-		  <Pack>True</Pack>
-		  <PackagePath>\</PackagePath>
-	  </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="RestSharp" Version="110.2.0" />
-  </ItemGroup>
+	<ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
+		<PackageReference Include="System.Text.Json" Version="9.0.0" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="RestSharp" Version="112.1.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DSoft.Portable.WebClient.Core\DSoft.Portable.WebClient.Core.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\DSoft.Portable.WebClient.Core\DSoft.Portable.WebClient.Core.csproj" />
+	</ItemGroup>
 
 </Project>
