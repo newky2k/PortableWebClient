@@ -53,6 +53,8 @@ EF Core Secure Database contexts           | `DSoft.Portable.EntityFrameworkCore
   
 ## Version History (from 4.0)
 
+- Version 4.1.0
+    - Updtated to the latest packages
 - Version 4.0.0
   	- Added support for .NET 8.0
   	- Removed EF Core libraries
