@@ -1,25 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-	  <TargetFrameworks>netstandard2.0;net6.0;net8.0;</TargetFrameworks>
-    <Description>Extensions to the Rest to RestServiceClientBase
-    </Description>
-    <PackageTags>Web Client RestFul</PackageTags>
-    <PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
-	<PackageReadmeFile>README.md</PackageReadmeFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		
+		<Description>
+			Extensions to the Rest to RestServiceClientBase
+		</Description>
+		<PackageTags>Web Client RestFul</PackageTags>
+		<PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-	  <None Include="..\README.md">
-		  <Pack>True</Pack>
-		  <PackagePath>\</PackagePath>
-	  </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DSoft.Portable.WebClient.Encryption\DSoft.Portable.WebClient.Encryption.csproj" />
-    <ProjectReference Include="..\DSoft.Portable.WebClient.Rest.Encryption\DSoft.Portable.WebClient.Rest.Encryption.csproj" />
-    <ProjectReference Include="..\DSoft.Portable.WebClient.Rest\DSoft.Portable.WebClient.Rest.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\DSoft.Portable.WebClient.Encryption\DSoft.Portable.WebClient.Encryption.csproj" />
+		<ProjectReference Include="..\DSoft.Portable.WebClient.Rest.Encryption\DSoft.Portable.WebClient.Rest.Encryption.csproj" />
+		<ProjectReference Include="..\DSoft.Portable.WebClient.Rest\DSoft.Portable.WebClient.Rest.csproj" />
+	</ItemGroup>
 
 </Project>

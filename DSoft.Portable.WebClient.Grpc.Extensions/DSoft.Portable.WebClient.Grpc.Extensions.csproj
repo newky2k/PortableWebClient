@@ -1,27 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net6.0;net8.0;</TargetFrameworks>
-    <Description>
-      Extension classes for DSoft.Portable.WebClient.Grpc
-    </Description>
-    <PackageTags>Web Client</PackageTags>
-    <PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<Description>
+			Extension classes for DSoft.Portable.WebClient.Grpc
+		</Description>
+		<PackageTags>Web Client</PackageTags>
+		<PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DSoft.Portable.WebClient.Grpc\DSoft.Portable.WebClient.Grpc.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\DSoft.Portable.WebClient.Grpc\DSoft.Portable.WebClient.Grpc.csproj" />
+	</ItemGroup>
 </Project>

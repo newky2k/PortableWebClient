@@ -1,39 +1,38 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-	  <TargetFrameworks>netstandard2.0;net6.0;net8.0;</TargetFrameworks>
-    <Description>Encrypted payload communications classes for the Grpc client</Description>
-    <PackageTags>Web Client Grpc</PackageTags>
-	  <PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
-	  <PackageReadmeFile>README.md</PackageReadmeFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<Description>Encrypted payload communications classes for the Grpc client</Description>
+		<PackageTags>Web Client Grpc</PackageTags>
+		<PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-	  <None Include="..\README.md">
-		  <Pack>True</Pack>
-		  <PackagePath>\</PackagePath>
-	  </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.25.1" />
-    <PackageReference Include="Grpc.Core" Version="2.46.6" />
-    <PackageReference Include="Grpc.Tools" Version="2.59.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Google.Protobuf" Version="3.28.3" />
+		<PackageReference Include="Grpc.Core" Version="2.46.6" />
+		<PackageReference Include="Grpc.Tools" Version="2.67.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Remove="Protos\securetypes.proto" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="Protos\securetypes.proto" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Protobuf Include="Protos\securetypes.proto" GrpcServices="Both" />
-  </ItemGroup>
+	<ItemGroup>
+		<Protobuf Include="Protos\securetypes.proto" GrpcServices="Both" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DSoft.Portable.WebClient.Encryption\DSoft.Portable.WebClient.Encryption.csproj" />
-    <ProjectReference Include="..\DSoft.Portable.WebClient.Grpc\DSoft.Portable.WebClient.Grpc.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\DSoft.Portable.WebClient.Encryption\DSoft.Portable.WebClient.Encryption.csproj" />
+		<ProjectReference Include="..\DSoft.Portable.WebClient.Grpc\DSoft.Portable.WebClient.Grpc.csproj" />
+	</ItemGroup>
 </Project>

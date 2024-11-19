@@ -1,18 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-	  <TargetFrameworks>netstandard2.0;net6.0;net8.0;</TargetFrameworks>
-    <PackageTags>Web Client</PackageTags>
-    <Description>Core libraries for DSoft.Portable.WebClient</Description>
-    <PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
-	  <PackageReadmeFile>README.md</PackageReadmeFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<PackageTags>Web Client</PackageTags>
+		<Description>Core libraries for DSoft.Portable.WebClient</Description>
+		<PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-	  <None Include="..\README.md">
-		  <Pack>True</Pack>
-		  <PackagePath>\</PackagePath>
-	  </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
 </Project>
