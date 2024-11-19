@@ -21,13 +21,19 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   releaseSuffix: ''
-
+  netVersion: '9.x'
 
 name: 4.1.$(date:yyMM).$(date:dd)$(rev:r)
 
 steps:  
 - task: NuGetToolInstaller@1
   displayName: Install Latest Nuget
+
+- task: UseDotNet@2
+  displayName: 'Install .NET sdk'
+  inputs:
+    packageType: 'sdk'
+    version: $(netVersion)
 
 - task: DotNetCoreCLI@2
   displayName: Restore Packages
