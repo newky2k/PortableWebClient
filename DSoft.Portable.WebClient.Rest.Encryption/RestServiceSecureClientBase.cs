@@ -1,4 +1,5 @@
 ﻿using DSoft.Portable.WebClient.Encryption;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,48 +12,53 @@ namespace DSoft.Portable.WebClient.Rest.Encryption
 	/// <seealso cref="DSoft.Portable.WebClient.Rest.RestServiceClientBase" />
 	public abstract class RestServiceSecureClientBase : RestServiceClientBase
     {
-		/// <summary>
-		/// Gets the initialize vector.
-		/// </summary>
-		/// <value>The initialize vector.</value>
-		public string InitVector => ((ISecureWebClient)WebClient).InitVector;
+        #region Fields
+        private readonly IIVKeyProvider _initVectorProvider;
 
-		/// <summary>
-		/// Gets the size of the key.
-		/// </summary>
-		/// <value>The size of the key.</value>
-		public KeySize KeySize => ((ISecureWebClient)WebClient).KeySize;
+        #endregion
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="RestServiceSecureClientBase"/> class.
-		/// </summary>
-		/// <param name="client">The client.</param>
-		protected RestServiceSecureClientBase(ISecureWebClient client) : base(client)
+        #region Properties
+
+        /// <summary>
+        /// Gets the initialize vector.
+        /// </summary>
+        /// <value>The initialize vector.</value>
+        public string InitVector => _initVectorProvider.InitVector;
+
+        /// <summary>
+        /// Gets the size of the key.
+        /// </summary>
+        /// <value>The size of the key.</value>
+        public KeySize KeySize => ((SecureRestClientOptions)Options).KeySize;
+
+
+        #endregion
+
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RestServiceSecureClientBase" /> class.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <param name="initVectorProvider">The initialize vector provider.</param>
+        protected RestServiceSecureClientBase(IOptions<SecureRestClientOptions> options, IIVKeyProvider initVectorProvider) : this(options.Value, initVectorProvider)
         {
-
+            _initVectorProvider = initVectorProvider;
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RestServiceSecureClientBase" /> class.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <param name="initVectorProvider">The initialize vector provider.</param>
+        protected RestServiceSecureClientBase(SecureRestClientOptions options, IIVKeyProvider initVectorProvider) : base(options)
+        {
+            _initVectorProvider = initVectorProvider;
+        }
+
+        #endregion
+
     }
 
-	/// <summary>
-	/// Secure base service class
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <seealso cref="DSoft.Portable.WebClient.Rest.RestServiceClientBase" />
-	public abstract class RestServiceSecureClientBase<T> : RestServiceSecureClientBase where T : ISecureWebClient
-    {
-		/// <summary>
-		/// Gets the client.
-		/// </summary>
-		/// <value>The client.</value>
-		protected T Client => (T)WebClient;
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="RestServiceSecureClientBase{T}"/> class.
-		/// </summary>
-		/// <param name="client">The client.</param>
-		protected RestServiceSecureClientBase(T client) : base(client)
-        {
-
-        }
-    }
 }

@@ -1,7 +1,10 @@
-﻿using DSoft.Portable.WebClient.Core.Exceptions;
+﻿using DSoft.Portable.WebClient.Core;
+using DSoft.Portable.WebClient.Core.Exceptions;
+using Microsoft.Extensions.Options;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -13,27 +16,34 @@ namespace DSoft.Portable.WebClient.Rest
 	/// <summary>
 	/// Base Service Client  class for consuming services provided by ASP.NET ApiControllers
 	/// </summary>
-	public abstract class RestServiceClientBase : IDisposable
+	public abstract class RestServiceClientBase
 	{
 		#region Fields
-		private IWebClient _client;
-		#endregion
+		private readonly RestClientOptions _options;
+        private readonly CookieContainer _cookieManager;
+        #endregion
 
-		#region Properties
+        #region Properties
 
-		/// <summary>
-		/// Gets the client version no.
-		/// </summary>
-		/// <value>The client version no.</value>
-		protected string ClientVersionNo => WebClient.ClientVersionNo;
+        /// <summary>
+        /// Gets the options provided to the client
+        /// </summary>
+        /// <value>The options.</value>
+        public RestClientOptions Options => _options;
+
+        /// <summary>
+        /// Gets the client version no.
+        /// </summary>
+        /// <value>The client version no.</value>
+        protected string ClientVersionNo => _options.ClientVersionNo;
 
 		/// <summary>
 		/// Gets the rest client.
 		/// </summary>
 		/// <value>The rest client.</value>
-		protected IRestClient RestClient => new RestClient(new Uri(_client.BaseUrl), options =>
+		protected IRestClient RestClient => new RestClient(_options.BaseUrl, options =>
 		{
-			options.MaxTimeout = _client.TimeOut;
+			options.Timeout = _options.TimeOut;
 
 		});
 
@@ -61,34 +71,38 @@ namespace DSoft.Portable.WebClient.Rest
 		/// <value>The custom headers.</value>
 		protected virtual ICollection<KeyValuePair<string, string>> CustomHeaders { get; }
 
-		/// <summary>
-		/// Gets the WebCient instancee.
-		/// </summary>
-		/// <value>The web client.</value>
-		public IWebClient WebClient => _client;
-		#endregion
+        #endregion
 
-		#region Constructors
-		/// <summary>
-		/// Initializes a new instance of the <see cref="RestServiceClientBase" /> class.
-		/// </summary>
-		/// <param name="client">The client.</param>
-		public RestServiceClientBase(IWebClient client)
-		{
-			_client = client;
+        #region Constructors
 
-		}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RestServiceClientBase"/> class.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        protected RestServiceClientBase(IOptions<RestClientOptions> options) : this(options.Value)
+        {
+				
+        }
 
-		#endregion
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RestServiceClientBase"/> class.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        protected RestServiceClientBase(RestClientOptions options)
+        {
 
-		#region Methods
+        }
 
-		/// <summary>
-		/// Calculates the URL for method based on BaseUrl of the Client, the controller name and the method name
-		/// </summary>
-		/// <param name="methodName">Name of the method.</param>
-		/// <returns>System.String.</returns>
-		public string CalculateUrlForMethod(string methodName)
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Calculates the URL for method based on BaseUrl of the Client, the controller name and the method name
+        /// </summary>
+        /// <param name="methodName">Name of the method.</param>
+        /// <returns>System.String.</returns>
+        public string CalculateUrlForMethod(string methodName)
 		{
 			var apiPrefix = ApiPrefix;
 
@@ -201,14 +215,6 @@ namespace DSoft.Portable.WebClient.Rest
 		}
 
 		/// <summary>
-		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-		/// </summary>
-		public virtual void Dispose()
-		{
-			_client = null;
-		}
-
-		/// <summary>
 		/// Applies the headers.
 		/// </summary>
 		/// <param name="request">The request.</param>
@@ -221,29 +227,6 @@ namespace DSoft.Portable.WebClient.Rest
 		}
 		#endregion
 
-	}
-
-	/// <summary>
-	/// Generic Typed version of the ServiceClientBase type
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <seealso cref="System.IDisposable" />
-	public abstract class RestServiceClientBase<T> : RestServiceClientBase where T : IWebClient
-	{
-		/// <summary>
-		/// Gets the client.
-		/// </summary>
-		/// <value>The client.</value>
-		protected T Client => (T)WebClient;
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="RestServiceClientBase{T}"/> class.
-		/// </summary>
-		/// <param name="client">The client.</param>
-		protected RestServiceClientBase(T client) : base(client)
-		{
-
-		}
 	}
 
 }

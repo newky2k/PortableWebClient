@@ -21,11 +21,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
+    <PackageReference Include="DSoft.System.Mvvm.Ui.Wpf" Version="3.4.2411.191" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DSoft.System.Mvvm.Ui.Wpf" Version="3.4.2411.191" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

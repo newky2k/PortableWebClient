@@ -93,7 +93,7 @@ namespace DSoft.Portable.WebClient.Rest
 
             var fReq = new SecureRequest()
             {
-                ClientVersionNo = target.WebClient.ClientVersionNo,
+                ClientVersionNo = target.Options.ClientVersionNo,
                 Id = tokenId,
                 Payload = new SecurePayload(data, encryptionToken, target.InitVector, target.KeySize),
             };
@@ -119,7 +119,7 @@ namespace DSoft.Portable.WebClient.Rest
         {
             return new SecureRequest()
             {
-                ClientVersionNo = target.WebClient.ClientVersionNo,
+                ClientVersionNo = target.Options.ClientVersionNo,
                 Id = tokenId,
                 Payload = new SecurePayload(encryptionToken, target.InitVector, target.KeySize),
             };
@@ -137,7 +137,7 @@ namespace DSoft.Portable.WebClient.Rest
         {
             return new SecureRequest()
             {
-                ClientVersionNo = target.WebClient.ClientVersionNo,
+                ClientVersionNo = target.Options.ClientVersionNo,
                 Id = tokenId,
                 Payload = new SecurePayload(data, encryptionToken, target.InitVector, target.KeySize),
             };
@@ -156,7 +156,7 @@ namespace DSoft.Portable.WebClient.Rest
         {
             var request = new SecureBinaryRequest()
             {
-                ClientVersionNo = target.WebClient.ClientVersionNo,
+                ClientVersionNo = target.Options.ClientVersionNo,
                 Id = tokenId,
                 Payload = new SecurePayload(data, encryptionToken, target.InitVector, target.KeySize),
             };

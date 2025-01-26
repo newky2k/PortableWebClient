@@ -38,5 +38,11 @@ namespace DSoft.Portable.WebClient.Grpc
         /// </summary>
         /// <value>The HTTP message handler.</value>
         public HttpMessageHandler HttpMessageHandler { get; set; }
+
+        /// <summary>
+        /// Gets the client version no.
+        /// </summary>
+        /// <value>The client version no.</value>
+        public string ClientVersionNo { get; }
     }
 }
