@@ -40,17 +40,74 @@ namespace DSoft.Portable.WebClient.Rest
 		/// Gets the rest client.
 		/// </summary>
 		/// <value>The rest client.</value>
-		protected virtual IRestClient RestClient => new RestClient(_options.BaseUrl, options =>
+		protected virtual IRestClient RestClient
 		{
-			options.Timeout = _options.TimeOut;
+            get 
+            {
 
-		});
+                var options = new RestSharp.RestClientOptions()
+                {
+                    BaseUrl = _options.BaseUrl,
+                    Timeout = _options.TimeOut,
 
-		/// <summary>
-		/// Gets the name of the Web Api Controller.
-		/// </summary>
-		/// <value>The name of the controller.</value>
-		protected abstract string ControllerName { get; }
+                };
+
+                if (_options.CookieContainer != null)
+                {
+                    options.CookieContainer = _options.CookieContainer;
+
+                    return new RestClient(AuthenticatedClient, options) as IRestClient;
+                }
+                else
+                {
+                    return new RestClient(options) as IRestClient;
+                }
+
+            }
+		}
+
+        /// <summary>
+        /// Gets and authenticated client with the custom cookie manager
+        /// </summary>
+        /// <value>
+        /// The authenticated client.
+        /// </value>
+        protected HttpClient AuthenticatedClient
+        {
+            get
+            {
+                var handler = new HttpClientHandler { CookieContainer = _options.CookieContainer };
+                var client = new HttpClient(handler);
+
+                return client;
+            }
+        }
+
+        /// <summary>
+        /// Custom Cookie Manager
+        /// </summary>
+        protected ICookieManager CookieManager
+        {
+            get
+            {
+                if (_options.CookieContainer == null)
+                    return null;
+
+                if (_options.CookieContainer is ICookieManager cm)
+                {
+                    return cm;
+                }
+
+                return null;
+
+            }
+        }
+
+        /// <summary>
+        /// Gets the name of the Web Api Controller.
+        /// </summary>
+        /// <value>The name of the controller.</value>
+        protected abstract string ControllerName { get; }
 
 		/// <summary>
 		/// Optional api module name if the api has been modularized  /api/module/controller
@@ -183,7 +240,7 @@ namespace DSoft.Portable.WebClient.Rest
         /// </summary>
         /// <param name="request">The request.</param>
         /// <param name="customHeaders">Optional custom headers.</param>
-        private void ApplyHeaders(RestRequest request, Dictionary<string, string> customHeaders = null)
+        public void ApplyHeaders(RestRequest request, Dictionary<string, string> customHeaders = null)
         {
             if (customHeaders != null && customHeaders.Count > 0)
             {
@@ -201,7 +258,7 @@ namespace DSoft.Portable.WebClient.Rest
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
         /// <exception cref="System.Exception">Unexpected response</exception>
-        protected async Task<T> ExecuteGetAsync<T>(string actionName, string controllerOverride = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
+        public async Task<T> ExecuteGetAsync<T>(string actionName, string controllerOverride = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -248,7 +305,7 @@ namespace DSoft.Portable.WebClient.Rest
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
         /// <exception cref="System.Exception">Unexpected response</exception>
-        protected async Task<T> ExecutePostAsync<T, T2>(Guid connectionId, string actionName, T2 payload, string controllerOverride = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
+        public async Task<T> ExecutePostAsync<T, T2>(Guid connectionId, string actionName, T2 payload, string controllerOverride = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
         {
             var request = BuildPostRequest(actionName, controllerOverride, headers);
 
