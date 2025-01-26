@@ -20,7 +20,6 @@ namespace DSoft.Portable.WebClient.Rest
 	{
 		#region Fields
 		private readonly RestClientOptions _options;
-        private readonly CookieContainer _cookieManager;
         #endregion
 
         #region Properties
@@ -41,7 +40,7 @@ namespace DSoft.Portable.WebClient.Rest
 		/// Gets the rest client.
 		/// </summary>
 		/// <value>The rest client.</value>
-		protected IRestClient RestClient => new RestClient(_options.BaseUrl, options =>
+		protected virtual IRestClient RestClient => new RestClient(_options.BaseUrl, options =>
 		{
 			options.Timeout = _options.TimeOut;
 
@@ -63,13 +62,13 @@ namespace DSoft.Portable.WebClient.Rest
 		/// Gets the API prefix inserted before the controller name E.g. api/controller/method
 		/// </summary>
 		/// <value>The api prefix - default: api</value>
-		protected virtual string ApiPrefix => "api";
+		protected virtual string ApiPrefix => "";
 
-		/// <summary>
-		/// Returns a collection of custom headers.
-		/// </summary>
-		/// <value>The custom headers.</value>
-		protected virtual ICollection<KeyValuePair<string, string>> CustomHeaders { get; }
+        /// <summary>
+        /// Gets the API prefix inserted before the controller name E.g. api/controller/method
+        /// </summary>
+        /// <value>The api prefix - default: api</value>
+        protected virtual string ServiceName => "";
 
         #endregion
 
@@ -98,11 +97,13 @@ namespace DSoft.Portable.WebClient.Rest
         #region Methods
 
         /// <summary>
-        /// Calculates the URL for method based on BaseUrl of the Client, the controller name and the method name
+        /// Calculates the URL for method.
         /// </summary>
         /// <param name="methodName">Name of the method.</param>
-        /// <returns>System.String.</returns>
-        public string CalculateUrlForMethod(string methodName)
+        /// <param name="parameterString">The parameter string.</param>
+        /// <param name="controllerOverride">The controller override.</param>
+        /// <returns></returns>
+        public string CalculateUrlForMethod(string methodName, string parameterString, string controllerOverride = null)
 		{
 			var apiPrefix = ApiPrefix;
 
@@ -111,120 +112,169 @@ namespace DSoft.Portable.WebClient.Rest
 				apiPrefix = $"{apiPrefix}/";
 			}
 
-			var url = $"{apiPrefix}{ControllerName}/{methodName}";
+            var baseEndpointService = ApiPrefix;
+
+            if (!string.IsNullOrWhiteSpace(ServiceName))
+            {
+                baseEndpointService = $"{apiPrefix}/{ServiceName}/";
+            }
+
+            var controllerComponent = ControllerName;
+
+            if (!string.IsNullOrWhiteSpace(controllerOverride))
+            {
+                controllerComponent = controllerOverride;
+            }
+
+            var url = $"{baseEndpointService}{controllerComponent}/{methodName}";
 
 			if (!string.IsNullOrWhiteSpace(Module))
 			{
-				url = $"{apiPrefix}{Module}/{ControllerName}/{methodName}";
+				url = $"{baseEndpointService}{Module}/{controllerComponent}/{methodName}";
 			}
 
-			return url;
+            if (!string.IsNullOrWhiteSpace(parameterString))
+            {
+                url = $"{url}{parameterString}";
+            }
+
+            return url;
 		}
 
-		/// <summary>
-		/// Builds a Post Request for the method
-		/// </summary>
-		/// <param name="methodName">Name of the method.</param>
-		/// <returns>RestRequest.</returns>
-		protected RestRequest BuildPostRequest(string methodName)
-		{
-			var request = new RestRequest(CalculateUrlForMethod(methodName), Method.Post);
+        /// <summary>
+        /// Builds a Post Request for the method
+        /// </summary>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="controllerOverride">The controller override.</param>
+        /// <param name="headers">The headers.</param>
+        /// <returns>
+        /// RestRequest.
+        /// </returns>
+        protected RestRequest BuildPostRequest(string methodName, string controllerOverride = null, Dictionary<string, string> headers = null)
+        {
+            var request = new RestRequest(CalculateUrlForMethod(methodName, null, controllerOverride), Method.Post);
 
-			ApplyHeaders(request);
+            ApplyHeaders(request, headers);
 
-			return request;
-		}
+            return request;
+        }
 
-		/// <summary>
-		/// Builds a Get Request for the method
-		/// </summary>
-		/// <param name="methodName">Name of the method.</param>
-		/// <returns>RestRequest.</returns>
-		protected RestRequest BuildGetRequest(string methodName)
-		{
-			var request = new RestRequest(CalculateUrlForMethod(methodName), Method.Get);
+        /// <summary>
+        /// Builds a Get Request for the method
+        /// </summary>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="parameterString">The parameter string.</param>
+        /// <param name="controllerOverride">The controller override.</param>
+        /// <param name="headers">The headers.</param>
+        /// <returns>
+        /// RestRequest.
+        /// </returns>
+        protected RestRequest BuildGetRequest(string methodName, string parameterString, string controllerOverride = null, Dictionary<string, string> headers = null)
+        {
+            var request = new RestRequest(CalculateUrlForMethod(methodName, parameterString, controllerOverride), Method.Get);
 
-			ApplyHeaders(request);
+            ApplyHeaders(request, headers);
 
-			return request;
-		}
+            return request;
+        }
 
-		/// <summary>
-		/// Execute a Request asynchronously
-		/// </summary>
-		/// <typeparam name="T">Response type</typeparam>
-		/// <param name="request">Request</param>
-		/// <returns>A Task&lt;T&gt; representing the asynchronous operation.</returns>
-		/// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.NoServerResponseException"></exception>
-		/// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.ServerResponseFailureException"></exception>
-		/// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.DataResponseFailureException"></exception>
-		public async Task<T> ExecuteRequestAsync<T>(RestRequest request) where T : ResponseBase
-		{
-			var result = await RestClient.ExecuteAsync<T>(request);
+        /// <summary>
+        /// Applies any custom headers.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="customHeaders">Optional custom headers.</param>
+        private void ApplyHeaders(RestRequest request, Dictionary<string, string> customHeaders = null)
+        {
+            if (customHeaders != null && customHeaders.Count > 0)
+            {
+                request.AddHeaders(customHeaders);
+            }
+        }
 
-			if (!result.IsSuccessful)
-			{
-				if (result.StatusCode == 0)
-					throw new NoServerResponseException(result.ErrorMessage, result.ErrorException);
-				else if (result.StatusCode != System.Net.HttpStatusCode.OK)
-					throw new ServerResponseFailureException(result.StatusCode, result.ErrorMessage, result.ErrorException);
-			}
+        /// <summary>
+        /// Executes the an anonymous get call
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="actionName">Name of the action.</param>
+        /// <param name="controllerOverride">The controller override.</param>
+        /// <param name="headers">The headers.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Unexpected response</exception>
+        protected async Task<T> ExecuteGetAsync<T>(string actionName, string controllerOverride = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var request = BuildGetRequest(actionName, null, controllerOverride, headers);
 
-			if (result.Data.Success == false)
-				throw new DataResponseFailureException(result.Data.Message);
+                var result = await RestClient.ExecuteAsync<T>(request, cancellationToken: cancellationToken);
 
-			return result.Data;
-		}
+                if (!result.IsSuccessful)
+                {
+                    if (result.StatusCode == 0)
+                    {
+                        throw new NoServerResponseException(result.ErrorMessage, result.ErrorException);
+                    }
+                    else if (result.StatusCode != System.Net.HttpStatusCode.OK)
+                    {
+                        throw new ServerResponseFailureException(result.StatusCode, result.ErrorMessage, result.ErrorException);
+                    }
+                    else
+                    {
+                        throw new Exception("Unexpected response");
+                    }
+                }
 
-		/// <summary>
-		/// Execute a Post request asynchronously
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="actionName">Controller action name</param>
-		/// <param name="packetBuilder">Function to buile request body object</param>
-		/// <returns>A Task&lt;T&gt; representing the asynchronous operation.</returns>
-		/// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.NoServerResponseException"></exception>
-		/// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.ServerResponseFailureException"></exception>
-		/// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.DataResponseFailureException"></exception>
-		public async Task<T> ExecutePostRequestAsync<T>(string actionName, Func<object> packetBuilder) where T : ResponseBase
-		{
-			var request = BuildPostRequest(actionName);
+                return result.Data;
+            }
+            catch (Exception)
+            {
 
-			var body = packetBuilder?.Invoke();
+                throw;
+            }
 
-			if (body != null)
-				request.AddJsonBody(body);
+        }
 
-			var result = await RestClient.ExecuteAsync<T>(request);
+        /// <summary>
+        /// Executes the an anonymous get call
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T2">The type of the 2.</typeparam>
+        /// <param name="connectionId">The connection identifier.</param>
+        /// <param name="actionName">Name of the action.</param>
+        /// <param name="payload">The payload.</param>
+        /// <param name="controllerOverride">The controller override.</param>
+        /// <param name="headers">The headers.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Unexpected response</exception>
+        protected async Task<T> ExecutePostAsync<T, T2>(Guid connectionId, string actionName, T2 payload, string controllerOverride = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
+        {
+            var request = BuildPostRequest(actionName, controllerOverride, headers);
 
-			if (!result.IsSuccessful)
-			{
-				if (result.StatusCode == 0)
-					throw new NoServerResponseException(result.ErrorMessage, result.ErrorException);
+            request.AddBody(payload);
 
-				else if (result.StatusCode != System.Net.HttpStatusCode.OK)
-					throw new ServerResponseFailureException(result.StatusCode, result.ErrorMessage, result.ErrorException);
-			}
+            var result = await RestClient.ExecuteAsync<T>(request, cancellationToken: cancellationToken);
 
-			if (!result.Data.Success)
-			{
-				throw new DataResponseFailureException(result.Data.Message);
-			}
+            if (!result.IsSuccessful)
+            {
+                if (result.StatusCode == 0)
+                {
+                    throw new NoServerResponseException(result.ErrorMessage, result.ErrorException);
+                }
+                else if (result.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    throw new ServerResponseFailureException(result.StatusCode, result.ErrorMessage, result.ErrorException);
+                }
+                else
+                {
+                    throw new Exception("Unexpected response");
+                }
+            }
 
-			return result.Data;
-		}
+            return result.Data;
+        }
 
-		/// <summary>
-		/// Applies the headers.
-		/// </summary>
-		/// <param name="request">The request.</param>
-		public void ApplyHeaders(RestRequest request)
-		{
-			if (CustomHeaders != null && CustomHeaders.Count > 0)
-			{
-				request.AddHeaders(CustomHeaders);
-			}
-		}
 		#endregion
 
 	}

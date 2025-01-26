@@ -23,7 +23,7 @@ variables:
   releaseSuffix: ''
   netVersion: '9.x'
 
-name: 4.1.$(date:yyMM).$(date:dd)$(rev:r)
+name: 5.0.$(date:yyMM).$(date:dd)$(rev:r)
 
 steps:  
 - task: NuGetToolInstaller@1

@@ -34,7 +34,6 @@ namespace DSoft.Portable.WebClient.Rest.Encryption
 
         #endregion
 
-
         #region Constructors
 
         /// <summary>
