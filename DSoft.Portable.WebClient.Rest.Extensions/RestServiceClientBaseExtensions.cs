@@ -190,7 +190,7 @@ namespace DSoft.Portable.WebClient.Rest
 
             target.ApplyHeaders(request);
 
-            var result = await target.ExecutePostAsync<SecureResponse>(request);
+            var result = await target.ExecuteRequestAsync<SecureResponse>(request);
 
             if (result.Success == false)
                 throw new Exception(result.Message);

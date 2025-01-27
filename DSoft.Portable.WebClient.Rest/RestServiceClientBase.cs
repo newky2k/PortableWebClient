@@ -258,11 +258,11 @@ namespace DSoft.Portable.WebClient.Rest
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
         /// <exception cref="System.Exception">Unexpected response</exception>
-        public async Task<T> ExecuteGetAsync<T>(string actionName, string controllerOverride = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
+        public async Task<T> ExecuteGetAsync<T>(string actionName, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
         {
             try
             {
-                var request = BuildGetRequest(actionName, null, controllerOverride, headers);
+                var request = BuildGetRequest(actionName, parameterString, controllerOverride, headers);
 
                 var result = await RestClient.ExecuteAsync<T>(request, cancellationToken: cancellationToken);
 
@@ -272,13 +272,13 @@ namespace DSoft.Portable.WebClient.Rest
                     {
                         throw new NoServerResponseException(result.ErrorMessage, result.ErrorException);
                     }
+                    else if (result.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        throw new UnauthorisedException();
+                    }
                     else if (result.StatusCode != System.Net.HttpStatusCode.OK)
                     {
                         throw new ServerResponseFailureException(result.StatusCode, result.ErrorMessage, result.ErrorException);
-                    }
-                    else
-                    {
-                        throw new Exception("Unexpected response");
                     }
                 }
 
@@ -305,7 +305,7 @@ namespace DSoft.Portable.WebClient.Rest
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
         /// <exception cref="System.Exception">Unexpected response</exception>
-        public async Task<T> ExecutePostAsync<T, T2>(Guid connectionId, string actionName, T2 payload, string controllerOverride = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
+        public async Task<T> ExecutePostAsync<T, T2>(string actionName, T2 payload, string controllerOverride = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
         {
             var request = BuildPostRequest(actionName, controllerOverride, headers);
 
@@ -319,21 +319,100 @@ namespace DSoft.Portable.WebClient.Rest
                 {
                     throw new NoServerResponseException(result.ErrorMessage, result.ErrorException);
                 }
+                else if (result.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    throw new UnauthorisedException();
+                }
                 else if (result.StatusCode != System.Net.HttpStatusCode.OK)
                 {
                     throw new ServerResponseFailureException(result.StatusCode, result.ErrorMessage, result.ErrorException);
-                }
-                else
-                {
-                    throw new Exception("Unexpected response");
                 }
             }
 
             return result.Data;
         }
 
-		#endregion
+        /// <summary>
+        /// Execute a Request asynchronously
+        /// </summary>
+        /// <typeparam name="T">Response type</typeparam>
+        /// <param name="request">Request</param>
+        /// <returns>A Task&lt;T&gt; representing the asynchronous operation.</returns>
+        /// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.NoServerResponseException"></exception>
+        /// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.ServerResponseFailureException"></exception>
+        /// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.DataResponseFailureException"></exception>
+        public async Task<T> ExecuteRequestAsync<T>(RestRequest request) where T : ResponseBase
+        {
+            var result = await RestClient.ExecuteAsync<T>(request);
 
-	}
+            if (!result.IsSuccessful)
+            {
+                if (result.StatusCode == 0)
+                {
+                    throw new NoServerResponseException(result.ErrorMessage, result.ErrorException);
+                }
+                else if (result.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    throw new UnauthorisedException();
+                }
+                else if (result.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    throw new ServerResponseFailureException(result.StatusCode, result.ErrorMessage, result.ErrorException);
+                }
+            }
+
+            if (result.Data.Success == false)
+                throw new DataResponseFailureException(result.Data.Message);
+
+            return result.Data;
+        }
+
+        /// <summary>
+        /// Execute a Post request asynchronously
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="actionName">Controller action name</param>
+        /// <param name="packetBuilder">Function to buile request body object</param>
+        /// <returns>A Task&lt;T&gt; representing the asynchronous operation.</returns>
+        /// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.NoServerResponseException"></exception>
+        /// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.ServerResponseFailureException"></exception>
+        /// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.DataResponseFailureException"></exception>
+        public async Task<T> ExecutePostRequestAsync<T>(string actionName, Func<object> packetBuilder) where T : ResponseBase
+        {
+            var request = BuildPostRequest(actionName);
+
+            var body = packetBuilder?.Invoke();
+
+            if (body != null)
+                request.AddJsonBody(body);
+
+            var result = await RestClient.ExecuteAsync<T>(request);
+
+            if (!result.IsSuccessful)
+            {
+                if (result.StatusCode == 0)
+                {
+                    throw new NoServerResponseException(result.ErrorMessage, result.ErrorException);
+                }
+                else if (result.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    throw new UnauthorisedException();
+                }
+                else if (result.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    throw new ServerResponseFailureException(result.StatusCode, result.ErrorMessage, result.ErrorException);
+                }
+            }
+
+            if (!result.Data.Success)
+            {
+                throw new DataResponseFailureException(result.Data.Message);
+            }
+
+            return result.Data;
+        }
+        #endregion
+
+    }
 
 }
