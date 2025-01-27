@@ -20,7 +20,7 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  releaseSuffix: ''
+  releaseSuffix: '-prerelease'
   netVersion: '9.x'
 
 name: 5.0.$(date:yyMM).$(date:dd)$(rev:r)
