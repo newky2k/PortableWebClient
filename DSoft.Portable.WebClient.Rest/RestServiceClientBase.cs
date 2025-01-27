@@ -146,7 +146,7 @@ namespace DSoft.Portable.WebClient.Rest
         /// <param name="options">The options.</param>
         protected RestServiceClientBase(RestClientOptions options)
         {
-
+            _options = options;
         }
 
         #endregion
