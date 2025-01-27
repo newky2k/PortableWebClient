@@ -110,7 +110,7 @@ namespace DSoft.Portable.WebClient.Rest
         protected abstract string ControllerName { get; }
 
 		/// <summary>
-		/// Optional api module name if the api has been modularized  /api/module/controller
+		/// Optional api module name if the api has been modularized  /api/module/controller/method
 		/// </summary>
 		/// <value>The module.</value>
 		protected virtual string Module { get; }
@@ -122,7 +122,7 @@ namespace DSoft.Portable.WebClient.Rest
 		protected virtual string ApiPrefix => "";
 
         /// <summary>
-        /// Gets the API prefix inserted before the controller name E.g. api/controller/method
+        /// Gets the API prefix inserted before the controller name E.g. servicename/api/controller/method
         /// </summary>
         /// <value>The api prefix - default: api</value>
         protected virtual string ServiceName => "";
@@ -160,7 +160,7 @@ namespace DSoft.Portable.WebClient.Rest
         /// <param name="parameterString">The parameter string.</param>
         /// <param name="controllerOverride">The controller override.</param>
         /// <returns></returns>
-        public string CalculateUrlForMethod(string methodName, string parameterString, string controllerOverride = null)
+        public string CalculateUrlForMethod(string methodName, string parameterString = null, string controllerOverride = null)
 		{
 			var apiPrefix = ApiPrefix;
 
@@ -253,10 +253,14 @@ namespace DSoft.Portable.WebClient.Rest
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="actionName">Name of the action.</param>
+        /// <param name="parameterString">The parameter string.</param>
         /// <param name="controllerOverride">The controller override.</param>
         /// <param name="headers">The headers.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
+        /// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.NoServerResponseException"></exception>
+        /// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.UnauthorisedException"></exception>
+        /// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.ServerResponseFailureException"></exception>
         /// <exception cref="System.Exception">Unexpected response</exception>
         public async Task<T> ExecuteGetAsync<T>(string actionName, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
         {
@@ -297,7 +301,6 @@ namespace DSoft.Portable.WebClient.Rest
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="T2">The type of the 2.</typeparam>
-        /// <param name="connectionId">The connection identifier.</param>
         /// <param name="actionName">Name of the action.</param>
         /// <param name="payload">The payload.</param>
         /// <param name="controllerOverride">The controller override.</param>
@@ -411,6 +414,7 @@ namespace DSoft.Portable.WebClient.Rest
 
             return result.Data;
         }
+
         #endregion
 
     }
