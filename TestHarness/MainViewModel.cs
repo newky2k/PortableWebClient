@@ -1,4 +1,7 @@
-﻿using DSoft.Portable.WebClient.Grpc;
+﻿using DSoft.Portable.WebClient.Encryption;
+using DSoft.Portable.WebClient.Encryption.Factories;
+using DSoft.Portable.WebClient.Grpc;
+using DSoft.Portable.WebClient.Rest.Encryption;
 using SampleApiClient;
 using System;
 using System.Collections.Generic;
@@ -7,13 +10,16 @@ using System.Mvvm;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using TestHarness.Client;
+using TestHarness.Services;
 
 namespace TestHarness
 {
     public class MainViewModel : ViewModel
     {
-		private static IGrpcChannelManager channelManager = new GrpcChannelManager();
+        internal string PassKey => "1234567890";
+        internal string IVKey => "xRFg8Ctp1sEqWfVp";
+
+        private static IGrpcChannelManager channelManager = new GrpcChannelManager();
 
 		private string _baseUrl;
 
@@ -36,11 +42,22 @@ namespace TestHarness
 						if (string.IsNullOrEmpty(BaseUrl))
 							throw new Exception("BaseUrl cannot be empty");
 
-						using (var client = new TestApiClient(BaseUrl))
+						IVProviderOptions iVProviderOptions = new()
 						{
-							var session = await client.Session.GenerateSessionTokenAsync();
+							InitVector = IVKey,
+						};
 
-						}
+						var ivProvider = IVProviderFactory.Create(iVProviderOptions);
+
+                        SecureRestClientOptions options = new()
+						{
+							KeySize = KeySize.TwoFiftySix,
+						};
+
+                        SessionService sessionService = new(options, ivProvider);
+
+                        var session = await sessionService.GenerateSessionTokenAsync(PassKey);
+
 					}
 					catch (Exception ex)
 					{
@@ -61,9 +78,12 @@ namespace TestHarness
 				{
 					try
 					{
-						var webClient = new SampleWebClient(BaseUrl);
+						GrpcClientOptions grpcOptions = new()
+						{
+							GrpcMode = HttpMode.Http_2_0
+						};
 
-						var servClient = new SampleServiceClient(webClient, channelManager, HttpMode.Http_2_0,true);
+						var servClient = new SampleServiceClient(channelManager, grpcOptions);
 
 						var result = await servClient.FindAsync(1);
 

@@ -20,10 +20,10 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  releaseSuffix: ''
+  releaseSuffix: '-prerelease'
   netVersion: '9.x'
 
-name: 4.1.$(date:yyMM).$(date:dd)$(rev:r)
+name: 5.0.$(date:yyMM).$(date:dd)$(rev:r)
 
 steps:  
 - task: NuGetToolInstaller@1

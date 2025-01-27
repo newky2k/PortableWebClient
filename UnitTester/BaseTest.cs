@@ -54,7 +54,6 @@ namespace UnitTester
         private static IServiceCollection ConfigureServices(IServiceCollection services)
         {
             services.TryAddSingleton<IGrpcChannelManager, GrpcChannelManager>();
-            services.TryAddScoped<IWebClient, SampleWebClient>();
             services.TryAddScoped<SampleServiceClient>();
             return services;
         }

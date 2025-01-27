@@ -13,87 +13,91 @@ namespace DSoft.Portable.WebClient.Rest
 	/// </summary>
 	public static class RestServiceClientBaseExtensions
     {
-		#region Rest Request Builders
+        #region Rest Request Builders
 
 
-		/// <summary>
-		/// Builds the user post request.
-		/// </summary>
-		/// <param name="target">The target.</param>
-		/// <param name="action">The action.</param>
-		/// <param name="data">The data.</param>
-		/// <param name="tokenId">The token identifier.</param>
-		/// <param name="encryptionToken">The encryption token.</param>
-		/// <returns>RestRequest.</returns>
-		public static RestRequest BuildUserPostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken)
+        /// <summary>
+        /// Builds the user post request.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="action">The action.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="tokenId">The token identifier.</param>
+        /// <param name="encryptionToken">The encryption token.</param>
+        /// <param name="headers">Optional custom headers.</param>
+        /// <returns>RestRequest.</returns>
+        public static RestRequest BuildUserPostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken, Dictionary<string, string> headers = null)
         {
-            var request = new RestRequest(target.CalculateUrlForMethod(action), Method.Post);
+            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString:null), Method.Post);
 
-            target.ApplyHeaders(request);
+            target.ApplyHeaders(request, headers);
 
             request.AddJsonBody(target.CreateUserRequest(data, tokenId, encryptionToken));
 
             return request;
         }
 
-		/// <summary>
-		/// Builds the empty user post request.
-		/// </summary>
-		/// <param name="target">The target.</param>
-		/// <param name="action">The action.</param>
-		/// <param name="tokenId">The token identifier.</param>
-		/// <param name="encryptionToken">The encryption token.</param>
-		/// <returns>RestRequest.</returns>
-		public static RestRequest BuildEmptyUserPostRequest(this RestServiceSecureClientBase target, string action, string tokenId, string encryptionToken)
+        /// <summary>
+        /// Builds the empty user post request.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="action">The action.</param>
+        /// <param name="tokenId">The token identifier.</param>
+        /// <param name="encryptionToken">The encryption token.</param>
+        /// <param name="headers">Optional custom headers.</param>
+        /// <returns>RestRequest.</returns>
+        public static RestRequest BuildEmptyUserPostRequest(this RestServiceSecureClientBase target, string action, string tokenId, string encryptionToken, Dictionary<string, string> headers = null)
         {
-            var request = new RestRequest(target.CalculateUrlForMethod(action), Method.Post);
+            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString: null), Method.Post);
 
-            target.ApplyHeaders(request);
+            target.ApplyHeaders(request, headers);
 
             request.AddJsonBody(target.CreateEmptyUserRequest(tokenId, encryptionToken));
 
             return request;
         }
 
-		/// <summary>
-		/// Builds the user binary post request.
-		/// </summary>
-		/// <param name="target">The target.</param>
-		/// <param name="action">The action.</param>
-		/// <param name="data">The data.</param>
-		/// <param name="binary">The binary.</param>
-		/// <param name="tokenId">The token identifier.</param>
-		/// <param name="encryptionToken">The encryption token.</param>
-		/// <returns>RestRequest.</returns>
-		public static RestRequest BuildUserBinaryPostRequest(this RestServiceSecureClientBase target, string action, object data, byte[] binary, string tokenId, string encryptionToken)
+        /// <summary>
+        /// Builds the user binary post request.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="action">The action.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="binary">The binary.</param>
+        /// <param name="tokenId">The token identifier.</param>
+        /// <param name="encryptionToken">The encryption token.</param>
+        /// <param name="headers">Optional custom headers.</param>
+        /// <returns>RestRequest.</returns>
+        public static RestRequest BuildUserBinaryPostRequest(this RestServiceSecureClientBase target, string action, object data, byte[] binary, string tokenId, string encryptionToken, Dictionary<string, string> headers = null)
         {
-            var request = new RestRequest(target.CalculateUrlForMethod(action), Method.Post);
+            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString: null), Method.Post);
 
-            target.ApplyHeaders(request);
+            target.ApplyHeaders(request, headers);
 
             request.AddJsonBody(target.CreateUserBinaryRequest(data, binary, tokenId, encryptionToken));
 
             return request;
         }
 
-		/// <summary>
-		/// Builds the secure post request.
-		/// </summary>
-		/// <param name="target">The target.</param>
-		/// <param name="action">The action.</param>
-		/// <param name="data">The data.</param>
-		/// <param name="tokenId">The token identifier.</param>
-		/// <param name="encryptionToken">The encryption token.</param>
-		/// <returns>RestRequest.</returns>
-		public static RestRequest BuildSecurePostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken)
+        /// <summary>
+        /// Builds the secure post request.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="action">The action.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="tokenId">The token identifier.</param>
+        /// <param name="encryptionToken">The encryption token.</param>
+        /// <param name="headers">Optional custom headers.</param>
+        /// <returns>RestRequest.</returns>
+        public static RestRequest BuildSecurePostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken, Dictionary<string, string> headers = null)
         {
-            var request = new RestRequest(target.CalculateUrlForMethod(action), Method.Post);
+            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString: null), Method.Post);
 
-            target.ApplyHeaders(request);
+            target.ApplyHeaders(request, headers);
 
             var fReq = new SecureRequest()
             {
-                ClientVersionNo = target.WebClient.ClientVersionNo,
+                ClientVersionNo = target.Options.ClientVersionNo,
                 Id = tokenId,
                 Payload = new SecurePayload(data, encryptionToken, target.InitVector, target.KeySize),
             };
@@ -119,7 +123,7 @@ namespace DSoft.Portable.WebClient.Rest
         {
             return new SecureRequest()
             {
-                ClientVersionNo = target.WebClient.ClientVersionNo,
+                ClientVersionNo = target.Options.ClientVersionNo,
                 Id = tokenId,
                 Payload = new SecurePayload(encryptionToken, target.InitVector, target.KeySize),
             };
@@ -137,7 +141,7 @@ namespace DSoft.Portable.WebClient.Rest
         {
             return new SecureRequest()
             {
-                ClientVersionNo = target.WebClient.ClientVersionNo,
+                ClientVersionNo = target.Options.ClientVersionNo,
                 Id = tokenId,
                 Payload = new SecurePayload(data, encryptionToken, target.InitVector, target.KeySize),
             };
@@ -156,7 +160,7 @@ namespace DSoft.Portable.WebClient.Rest
         {
             var request = new SecureBinaryRequest()
             {
-                ClientVersionNo = target.WebClient.ClientVersionNo,
+                ClientVersionNo = target.Options.ClientVersionNo,
                 Id = tokenId,
                 Payload = new SecurePayload(data, encryptionToken, target.InitVector, target.KeySize),
             };

@@ -10,13 +10,12 @@ namespace SampleApiClient
 	public class SampleServiceClient : GrpcServiceClientBase
 	{
 
+        public SampleServiceClient(IGrpcChannelManager channelManager, IOptions<GrpcClientOptions> options) : base(channelManager, options)
+        {
 
-		public SampleServiceClient(IWebClient client, IGrpcChannelManager channelManager,  HttpMode httpMode, bool disableSSLCertCheck) : base(client, channelManager, httpMode, disableSSLCertCheck)
-		{
+        }
 
-        }//
-
-        public SampleServiceClient(IWebClient client, IGrpcChannelManager channelManager, IOptions<GrpcClientOptions> options) : base(client, channelManager, options)
+        public SampleServiceClient(IGrpcChannelManager channelManager, GrpcClientOptions options) : base(channelManager, options)
         {
 
         }
