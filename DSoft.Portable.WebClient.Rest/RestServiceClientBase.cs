@@ -52,15 +52,21 @@ namespace DSoft.Portable.WebClient.Rest
 
                 };
 
-                if (_options.CookieContainer != null)
+                if (_options.HttpMessageHandler != null)
+                {
+                    var client = new HttpClient(_options.HttpMessageHandler);
+
+                    return new RestClient(client, options);
+                } 
+                else if (_options.CookieContainer != null)
                 {
                     options.CookieContainer = _options.CookieContainer;
 
-                    return new RestClient(AuthenticatedClient, options) as IRestClient;
+                    return new RestClient(AuthenticatedClient, options);
                 }
                 else
                 {
-                    return new RestClient(options) as IRestClient;
+                    return new RestClient(options);
                 }
 
             }
