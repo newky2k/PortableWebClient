@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 
 namespace DSoft.Portable.WebClient.Rest
@@ -36,5 +37,10 @@ namespace DSoft.Portable.WebClient.Rest
         /// </value>
         public CookieContainer CookieContainer { get; set; }
 
+        /// <summary>
+        /// Gets or sets the an optional HTTP message handler. (Use for Unit Testing)
+        /// </summary>
+        /// <value>The HTTP message handler.</value>
+        public HttpMessageHandler HttpMessageHandler { get; set; }
     }
 }
