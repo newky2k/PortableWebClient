@@ -29,7 +29,7 @@ namespace DSoft.Portable.WebClient.Rest.Encryption
         /// Gets the size of the key.
         /// </summary>
         /// <value>The size of the key.</value>
-        public KeySize KeySize => ((SecureRestClientOptions)Options).KeySize;
+        public KeySize KeySize => ((SecureRestApiClientOptions)Options).KeySize;
 
 
         #endregion
@@ -41,7 +41,7 @@ namespace DSoft.Portable.WebClient.Rest.Encryption
         /// </summary>
         /// <param name="options">The options.</param>
         /// <param name="initVectorProvider">The initialize vector provider.</param>
-        protected RestServiceSecureClientBase(IOptions<SecureRestClientOptions> options, IIVKeyProvider initVectorProvider) : this(options.Value, initVectorProvider)
+        protected RestServiceSecureClientBase(IOptions<SecureRestApiClientOptions> options, IIVKeyProvider initVectorProvider) : this(options.Value, initVectorProvider)
         {
             _initVectorProvider = initVectorProvider;
         }
@@ -51,7 +51,7 @@ namespace DSoft.Portable.WebClient.Rest.Encryption
         /// </summary>
         /// <param name="options">The options.</param>
         /// <param name="initVectorProvider">The initialize vector provider.</param>
-        protected RestServiceSecureClientBase(SecureRestClientOptions options, IIVKeyProvider initVectorProvider) : base(options)
+        protected RestServiceSecureClientBase(SecureRestApiClientOptions options, IIVKeyProvider initVectorProvider) : base(options)
         {
             _initVectorProvider = initVectorProvider;
         }

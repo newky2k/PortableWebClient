@@ -9,7 +9,7 @@ namespace DSoft.Portable.WebClient.Rest
     /// <summary>
     /// Options for the rest client
     /// </summary>
-    public class RestClientOptions
+    public class RestApiClientOptions
     {
         /// <summary>
         /// Gets the base URL.

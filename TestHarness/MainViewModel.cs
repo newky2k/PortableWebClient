@@ -49,7 +49,7 @@ namespace TestHarness
 
 						var ivProvider = IVProviderFactory.Create(iVProviderOptions);
 
-                        SecureRestClientOptions options = new()
+                        SecureRestApiClientOptions options = new()
 						{
 							KeySize = KeySize.TwoFiftySix,
 						};

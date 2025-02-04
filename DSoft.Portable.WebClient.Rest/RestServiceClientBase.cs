@@ -19,7 +19,7 @@ namespace DSoft.Portable.WebClient.Rest
 	public abstract class RestServiceClientBase
 	{
 		#region Fields
-		private readonly RestClientOptions _options;
+		private readonly RestApiClientOptions _options;
         #endregion
 
         #region Properties
@@ -28,7 +28,7 @@ namespace DSoft.Portable.WebClient.Rest
         /// Gets the options provided to the client
         /// </summary>
         /// <value>The options.</value>
-        public RestClientOptions Options => _options;
+        public RestApiClientOptions Options => _options;
 
         /// <summary>
         /// Gets the client version no.
@@ -141,7 +141,7 @@ namespace DSoft.Portable.WebClient.Rest
         /// Initializes a new instance of the <see cref="RestServiceClientBase"/> class.
         /// </summary>
         /// <param name="options">The options.</param>
-        protected RestServiceClientBase(IOptions<RestClientOptions> options) : this(options.Value)
+        protected RestServiceClientBase(IOptions<RestApiClientOptions> options) : this(options.Value)
         {
 				
         }
@@ -150,7 +150,7 @@ namespace DSoft.Portable.WebClient.Rest
         /// Initializes a new instance of the <see cref="RestServiceClientBase"/> class.
         /// </summary>
         /// <param name="options">The options.</param>
-        protected RestServiceClientBase(RestClientOptions options)
+        protected RestServiceClientBase(RestApiClientOptions options)
         {
             _options = options;
         }
@@ -168,18 +168,18 @@ namespace DSoft.Portable.WebClient.Rest
         /// <returns></returns>
         public string CalculateUrlForMethod(string methodName, string parameterString = null, string controllerOverride = null)
 		{
-			var apiPrefix = ApiPrefix;
+			var apiPrefixBase = ApiPrefix;
 
-			if (!string.IsNullOrEmpty(apiPrefix) && !apiPrefix.EndsWith(@"/"))
+			if (!string.IsNullOrEmpty(apiPrefixBase) && !apiPrefixBase.EndsWith(@"/"))
 			{
-				apiPrefix = $"{apiPrefix}/";
+                apiPrefixBase = $"{apiPrefixBase}/";
 			}
 
-            var baseEndpointService = ApiPrefix;
+            var baseEndpointService = apiPrefixBase;
 
             if (!string.IsNullOrWhiteSpace(ServiceName))
             {
-                baseEndpointService = $"{apiPrefix}/{ServiceName}/";
+                baseEndpointService = $"{apiPrefixBase}/{ServiceName}/";
             }
 
             var controllerComponent = ControllerName;

@@ -16,7 +16,7 @@ namespace TestHarness.Services
 		protected override string ControllerName => "Session";
 
 
-		public SessionService(SecureRestClientOptions options, IIVKeyProvider initVectorProvider) : base(options, initVectorProvider)
+		public SessionService(SecureRestApiClientOptions options, IIVKeyProvider initVectorProvider) : base(options, initVectorProvider)
         {
 
 		}
