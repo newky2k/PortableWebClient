@@ -19,7 +19,7 @@ namespace DSoft.Portable.WebClient.Rest
 	public abstract class RestServiceClientBase
 	{
 		#region Fields
-		private readonly RestClientOptions _options;
+		private readonly RestApiClientOptions _options;
         #endregion
 
         #region Properties
@@ -28,7 +28,7 @@ namespace DSoft.Portable.WebClient.Rest
         /// Gets the options provided to the client
         /// </summary>
         /// <value>The options.</value>
-        public RestClientOptions Options => _options;
+        public RestApiClientOptions Options => _options;
 
         /// <summary>
         /// Gets the client version no.
@@ -141,7 +141,7 @@ namespace DSoft.Portable.WebClient.Rest
         /// Initializes a new instance of the <see cref="RestServiceClientBase"/> class.
         /// </summary>
         /// <param name="options">The options.</param>
-        protected RestServiceClientBase(IOptions<RestClientOptions> options) : this(options.Value)
+        protected RestServiceClientBase(IOptions<RestApiClientOptions> options) : this(options.Value)
         {
 				
         }
@@ -150,7 +150,7 @@ namespace DSoft.Portable.WebClient.Rest
         /// Initializes a new instance of the <see cref="RestServiceClientBase"/> class.
         /// </summary>
         /// <param name="options">The options.</param>
-        protected RestServiceClientBase(RestClientOptions options)
+        protected RestServiceClientBase(RestApiClientOptions options)
         {
             _options = options;
         }
