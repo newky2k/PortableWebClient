@@ -8,7 +8,7 @@ namespace DSoft.Portable.WebClient.Rest.Encryption
     /// <summary>
     /// Security Options for the rest client
     /// </summary>
-    public class SecureRestClientOptions : RestApiClientOptions
+    public class SecureRestApiClientOptions : RestApiClientOptions
     {
         /// <summary>
         /// Gets or sets the size of the key for the encryption
