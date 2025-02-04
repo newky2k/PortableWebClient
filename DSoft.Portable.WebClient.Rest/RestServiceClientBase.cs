@@ -168,18 +168,18 @@ namespace DSoft.Portable.WebClient.Rest
         /// <returns></returns>
         public string CalculateUrlForMethod(string methodName, string parameterString = null, string controllerOverride = null)
 		{
-			var apiPrefix = ApiPrefix;
+			var apiPrefixBase = ApiPrefix;
 
-			if (!string.IsNullOrEmpty(apiPrefix) && !apiPrefix.EndsWith(@"/"))
+			if (!string.IsNullOrEmpty(apiPrefixBase) && !apiPrefixBase.EndsWith(@"/"))
 			{
-				apiPrefix = $"{apiPrefix}/";
+                apiPrefixBase = $"{apiPrefixBase}/";
 			}
 
-            var baseEndpointService = ApiPrefix;
+            var baseEndpointService = apiPrefixBase;
 
             if (!string.IsNullOrWhiteSpace(ServiceName))
             {
-                baseEndpointService = $"{apiPrefix}/{ServiceName}/";
+                baseEndpointService = $"{apiPrefixBase}/{ServiceName}/";
             }
 
             var controllerComponent = ControllerName;
