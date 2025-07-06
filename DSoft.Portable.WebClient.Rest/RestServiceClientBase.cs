@@ -133,7 +133,6 @@ namespace DSoft.Portable.WebClient.Rest
         /// <value>The api prefix - default: api</value>
         protected virtual string ServiceName => "";
 
-
         /// <summary>
         /// Gets the default headers.
         /// </summary>
