@@ -163,9 +163,6 @@ namespace DSoft.Portable.WebClient.Grpc
                     }
                 default:
                     throw new Exception("Unexpected HTTP mode for Grpc Channel");
-
-
-
             }
 
             return grpcChannelOptions;

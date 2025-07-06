@@ -22,7 +22,7 @@ The libary provides low level, bootstrapped base classes to simplify the buildin
 - Integrated encryption, with abiltiy provide override with custom implementations.
   - Uses 256-bit AES encryption by default
 
-## V3.x and v3.1 breaking changes
+## V3.x and abovew breaking changes
 With the move to v3 some of the classes have been renamed and moved into different packages, such as `ServiceClientBase` which now exists in `DSoft.Portable.WebClient.Rest` and is now named `RestServiceClientBase`.  
 
 ### Encryption changes 
@@ -32,8 +32,12 @@ You know have to set an InitVector key of your own on `EncryptionProviderFactory
 **v3.1 and Above**  
 In v3.1 and above the InitVector key is passed explicilty to the `IEncryptionProvider` implementation when returned by `EncryptionProviderFactory.Build`.  This allows for calls to multiple services using multiple IVs.  Check out the test harness for an example.
 
+**v5.0 and Above**  
+`IWebClient` has been removed and now constructors for `GrpcServiceClientBase` and `RestServiceClientBase` receive `GrpcClientOptions` and `RestApiClientOptions` to provide configuration data.
+
 ## Build status
 [![Build Status](https://dev.azure.com/humbatt/Daves%20Projects/_apis/build/status/PortableWebClient/PortableWebClient%20-%20Release?branchName=master)](https://dev.azure.com/humbatt/Daves%20Projects/_build/latest?definitionId=49&branchName=master)
+
 
 
 ## Packages
@@ -52,7 +56,9 @@ EF Core Security Entities       | `DSoft.Portable.Server.Security.Core` | [![NuG
 EF Core Secure Database contexts           | `DSoft.Portable.EntityFrameworkCore.Security` | [![NuGet](https://img.shields.io/nuget/v/DSoft.Portable.EntityFrameworkCore.Security.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/DSoft.Portable.EntityFrameworkCore.Security/) |  [![NuGet](https://img.shields.io/nuget/vpre/DSoft.Portable.EntityFrameworkCore.Security.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/DSoft.Portable.EntityFrameworkCore.Security/) |
   
 ## Version History (from 4.0)
-
+- Version 5.0.0
+    - Cleanup of API
+	- Removal of IWebClient
 - Version 4.1.0
     - Updtated to the latest packages
 - Version 4.0.0
