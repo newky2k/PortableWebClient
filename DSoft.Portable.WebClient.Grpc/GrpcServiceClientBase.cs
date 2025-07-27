@@ -42,10 +42,10 @@ namespace DSoft.Portable.WebClient.Grpc
         protected IGrpcChannelManager GrpcChannelManager => _grpcChannelManager;
 
         /// <summary>
-        /// Gets the client version no.
+        /// Gets the client version number.
         /// </summary>
         /// <value>The client version no.</value>
-        internal protected string ClientVersionNo => _options.ClientVersionNo;
+        abstract protected string ClientVersionNo { get; }
 
 		#endregion
 
