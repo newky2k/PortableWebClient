@@ -16,7 +16,7 @@ namespace DSoft.Portable.WebClient.Rest
 	/// <summary>
 	/// Base Service Client  class for consuming services provided by ASP.NET ApiControllers
 	/// </summary>
-	public abstract class RestServiceClientBase
+	public abstract class RestServiceClientBase : IDisposable
 	{
 		#region Fields
 		private readonly RestApiClientOptions _options;
@@ -34,7 +34,7 @@ namespace DSoft.Portable.WebClient.Rest
         /// Gets the client version no.
         /// </summary>
         /// <value>The client version no.</value>
-        protected string ClientVersionNo => _options.ClientVersionNo;
+        public abstract string ClientVersionNo { get; }
 
 		/// <summary>
 		/// Gets the rest client.
@@ -430,6 +430,11 @@ namespace DSoft.Portable.WebClient.Rest
             }
 
             return result.Data;
+        }
+
+        public void Dispose()
+        {
+           
         }
 
         #endregion
