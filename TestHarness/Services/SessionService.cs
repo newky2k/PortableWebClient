@@ -15,15 +15,17 @@ namespace TestHarness.Services
     {
 		protected override string ControllerName => "Session";
 
+        public override string ClientVersionNo => "1.0";
 
-		public SessionService(SecureRestApiClientOptions options, IIVKeyProvider initVectorProvider) : base(options, initVectorProvider)
+
+        public SessionService(SecureRestApiClientOptions options, IIVKeyProvider initVectorProvider) : base(options, initVectorProvider)
         {
 
 		}
 
         public async Task<SessionDto> GenerateSessionTokenAsync(string passKey)
         {
-            var result = await ExecutePostRequestAsync<SecureResponse>("Create", () => new SecureRequest(passKey, ClientVersionNo, DateTime.Now.ToUniversalTime(), InitVector, KeySize));
+            var result = await ExecutePostAsync<SecureResponse>("Create", () => new SecureRequest(passKey, ClientVersionNo, DateTime.Now.ToUniversalTime(), InitVector, KeySize));
 
             if (!result.Success)
             {

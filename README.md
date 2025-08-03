@@ -56,6 +56,9 @@ EF Core Security Entities       | `DSoft.Portable.Server.Security.Core` | [![NuG
 EF Core Secure Database contexts           | `DSoft.Portable.EntityFrameworkCore.Security` | [![NuGet](https://img.shields.io/nuget/v/DSoft.Portable.EntityFrameworkCore.Security.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/DSoft.Portable.EntityFrameworkCore.Security/) |  [![NuGet](https://img.shields.io/nuget/vpre/DSoft.Portable.EntityFrameworkCore.Security.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/DSoft.Portable.EntityFrameworkCore.Security/) |
   
 ## Version History (from 4.0)
+- Version 5.1.0
+    - Moved version number from RestApiClientOptions to abtract property of RestServiceClientBase
+	- Added IDisposable to RestServiceClientBase 
 - Version 5.0.0
     - Cleanup of API
 	- Removal of IWebClient

@@ -18,12 +18,6 @@ namespace DSoft.Portable.WebClient.Rest
         public Uri BaseUrl { get; set; }
 
         /// <summary>
-        /// Gets the client version no.
-        /// </summary>
-        /// <value>The client version no.</value>
-        public string ClientVersionNo { get; set; }
-
-        /// <summary>
         /// Gets the time out. Default(30 seconds)
         /// </summary>
         /// <value>The time out.</value>
