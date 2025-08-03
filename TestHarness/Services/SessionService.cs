@@ -25,7 +25,7 @@ namespace TestHarness.Services
 
         public async Task<SessionDto> GenerateSessionTokenAsync(string passKey)
         {
-            var result = await ExecutePostRequestAsync<SecureResponse>("Create", () => new SecureRequest(passKey, ClientVersionNo, DateTime.Now.ToUniversalTime(), InitVector, KeySize));
+            var result = await ExecutePostAsync<SecureResponse>("Create", () => new SecureRequest(passKey, ClientVersionNo, DateTime.Now.ToUniversalTime(), InitVector, KeySize));
 
             if (!result.Success)
             {

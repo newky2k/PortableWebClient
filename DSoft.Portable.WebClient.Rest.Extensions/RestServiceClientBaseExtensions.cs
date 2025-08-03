@@ -24,11 +24,13 @@ namespace DSoft.Portable.WebClient.Rest
         /// <param name="data">The data.</param>
         /// <param name="tokenId">The token identifier.</param>
         /// <param name="encryptionToken">The encryption token.</param>
+        /// <param name="parameterString">The parameter string.</param>
+        /// <param name="controllerOverride">The controller override.</param>
         /// <param name="headers">Optional custom headers.</param>
         /// <returns>RestRequest.</returns>
-        public static RestRequest BuildUserPostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken, Dictionary<string, string> headers = null)
+        public static RestRequest BuildUserPostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null)
         {
-            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString:null), Method.Post);
+            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString: parameterString, controllerOverride: controllerOverride), Method.Post);
 
             target.ApplyHeaders(request, headers);
 
@@ -44,11 +46,13 @@ namespace DSoft.Portable.WebClient.Rest
         /// <param name="action">The action.</param>
         /// <param name="tokenId">The token identifier.</param>
         /// <param name="encryptionToken">The encryption token.</param>
+        /// <param name="parameterString">The parameter string.</param>
+        /// <param name="controllerOverride">The controller override.</param>
         /// <param name="headers">Optional custom headers.</param>
         /// <returns>RestRequest.</returns>
-        public static RestRequest BuildEmptyUserPostRequest(this RestServiceSecureClientBase target, string action, string tokenId, string encryptionToken, Dictionary<string, string> headers = null)
+        public static RestRequest BuildEmptyUserPostRequest(this RestServiceSecureClientBase target, string action, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null)
         {
-            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString: null), Method.Post);
+            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString: parameterString, controllerOverride: controllerOverride), Method.Post);
 
             target.ApplyHeaders(request, headers);
 
@@ -66,11 +70,13 @@ namespace DSoft.Portable.WebClient.Rest
         /// <param name="binary">The binary.</param>
         /// <param name="tokenId">The token identifier.</param>
         /// <param name="encryptionToken">The encryption token.</param>
+        /// <param name="parameterString">The parameter string.</param>
+        /// <param name="controllerOverride">The controller override.</param>
         /// <param name="headers">Optional custom headers.</param>
         /// <returns>RestRequest.</returns>
-        public static RestRequest BuildUserBinaryPostRequest(this RestServiceSecureClientBase target, string action, object data, byte[] binary, string tokenId, string encryptionToken, Dictionary<string, string> headers = null)
+        public static RestRequest BuildUserBinaryPostRequest(this RestServiceSecureClientBase target, string action, object data, byte[] binary, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null)
         {
-            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString: null), Method.Post);
+            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString: parameterString, controllerOverride: controllerOverride), Method.Post);
 
             target.ApplyHeaders(request, headers);
 
@@ -87,11 +93,13 @@ namespace DSoft.Portable.WebClient.Rest
         /// <param name="data">The data.</param>
         /// <param name="tokenId">The token identifier.</param>
         /// <param name="encryptionToken">The encryption token.</param>
+        /// <param name="parameterString">The parameter string.</param>
+        /// <param name="controllerOverride">The controller override.</param>
         /// <param name="headers">Optional custom headers.</param>
         /// <returns>RestRequest.</returns>
-        public static RestRequest BuildSecurePostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken, Dictionary<string, string> headers = null)
+        public static RestRequest BuildSecurePostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null)
         {
-            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString: null), Method.Post);
+            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString: parameterString, controllerOverride: controllerOverride), Method.Post);
 
             target.ApplyHeaders(request, headers);
 
@@ -107,19 +115,18 @@ namespace DSoft.Portable.WebClient.Rest
             return request;
         }
 
-		#endregion
+        #endregion
 
-		#region SecureRequest Builders
+        #region SecureRequest Builders
 
-
-		/// <summary>
-		/// Creates the empty user request.
-		/// </summary>
-		/// <param name="target">The target.</param>
-		/// <param name="tokenId">The token identifier.</param>
-		/// <param name="encryptionToken">The encryption token.</param>
-		/// <returns>SecureRequest.</returns>
-		public static SecureRequest CreateEmptyUserRequest(this RestServiceSecureClientBase target, string tokenId, string encryptionToken)
+        /// <summary>
+        /// Creates the empty user request.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="tokenId">The token identifier.</param>
+        /// <param name="encryptionToken">The encryption token.</param>
+        /// <returns>SecureRequest.</returns>
+        public static SecureRequest CreateEmptyUserRequest(this RestServiceSecureClientBase target, string tokenId, string encryptionToken)
         {
             return new SecureRequest()
             {
@@ -170,23 +177,26 @@ namespace DSoft.Portable.WebClient.Rest
             return request;
         }
 
-		#endregion
+        #endregion
 
-		#region Request execution methods
+        #region Request execution methods
 
-		/// <summary>
-		/// Execute secure call as an asynchronous operation.
-		/// </summary>
-		/// <param name="target">The target.</param>
-		/// <param name="methodName">Name of the method.</param>
-		/// <param name="data">The data.</param>
-		/// <param name="tokenId">The token identifier.</param>
-		/// <param name="encryptionToken">The encryption token.</param>
-		/// <returns>A Task representing the asynchronous operation.</returns>
-		/// <exception cref="System.Exception"></exception>
-		public static async Task ExecuteSecureCallAsync(this RestServiceSecureClientBase target, string methodName, object data, string tokenId, string encryptionToken)
+        /// <summary>
+        /// Execute secure call as an asynchronous operation.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="tokenId">The token identifier.</param>
+        /// <param name="encryptionToken">The encryption token.</param>
+        /// <param name="parameterString">The parameter string.</param>
+        /// <param name="controllerOverride">The controller override.</param>
+        /// <param name="headers">The headers.</param>
+        /// <returns>A Task representing the asynchronous operation.</returns>
+        /// <exception cref="System.Exception"></exception>
+        public static async Task ExecuteSecureCallAsync(this RestServiceSecureClientBase target, string methodName, object data, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null)
         {
-            var request = target.BuildUserPostRequest(methodName, data, tokenId, encryptionToken);
+            var request = target.BuildUserPostRequest(methodName, data, tokenId, encryptionToken, parameterString, controllerOverride, headers);
 
             target.ApplyHeaders(request);
 
@@ -196,46 +206,22 @@ namespace DSoft.Portable.WebClient.Rest
                 throw new Exception(result.Message);
         }
 
-		/// <summary>
-		/// Execute secure call as an asynchronous operation.
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="target">The target.</param>
-		/// <param name="methodName">Name of the method.</param>
-		/// <param name="tokenId">The token identifier.</param>
-		/// <param name="encryptionToken">The encryption token.</param>
-		/// <returns>A Task&lt;T&gt; representing the asynchronous operation.</returns>
-		/// <exception cref="System.Exception"></exception>
-		public static async Task<T> ExecuteSecureCallAsync<T>(this RestServiceSecureClientBase target, string methodName, string tokenId, string encryptionToken)
+        /// <summary>
+        /// Execute secure call as an asynchronous operation.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="target">The target.</param>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="tokenId">The token identifier.</param>
+        /// <param name="encryptionToken">The encryption token.</param>
+        /// <param name="parameterString">The parameter string.</param>
+        /// <param name="controllerOverride">The controller override.</param>
+        /// <param name="headers">The headers.</param>
+        /// <returns>A Task&lt;T&gt; representing the asynchronous operation.</returns>
+        /// <exception cref="System.Exception"></exception>
+        public static async Task<T> ExecuteSecureCallAsync<T>(this RestServiceSecureClientBase target, string methodName, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null)
         {
-            var request = target.BuildEmptyUserPostRequest(methodName, tokenId, encryptionToken);
-
-            target.ApplyHeaders(request);
-
-            var result = await target.ExecuteRequestAsync<SecureResponse>(request);
-
-            if (result.Success == false)
-                throw new Exception(result.Message);
-
-            var payload = result.Payload.Extract<T>(encryptionToken, target.InitVector, target.KeySize);
-
-            return payload;
-        }
-
-		/// <summary>
-		/// Execute secure call as an asynchronous operation.
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="target">The target.</param>
-		/// <param name="methodName">Name of the method.</param>
-		/// <param name="data">The data.</param>
-		/// <param name="tokenId">The token identifier.</param>
-		/// <param name="encryptionToken">The encryption token.</param>
-		/// <returns>A Task&lt;T&gt; representing the asynchronous operation.</returns>
-		/// <exception cref="System.Exception"></exception>
-		public static async Task<T> ExecuteSecureCallAsync<T>(this RestServiceSecureClientBase target, string methodName, object data, string tokenId, string encryptionToken)
-        {
-            var request = target.BuildUserPostRequest(methodName, data, tokenId, encryptionToken);
+            var request = target.BuildEmptyUserPostRequest(methodName, tokenId, encryptionToken, parameterString, controllerOverride, headers);
 
             target.ApplyHeaders(request);
 
@@ -249,20 +235,53 @@ namespace DSoft.Portable.WebClient.Rest
             return payload;
         }
 
-		/// <summary>
-		/// Execute secure binary call as an asynchronous operation.
-		/// </summary>
-		/// <param name="target">The target.</param>
-		/// <param name="methodName">Name of the method.</param>
-		/// <param name="data">The data.</param>
-		/// <param name="binary">The binary.</param>
-		/// <param name="tokenId">The token identifier.</param>
-		/// <param name="encryptionToken">The encryption token.</param>
-		/// <returns>A Task representing the asynchronous operation.</returns>
-		/// <exception cref="System.Exception"></exception>
-		public static async Task ExecuteSecureBinaryCallAsync(this RestServiceSecureClientBase target, string methodName, object data, byte[] binary, string tokenId, string encryptionToken)
+        /// <summary>
+        /// Execute secure call as an asynchronous operation.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="target">The target.</param>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="tokenId">The token identifier.</param>
+        /// <param name="encryptionToken">The encryption token.</param>
+        /// <param name="parameterString">The parameter string.</param>
+        /// <param name="controllerOverride">The controller override.</param>
+        /// <param name="headers">The headers.</param>
+        /// <returns>A Task&lt;T&gt; representing the asynchronous operation.</returns>
+        /// <exception cref="System.Exception"></exception>
+        public static async Task<T> ExecuteSecureCallAsync<T>(this RestServiceSecureClientBase target, string methodName, object data, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null)
         {
-            var request = target.BuildUserBinaryPostRequest(methodName, data, binary, tokenId, encryptionToken);
+            var request = target.BuildUserPostRequest(methodName, data, tokenId, encryptionToken, parameterString, controllerOverride, headers);
+
+            target.ApplyHeaders(request);
+
+            var result = await target.ExecuteRequestAsync<SecureResponse>(request);
+
+            if (result.Success == false)
+                throw new Exception(result.Message);
+
+            var payload = result.Payload.Extract<T>(encryptionToken, target.InitVector, target.KeySize);
+
+            return payload;
+        }
+
+        /// <summary>
+        /// Execute secure binary call as an asynchronous operation.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="binary">The binary.</param>
+        /// <param name="tokenId">The token identifier.</param>
+        /// <param name="encryptionToken">The encryption token.</param>
+        /// <param name="parameterString">The parameter string.</param>
+        /// <param name="controllerOverride">The controller override.</param>
+        /// <param name="headers">The headers.</param>
+        /// <returns>A Task representing the asynchronous operation.</returns>
+        /// <exception cref="System.Exception"></exception>
+        public static async Task ExecuteSecureBinaryCallAsync(this RestServiceSecureClientBase target, string methodName, object data, byte[] binary, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null)
+        {
+            var request = target.BuildUserBinaryPostRequest(methodName, data, binary, tokenId, encryptionToken, parameterString, controllerOverride, headers);
 
             target.ApplyHeaders(request);
 
@@ -272,19 +291,22 @@ namespace DSoft.Portable.WebClient.Rest
                 throw new Exception(result.Message);
         }
 
-		/// <summary>
-		/// Execute secure download service call as an asynchronous operation.
-		/// </summary>
-		/// <param name="target">The target.</param>
-		/// <param name="methodName">Name of the method.</param>
-		/// <param name="data">The data.</param>
-		/// <param name="tokenId">The token identifier.</param>
-		/// <param name="encryptionToken">The encryption token.</param>
-		/// <returns>A Task&lt;System.ValueTuple&gt; representing the asynchronous operation.</returns>
-		/// <exception cref="System.Exception"></exception>
-		public static async Task<(string FileName, string MimeType, byte[] Binary)> ExecuteSecureDownloadServiceCallAsync(this RestServiceSecureClientBase target, string methodName, object data, string tokenId, string encryptionToken)
+        /// <summary>
+        /// Execute secure download service call as an asynchronous operation.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="tokenId">The token identifier.</param>
+        /// <param name="encryptionToken">The encryption token.</param>
+        /// <param name="parameterString">The parameter string.</param>
+        /// <param name="controllerOverride">The controller override.</param>
+        /// <param name="headers">The headers.</param>
+        /// <returns>A Task&lt;System.ValueTuple&gt; representing the asynchronous operation.</returns>
+        /// <exception cref="System.Exception"></exception>
+        public static async Task<(string FileName, string MimeType, byte[] Binary)> ExecuteSecureDownloadServiceCallAsync(this RestServiceSecureClientBase target, string methodName, object data, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null)
         {
-            var request = target.BuildUserPostRequest(methodName, data, tokenId, encryptionToken);
+            var request = target.BuildUserPostRequest(methodName, data, tokenId, encryptionToken, parameterString, controllerOverride, headers);
 
             target.ApplyHeaders(request);
 

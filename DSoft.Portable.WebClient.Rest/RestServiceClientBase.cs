@@ -353,6 +353,51 @@ namespace DSoft.Portable.WebClient.Rest
         }
 
         /// <summary>
+        /// Execute a Post request asynchronously
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="actionName">Controller action name</param>
+        /// <param name="packetBuilder">Function to buile request body object</param>
+        /// <returns>A Task&lt;T&gt; representing the asynchronous operation.</returns>
+        /// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.NoServerResponseException"></exception>
+        /// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.ServerResponseFailureException"></exception>
+        /// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.DataResponseFailureException"></exception>
+        public async Task<T> ExecutePostAsync<T>(string actionName, Func<object> packetBuilder) where T : ResponseBase
+        {
+            var request = BuildPostRequest(actionName);
+
+            var body = packetBuilder?.Invoke();
+
+            if (body != null)
+                request.AddJsonBody(body);
+
+            var result = await RestClient.ExecuteAsync<T>(request);
+
+            if (!result.IsSuccessful)
+            {
+                if (result.StatusCode == 0)
+                {
+                    throw new NoServerResponseException(result.ErrorMessage, result.ErrorException);
+                }
+                else if (result.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    throw new UnauthorisedException();
+                }
+                else if (result.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    throw new ServerResponseFailureException(result.StatusCode, result.ErrorMessage, result.ErrorException);
+                }
+            }
+
+            if (!result.Data.Success)
+            {
+                throw new DataResponseFailureException(result.Data.Message);
+            }
+
+            return result.Data;
+        }
+
+        /// <summary>
         /// Execute a Request asynchronously
         /// </summary>
         /// <typeparam name="T">Response type</typeparam>
@@ -388,50 +433,8 @@ namespace DSoft.Portable.WebClient.Rest
         }
 
         /// <summary>
-        /// Execute a Post request asynchronously
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="actionName">Controller action name</param>
-        /// <param name="packetBuilder">Function to buile request body object</param>
-        /// <returns>A Task&lt;T&gt; representing the asynchronous operation.</returns>
-        /// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.NoServerResponseException"></exception>
-        /// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.ServerResponseFailureException"></exception>
-        /// <exception cref="DSoft.Portable.WebClient.Core.Exceptions.DataResponseFailureException"></exception>
-        public async Task<T> ExecutePostRequestAsync<T>(string actionName, Func<object> packetBuilder) where T : ResponseBase
-        {
-            var request = BuildPostRequest(actionName);
-
-            var body = packetBuilder?.Invoke();
-
-            if (body != null)
-                request.AddJsonBody(body);
-
-            var result = await RestClient.ExecuteAsync<T>(request);
-
-            if (!result.IsSuccessful)
-            {
-                if (result.StatusCode == 0)
-                {
-                    throw new NoServerResponseException(result.ErrorMessage, result.ErrorException);
-                }
-                else if (result.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    throw new UnauthorisedException();
-                }
-                else if (result.StatusCode != System.Net.HttpStatusCode.OK)
-                {
-                    throw new ServerResponseFailureException(result.StatusCode, result.ErrorMessage, result.ErrorException);
-                }
-            }
-
-            if (!result.Data.Success)
-            {
-                throw new DataResponseFailureException(result.Data.Message);
-            }
-
-            return result.Data;
-        }
-
         public void Dispose()
         {
            
