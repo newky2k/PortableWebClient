@@ -17,11 +17,11 @@ pool:
   vmImage: 'windows-2022'
 
 variables:
-  solution: '**/*.sln'
+  solution: '**/*.slnx'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   releaseSuffix: ''
-  netVersion: '9.x'
+  netVersion: '10.x'
 
 name: 5.1.$(date:yyMM).$(date:dd)$(rev:r)
 

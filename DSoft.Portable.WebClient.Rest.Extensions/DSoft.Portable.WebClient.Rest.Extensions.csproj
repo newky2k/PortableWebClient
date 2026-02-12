@@ -1,12 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		
 		<Description>
 			Extensions to the Rest to RestServiceClientBase
 		</Description>
 		<PackageTags>Web Client RestFul</PackageTags>
-		<PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
+		<PackageReleaseNotes>v5.2 - Add .NET 10 Support, removed .NET 8.0</PackageReleaseNotes>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 

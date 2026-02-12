@@ -14,7 +14,7 @@
 		</Description>
 		<PackageTags>gRPC RPC HTTP/2 Web client</PackageTags>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
+		<PackageReleaseNotes>v5.2 - Add .NET 10 Support, removed .NET 8.0</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<ItemGroup>

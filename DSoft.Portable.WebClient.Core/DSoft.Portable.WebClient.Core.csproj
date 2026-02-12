@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<PackageTags>Web Client</PackageTags>
 		<Description>Core libraries for DSoft.Portable.WebClient</Description>
-		<PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
+		<PackageReleaseNotes>v5.2 - Add .NET 10 Support, removed .NET 8.0</PackageReleaseNotes>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
