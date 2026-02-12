@@ -1,12 +1,10 @@
-﻿using DSoft.Portable.WebClient.Core;
-using DSoft.Portable.WebClient.Core.Exceptions;
+﻿using DSoft.Portable.WebClient.Core.Exceptions;
 using Microsoft.Extensions.Options;
 using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -165,14 +163,17 @@ namespace DSoft.Portable.WebClient.Rest
 
         #region Methods
 
+        #region Request Calculations
+
         /// <summary>
         /// Calculates the URL for method.
         /// </summary>
         /// <param name="methodName">Name of the method.</param>
         /// <param name="parameterString">The parameter string.</param>
         /// <param name="controllerOverride">The controller override.</param>
+        /// <param name="serviceOverride">override the service component</param>
         /// <returns></returns>
-        public string CalculateUrlForMethod(string methodName, string parameterString = null, string controllerOverride = null)
+        public string CalculateUrlForMethod(string methodName, string parameterString = null, string controllerOverride = null, string serviceOverride = null)
 		{
 			var apiPrefixBase = ApiPrefix;
 
@@ -183,9 +184,16 @@ namespace DSoft.Portable.WebClient.Rest
 
             var baseEndpointService = apiPrefixBase;
 
-            if (!string.IsNullOrWhiteSpace(ServiceName))
+            var serviceComponent = ServiceName;
+
+            if (!string.IsNullOrWhiteSpace(serviceOverride))
             {
-                baseEndpointService = $"{apiPrefixBase}/{ServiceName}/";
+                serviceComponent = serviceOverride;
+            }
+
+            if (!string.IsNullOrWhiteSpace(serviceComponent))
+            {
+                baseEndpointService = $"{apiPrefixBase}/{serviceComponent}/";
             }
 
             var controllerComponent = ControllerName;
@@ -211,44 +219,7 @@ namespace DSoft.Portable.WebClient.Rest
 		}
 
         /// <summary>
-        /// Builds a Post Request for the method
-        /// </summary>
-        /// <param name="methodName">Name of the method.</param>
-        /// <param name="controllerOverride">The controller override.</param>
-        /// <param name="headers">The headers.</param>
-        /// <returns>
-        /// RestRequest.
-        /// </returns>
-        protected RestRequest BuildPostRequest(string methodName, string controllerOverride = null, Dictionary<string, string> headers = null)
-        {
-            var request = new RestRequest(CalculateUrlForMethod(methodName, null, controllerOverride), Method.Post);
-
-            ApplyHeaders(request, headers);
-
-            return request;
-        }
-
-        /// <summary>
-        /// Builds a Get Request for the method
-        /// </summary>
-        /// <param name="methodName">Name of the method.</param>
-        /// <param name="parameterString">The parameter string.</param>
-        /// <param name="controllerOverride">The controller override.</param>
-        /// <param name="headers">The headers.</param>
-        /// <returns>
-        /// RestRequest.
-        /// </returns>
-        protected RestRequest BuildGetRequest(string methodName, string parameterString, string controllerOverride = null, Dictionary<string, string> headers = null)
-        {
-            var request = new RestRequest(CalculateUrlForMethod(methodName, parameterString, controllerOverride), Method.Get);
-
-            ApplyHeaders(request, headers);
-
-            return request;
-        }
-
-        /// <summary>
-        /// Applies any custom headers.
+        /// Apply any custom headers.
         /// </summary>
         /// <param name="request">The request.</param>
         /// <param name="customHeaders">Optional custom headers.</param>
@@ -264,6 +235,94 @@ namespace DSoft.Portable.WebClient.Rest
                 request.AddHeaders(customHeaders);
             }
         }
+
+        /// <summary>
+        /// Builds a Post Request for the method
+        /// </summary>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="controllerOverride">The controller override.</param>
+        /// <param name="headers">The headers.</param>
+        /// <param name="serviceOverride">override the service component</param>
+        /// <returns>
+        /// RestRequest.
+        /// </returns>
+        protected RestRequest BuildPostRequest(string methodName, string controllerOverride = null, Dictionary<string, string> headers = null, string serviceOverride = null)
+        {
+            var request = new RestRequest(CalculateUrlForMethod(methodName, null, controllerOverride, serviceOverride), Method.Post);
+
+            ApplyHeaders(request, headers);
+
+            return request;
+        }
+
+        /// <summary>
+        /// Builds a Get Request for the method
+        /// </summary>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="parameterString">The parameter string.</param>
+        /// <param name="controllerOverride">The controller override.</param>
+        /// <param name="headers">The headers.</param>
+        /// <param name="serviceOverride">override the service component</param>
+        /// <returns>
+        /// RestRequest.
+        /// </returns>
+        protected RestRequest BuildGetRequest(string methodName, string parameterString, string controllerOverride = null, Dictionary<string, string> headers = null, string serviceOverride = null)
+        {
+            var request = new RestRequest(CalculateUrlForMethod(methodName, parameterString, controllerOverride, serviceOverride), Method.Get);
+
+            ApplyHeaders(request, headers);
+
+            return request;
+        }
+
+        /// <summary>
+        /// Builds a Delete Request for the method
+        /// </summary>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="parameterString">The parameter string.</param>
+        /// <param name="controllerOverride">The controller override.</param>
+        /// <param name="headers">The headers.</param>
+        /// <param name="serviceOverride">override the service component</param>
+        /// <returns>
+        /// RestRequest.
+        /// </returns>
+        protected RestRequest BuildDeleteRequest(string methodName, string parameterString, string controllerOverride = null, Dictionary<string, string> headers = null, string serviceOverride = null)
+        {
+            var request = new RestRequest(CalculateUrlForMethod(methodName, parameterString, controllerOverride, serviceOverride), Method.Delete);
+
+            ApplyHeaders(request, headers);
+
+            return request;
+        }
+
+        /// <summary>
+        /// Builds basic Get Request with the specified Url
+        /// </summary>
+        /// <param name="url">The Url.</param>
+        /// <param name="headers">The headers.</param>
+        /// <returns>
+        /// RestRequest.
+        /// </returns>
+        protected RestRequest BuildGetRequest(string url, Dictionary<string, string> headers = null) => BuildGetRequest(new Uri(url), headers);
+
+        /// <summary>
+        /// Builds basic Get Request with the specified Url
+        /// </summary>
+        /// <param name="url">The Url.</param>
+        /// <param name="headers">The headers.</param>
+        /// <returns>
+        /// RestRequest.
+        /// </returns>
+        protected RestRequest BuildGetRequest(Uri url, Dictionary<string, string> headers = null)
+        {
+            var request = new RestRequest(url, Method.Get);
+
+            ApplyHeaders(request, headers);
+
+            return request;
+        }
+
+        #endregion
 
         /// <summary>
         /// Executes the an anonymous get call

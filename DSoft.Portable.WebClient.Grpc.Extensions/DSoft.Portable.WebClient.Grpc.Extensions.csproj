@@ -23,4 +23,5 @@
 	<ItemGroup>
 		<ProjectReference Include="..\DSoft.Portable.WebClient.Grpc\DSoft.Portable.WebClient.Grpc.csproj" />
 	</ItemGroup>
+
 </Project>
