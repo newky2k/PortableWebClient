@@ -9,14 +9,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-
+using UnitTester.Samples;
 
 namespace UnitTester
 {
     [TestClass]
     public abstract class BaseTest
     {
+        public static JsonSerializerOptions DefaultJsonOptions = new()
+        {
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            WriteIndented = true,
+        };
+
         public static ServiceProvider Provider { get; private set; }
 
         public static WebApplicationFactory<SUT::SampleWebApp.Startup> webAppFactory { get; private set; }
@@ -43,6 +51,13 @@ namespace UnitTester
                 x.HttpMessageHandler = webAppFactory.Server.CreateHandler();
             });
 
+            services.AddRestServiceClientFactory(x =>
+            {
+                x.TimeOut = TimeSpan.FromSeconds(5);
+                x.JsonSerializerOptions = DefaultJsonOptions;
+                x.HttpMessageHandler = webAppFactory.Server.CreateHandler();
+            });
+
             Provider = services.BuildServiceProvider();
         }
 
@@ -55,6 +70,10 @@ namespace UnitTester
         {
             services.TryAddSingleton<IGrpcChannelManager, GrpcChannelManager>();
             services.TryAddScoped<SampleServiceClient>();
+
+            //add sample rest service
+            services.TryAddScoped<ISampleRestService, SampleRestService>(); 
+
             return services;
         }
     }

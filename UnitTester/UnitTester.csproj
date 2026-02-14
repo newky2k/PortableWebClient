@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DSoft.Portable.WebClient.Rest\DSoft.Portable.WebClient.Rest.csproj" />
     <ProjectReference Include="..\SampleApiClient\SampleApiClient.csproj" />
 	  <ProjectReference Include="..\SampleWebApp\SampleWebApp.csproj">
 		  <Aliases>SUT</Aliases>

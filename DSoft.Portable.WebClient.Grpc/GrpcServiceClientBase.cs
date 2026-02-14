@@ -58,6 +58,7 @@ namespace DSoft.Portable.WebClient.Grpc
         {
 
 		}
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GrpcServiceClientBase"/> class.
         /// </summary>
