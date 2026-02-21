@@ -22,8 +22,4 @@
 		<PackageReference Include="Microsoft.Extensions.Options" Version="10.0.3" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\DSoft.Portable.WebClient.Core\DSoft.Portable.WebClient.Core.csproj" />
-	</ItemGroup>
-
 </Project>

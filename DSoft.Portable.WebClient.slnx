@@ -23,6 +23,5 @@
     <File Path="Directory.Build.props" />
     <File Path="README.md" />
   </Folder>
-  <Project Path="DSoft.Portable.WebClient.Core/DSoft.Portable.WebClient.Core.csproj" />
   <Project Path="DSoft.Portable.WebClient.Encryption/DSoft.Portable.WebClient.Encryption.csproj" />
 </Solution>

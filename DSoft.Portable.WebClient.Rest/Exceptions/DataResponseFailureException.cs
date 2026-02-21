@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DSoft.Portable.WebClient.Core.Exceptions
+namespace DSoft.Portable.WebClient.Rest.Exceptions
 {
 	/// <summary>
 	/// Class DataResponseFailureException.
