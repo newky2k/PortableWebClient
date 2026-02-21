@@ -203,7 +203,7 @@ namespace DSoft.Portable.WebClient.Rest
 
             target.ApplyHeaders(request);
 
-            var result = await target.ExecuteRequestAsync<SecureResponse>(request);
+            var result = await target.ExecuteAsync<SecureResponse>(request);
 
             if (result.Success == false)
                 throw new Exception(result.Message);
@@ -228,7 +228,7 @@ namespace DSoft.Portable.WebClient.Rest
 
             target.ApplyHeaders(request);
 
-            var result = await target.ExecuteRequestAsync<SecureResponse>(request);
+            var result = await target.ExecuteAsync<SecureResponse>(request);
 
             if (result.Success == false)
                 throw new Exception(result.Message);
@@ -258,7 +258,7 @@ namespace DSoft.Portable.WebClient.Rest
 
             target.ApplyHeaders(request);
 
-            var result = await target.ExecuteRequestAsync<SecureResponse>(request);
+            var result = await target.ExecuteAsync<SecureResponse>(request);
 
             if (result.Success == false)
                 throw new Exception(result.Message);
@@ -288,7 +288,7 @@ namespace DSoft.Portable.WebClient.Rest
 
             target.ApplyHeaders(request);
 
-            var result = await target.ExecuteRequestAsync<SecureResponse>(request);
+            var result = await target.ExecuteAsync<SecureResponse>(request);
 
             if (result.Success == false)
                 throw new Exception(result.Message);
@@ -313,7 +313,7 @@ namespace DSoft.Portable.WebClient.Rest
 
             target.ApplyHeaders(request);
 
-            var result = await target.ExecuteRequestAsync<SecureBinaryResponse>(request);
+            var result = await target.ExecuteAsync<SecureBinaryResponse>(request);
 
             if (result.Success == false)
                 throw new Exception(result.Message);

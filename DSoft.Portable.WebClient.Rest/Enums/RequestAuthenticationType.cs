@@ -1,5 +1,6 @@
 ﻿
-namespace DSoft.Portable.WebClient.Core.Enum;
+
+namespace DSoft.Portable.WebClient.Rest.Enums;
 
 /// <summary>
 /// Authentication Type for request
@@ -7,9 +8,11 @@ namespace DSoft.Portable.WebClient.Core.Enum;
 public enum RequestAuthenticationType
 {
     /// <summary>
-    /// Specifies that no authentication is required for the request.
+    /// Represents an anonymous type that encapsulates a set of read-only properties.
     /// </summary>
-    None,
+    /// <remarks>Anonymous types are typically used to create simple objects for data transfer without
+    /// explicitly defining a class. They are immutable and can only be created using object initializers.</remarks>
+    Anonymous,
     /// <summary>
     /// Represents an HTTP cookie used to store data on the client and send it to the server with subsequent requests.
     /// </summary>

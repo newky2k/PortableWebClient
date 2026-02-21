@@ -1,9 +1,5 @@
-﻿using DSoft.Portable.WebClient.Core.Enum;
-using DSoft.Portable.WebClient.Rest;
-using DSoft.Portable.WebClient.Rest.Encryption;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using DSoft.Portable.WebClient.Rest;
+using DSoft.Portable.WebClient.Rest.Enums;
 
 namespace UnitTester.Samples;
 
@@ -20,7 +16,7 @@ internal class SampleRestService : RestServiceClientBase, ISampleRestService
 
     public async Task<ReleaseInfo> GetReleaseAsync()
     {
-        var result = await ExecuteGetAsync<ReleaseInfo>("Current", RequestAuthenticationType.None);
+        var result = await ExecuteGetAsync<ReleaseInfo>("Current", authentication: RequestAuthenticationType.Anonymous);
 
         return result;
     }
