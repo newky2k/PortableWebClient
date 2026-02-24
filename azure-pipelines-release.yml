@@ -17,13 +17,13 @@ pool:
   vmImage: 'windows-2022'
 
 variables:
-  solution: '**/*.sln'
+  solution: '**/*.slnx'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  releaseSuffix: ''
-  netVersion: '9.x'
+  releaseSuffix: '-prerelease'
+  netVersion: '10.x'
 
-name: 5.1.$(date:yyMM).$(date:dd)$(rev:r)
+name: 6.0.$(date:yyMM).$(date:dd)$(rev:r)
 
 steps:  
 - task: NuGetToolInstaller@1

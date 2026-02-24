@@ -1,0 +1,27 @@
+<Solution>
+  <Folder Name="/Grpc/">
+    <Project Path="DSoft.Portable.WebClient.Grpc.Encryption.Tools/DSoft.Portable.WebClient.Grpc.Encryption.Tools.csproj" />
+    <Project Path="DSoft.Portable.WebClient.Grpc.Encryption/DSoft.Portable.WebClient.Grpc.Encryption.csproj" />
+    <Project Path="DSoft.Portable.WebClient.Grpc.Extensions/DSoft.Portable.WebClient.Grpc.Extensions.csproj" />
+    <Project Path="DSoft.Portable.WebClient.Grpc/DSoft.Portable.WebClient.Grpc.csproj" />
+  </Folder>
+  <Folder Name="/Rest/">
+    <Project Path="DSoft.Portable.WebClient.Rest.Encryption/DSoft.Portable.WebClient.Rest.Encryption.csproj" />
+    <Project Path="DSoft.Portable.WebClient.Rest.Extensions/DSoft.Portable.WebClient.Rest.Extensions.csproj" />
+    <Project Path="DSoft.Portable.WebClient.Rest/DSoft.Portable.WebClient.Rest.csproj" />
+  </Folder>
+  <Folder Name="/Testing/">
+    <Project Path="RpcSample/RpcSample.csproj" />
+    <Project Path="SampleApiClient/SampleApiClient.csproj" />
+    <Project Path="SampleWebApp/SampleWebApp.csproj" />
+    <Project Path="TestHarness/TestHarness.csproj" />
+    <Project Path="UnitTester/UnitTester.csproj" />
+  </Folder>
+  <Folder Name="/_ci/">
+    <File Path="azure-pipelines-mergetest.yml" />
+    <File Path="azure-pipelines-release.yml" />
+    <File Path="Directory.Build.props" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="DSoft.Portable.WebClient.Encryption/DSoft.Portable.WebClient.Encryption.csproj" />
+</Solution>

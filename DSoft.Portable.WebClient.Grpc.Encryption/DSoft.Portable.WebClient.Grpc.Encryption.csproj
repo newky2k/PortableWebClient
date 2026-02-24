@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<Description>Encrypted payload communications classes for the Grpc client</Description>
 		<PackageTags>Web Client Grpc</PackageTags>
-		<PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
+		<PackageReleaseNotes>v5.2 - Add .NET 10 Support, removed .NET 8.0</PackageReleaseNotes>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
@@ -15,9 +15,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Google.Protobuf" Version="3.29.3" />
+		<PackageReference Include="Google.Protobuf" Version="3.33.5" />
 		<PackageReference Include="Grpc.Core" Version="2.46.6" />
-		<PackageReference Include="Grpc.Tools" Version="2.69.0">
+		<PackageReference Include="Grpc.Tools" Version="2.78.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

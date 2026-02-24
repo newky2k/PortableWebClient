@@ -15,7 +15,6 @@ namespace DSoft.Portable.WebClient.Rest
     {
         #region Rest Request Builders
 
-
         /// <summary>
         /// Builds the user post request.
         /// </summary>
@@ -27,10 +26,11 @@ namespace DSoft.Portable.WebClient.Rest
         /// <param name="parameterString">The parameter string.</param>
         /// <param name="controllerOverride">The controller override.</param>
         /// <param name="headers">Optional custom headers.</param>
+        /// <param name="serviceOverride">override the service component</param>
         /// <returns>RestRequest.</returns>
-        public static RestRequest BuildUserPostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null)
+        public static RestRequest BuildUserPostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null, string serviceOverride = null)
         {
-            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString: parameterString, controllerOverride: controllerOverride), Method.Post);
+            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString: parameterString, controllerOverride: controllerOverride, serviceOverride), Method.Post);
 
             target.ApplyHeaders(request, headers);
 
@@ -49,10 +49,11 @@ namespace DSoft.Portable.WebClient.Rest
         /// <param name="parameterString">The parameter string.</param>
         /// <param name="controllerOverride">The controller override.</param>
         /// <param name="headers">Optional custom headers.</param>
+        /// <param name="serviceOverride">override the service component</param>
         /// <returns>RestRequest.</returns>
-        public static RestRequest BuildEmptyUserPostRequest(this RestServiceSecureClientBase target, string action, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null)
+        public static RestRequest BuildEmptyUserPostRequest(this RestServiceSecureClientBase target, string action, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null, string serviceOverride = null)
         {
-            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString: parameterString, controllerOverride: controllerOverride), Method.Post);
+            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString: parameterString, controllerOverride: controllerOverride, serviceOverride), Method.Post);
 
             target.ApplyHeaders(request, headers);
 
@@ -73,10 +74,11 @@ namespace DSoft.Portable.WebClient.Rest
         /// <param name="parameterString">The parameter string.</param>
         /// <param name="controllerOverride">The controller override.</param>
         /// <param name="headers">Optional custom headers.</param>
+        /// <param name="serviceOverride">override the service component</param>
         /// <returns>RestRequest.</returns>
-        public static RestRequest BuildUserBinaryPostRequest(this RestServiceSecureClientBase target, string action, object data, byte[] binary, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null)
+        public static RestRequest BuildUserBinaryPostRequest(this RestServiceSecureClientBase target, string action, object data, byte[] binary, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null, string serviceOverride = null)
         {
-            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString: parameterString, controllerOverride: controllerOverride), Method.Post);
+            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString: parameterString, controllerOverride: controllerOverride, serviceOverride), Method.Post);
 
             target.ApplyHeaders(request, headers);
 
@@ -96,10 +98,11 @@ namespace DSoft.Portable.WebClient.Rest
         /// <param name="parameterString">The parameter string.</param>
         /// <param name="controllerOverride">The controller override.</param>
         /// <param name="headers">Optional custom headers.</param>
+        /// <param name="serviceOverride">override the service component</param>
         /// <returns>RestRequest.</returns>
-        public static RestRequest BuildSecurePostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null)
+        public static RestRequest BuildSecurePostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null, string serviceOverride = null)
         {
-            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString: parameterString, controllerOverride: controllerOverride), Method.Post);
+            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString: parameterString, controllerOverride: controllerOverride, serviceOverride), Method.Post);
 
             target.ApplyHeaders(request, headers);
 
@@ -200,7 +203,7 @@ namespace DSoft.Portable.WebClient.Rest
 
             target.ApplyHeaders(request);
 
-            var result = await target.ExecuteRequestAsync<SecureResponse>(request);
+            var result = await target.ExecuteAsync<SecureResponse>(request);
 
             if (result.Success == false)
                 throw new Exception(result.Message);
@@ -225,7 +228,7 @@ namespace DSoft.Portable.WebClient.Rest
 
             target.ApplyHeaders(request);
 
-            var result = await target.ExecuteRequestAsync<SecureResponse>(request);
+            var result = await target.ExecuteAsync<SecureResponse>(request);
 
             if (result.Success == false)
                 throw new Exception(result.Message);
@@ -255,7 +258,7 @@ namespace DSoft.Portable.WebClient.Rest
 
             target.ApplyHeaders(request);
 
-            var result = await target.ExecuteRequestAsync<SecureResponse>(request);
+            var result = await target.ExecuteAsync<SecureResponse>(request);
 
             if (result.Success == false)
                 throw new Exception(result.Message);
@@ -285,7 +288,7 @@ namespace DSoft.Portable.WebClient.Rest
 
             target.ApplyHeaders(request);
 
-            var result = await target.ExecuteRequestAsync<SecureResponse>(request);
+            var result = await target.ExecuteAsync<SecureResponse>(request);
 
             if (result.Success == false)
                 throw new Exception(result.Message);
@@ -310,7 +313,7 @@ namespace DSoft.Portable.WebClient.Rest
 
             target.ApplyHeaders(request);
 
-            var result = await target.ExecuteRequestAsync<SecureBinaryResponse>(request);
+            var result = await target.ExecuteAsync<SecureBinaryResponse>(request);
 
             if (result.Success == false)
                 throw new Exception(result.Message);

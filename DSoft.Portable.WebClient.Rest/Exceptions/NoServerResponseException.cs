@@ -1,18 +1,17 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
-namespace DSoft.Portable.WebClient.Core.Exceptions
+namespace DSoft.Portable.WebClient.Rest.Exceptions
 {
 	/// <summary>
-	/// Class ServerResponseFailureException.
+	/// Class NoServerResponseException.
 	/// Implements the <see cref="Exception" />
 	/// </summary>
 	/// <seealso cref="Exception" />
-	public class ServerResponseFailureException : Exception
+	public class NoServerResponseException : Exception
     {
-        private HttpStatusCode _httpStatusCode;
         private string _errorMessage;
 		/// <summary>
 		/// Gets a message that describes the current exception.
@@ -22,19 +21,17 @@ namespace DSoft.Portable.WebClient.Core.Exceptions
         {
             get
             {
-                return $"Response failure - Status: {_httpStatusCode} - Message - {_errorMessage}";
+                return $"Unable to connect - Message - {_errorMessage}";
             }
         }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ServerResponseFailureException"/> class.
+		/// Initializes a new instance of the <see cref="NoServerResponseException"/> class.
 		/// </summary>
-		/// <param name="httpStatusCode">The HTTP status code.</param>
 		/// <param name="errorMessage">The error message.</param>
 		/// <param name="exception">The exception.</param>
-		public ServerResponseFailureException(HttpStatusCode httpStatusCode, string errorMessage, Exception exception) : base(null, exception)
+		public NoServerResponseException(string errorMessage, Exception exception) : base(null, exception)
         {
-            _httpStatusCode = httpStatusCode;
             _errorMessage = errorMessage;
         }
     }

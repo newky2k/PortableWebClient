@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<Description>Encrypted communications classes for the RESRful web api client</Description>
 		<PackageTags>Web Client</PackageTags>
-		<PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
+		<PackageReleaseNotes>v5.2 - Add .NET 10 Support, removed .NET 8.0</PackageReleaseNotes>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 

@@ -1,9 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-
-	</PropertyGroup>
-
 	<PropertyGroup Label="NuGet package definition" Condition=" '$(Configuration)' == 'Release' ">
 		<BuildOutputTargetFolder>build\_protobuf\</BuildOutputTargetFolder>
 		<DevelopmentDependency>true</DevelopmentDependency>
@@ -14,7 +10,7 @@
 		</Description>
 		<PackageTags>gRPC RPC HTTP/2 Web client</PackageTags>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageReleaseNotes>v3.1 - Release</PackageReleaseNotes>
+		<PackageReleaseNotes>v5.2 - Add .NET 10 Support, removed .NET 8.0</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -34,4 +30,5 @@
 		<None Include="@(_Asset)" Pack="true" Visible="false" />
 		<None Include="securetypes.proto" />
 	</ItemGroup>
+
 </Project>

@@ -39,19 +39,8 @@ namespace DSoft.Portable.WebClient.Rest.Encryption
         /// <summary>
         /// Initializes a new instance of the <see cref="RestServiceSecureClientBase" /> class.
         /// </summary>
-        /// <param name="options">The options.</param>
         /// <param name="initVectorProvider">The initialize vector provider.</param>
-        protected RestServiceSecureClientBase(IOptions<SecureRestApiClientOptions> options, IIVKeyProvider initVectorProvider) : this(options.Value, initVectorProvider)
-        {
-            _initVectorProvider = initVectorProvider;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RestServiceSecureClientBase" /> class.
-        /// </summary>
-        /// <param name="options">The options.</param>
-        /// <param name="initVectorProvider">The initialize vector provider.</param>
-        protected RestServiceSecureClientBase(SecureRestApiClientOptions options, IIVKeyProvider initVectorProvider) : base(options)
+        protected RestServiceSecureClientBase(IIVKeyProvider initVectorProvider) : base()
         {
             _initVectorProvider = initVectorProvider;
         }
