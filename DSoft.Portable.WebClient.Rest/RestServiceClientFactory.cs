@@ -16,7 +16,7 @@ internal class RestServiceClientFactory : IRestServiceClientFactory
         this.options = options?.Value ?? new();
     }
 
-    public T GetClient<T>(Uri baseAddress, string uniqueId = null) where T : IRestServiceClient
+    public T GetClient<T>(string uniqueId = null) where T : IRestServiceClient
     {
         using var scope = scopeFactory.CreateScope();
 
@@ -24,6 +24,8 @@ internal class RestServiceClientFactory : IRestServiceClientFactory
 
         if (client is RestServiceClientBase restService)
         {
+            var baseAddress = options.UrlBuilder(uniqueId);
+
             restService.Configure(baseAddress, options, uniqueId);
 
             return client;

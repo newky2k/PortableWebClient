@@ -54,5 +54,11 @@ public class RestApiClientOptions
     /// <value>The default headers.</value>
     public Dictionary<string, string> DefaultHeaders { get; set; } = [];
 
+    /// <summary>
+    /// Gets or sets the optional URL builder (Use for Dependency Injection)
+    /// </summary>
+    /// <value>The URL builder.</value>
+    public Func<string, Uri> UrlBuilder { get; set; }
+
 
 }

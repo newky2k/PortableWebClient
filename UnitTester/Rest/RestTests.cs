@@ -27,9 +27,7 @@ public class RestTests : BaseTest
 
         Assert.IsNotNull(serviceFactory);
 
-        var baseAddreess = "https://www.google.com";
-
-        var sampleClient = serviceFactory.GetClient<ISampleRestService>(new Uri(baseAddreess), Guid.NewGuid().ToString());
+        var sampleClient = serviceFactory.GetClient<ISampleRestService>(Guid.NewGuid().ToString());
 
         Assert.IsNotNull(sampleClient);
     }

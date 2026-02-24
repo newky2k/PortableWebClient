@@ -56,6 +56,10 @@ namespace UnitTester
                 x.TimeOut = TimeSpan.FromSeconds(5);
                 x.JsonSerializerOptions = DefaultJsonOptions;
                 x.HttpMessageHandler = webAppFactory.Server.CreateHandler();
+                x.UrlBuilder = (clientName) =>
+                {
+                    return webAppFactory.Server.BaseAddress;
+                };
             });
 
             Provider = services.BuildServiceProvider();

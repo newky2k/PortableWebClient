@@ -1,6 +1,4 @@
 ﻿
-using System;
-
 namespace DSoft.Portable.WebClient.Rest;
 
 /// <summary>
@@ -16,8 +14,7 @@ public interface IRestServiceClientFactory
     /// Get services client
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <param name="baseAddress"></param>
     /// <param name="uniqueId">Unique id or connection key</param>
     /// <returns></returns>
-    T GetClient<T>(Uri baseAddress, string uniqueId = null) where T : IRestServiceClient;
+    T GetClient<T>(string uniqueId = null) where T : IRestServiceClient;
 }
