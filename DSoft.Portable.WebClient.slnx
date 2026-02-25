@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Encryption/">
+    <Project Path="DSoft.Portable.WebClient.Encryption/DSoft.Portable.WebClient.Encryption.csproj" />
+  </Folder>
   <Folder Name="/Grpc/">
     <Project Path="DSoft.Portable.WebClient.Grpc.Encryption.Tools/DSoft.Portable.WebClient.Grpc.Encryption.Tools.csproj" />
     <Project Path="DSoft.Portable.WebClient.Grpc.Encryption/DSoft.Portable.WebClient.Grpc.Encryption.csproj" />
@@ -23,5 +26,4 @@
     <File Path="Directory.Build.props" />
     <File Path="README.md" />
   </Folder>
-  <Project Path="DSoft.Portable.WebClient.Encryption/DSoft.Portable.WebClient.Encryption.csproj" />
 </Solution>

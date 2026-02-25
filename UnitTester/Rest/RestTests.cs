@@ -21,14 +21,18 @@ public class RestTests : BaseTest
     }
 
     [TestMethod]
-    public void CanGetSampleClienty()
+    public async Task CanGetSampleClienty()
     {
         var serviceFactory = Provider.GetRequiredService<IRestServiceClientFactory>();
 
         Assert.IsNotNull(serviceFactory);
 
-        var sampleClient = serviceFactory.GetClient<ISampleRestService>(Guid.NewGuid().ToString());
+        var uniqueClientId = Guid.NewGuid().ToString();
+
+        var sampleClient = serviceFactory.GetClient<ISampleRestService>(uniqueClientId);
 
         Assert.IsNotNull(sampleClient);
+
+        await sampleClient.GetReleaseAsync();
     }
 }
