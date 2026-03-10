@@ -14,5 +14,7 @@ public class RestTests : BaseTest
         Assert.IsNotNull(sampleClient);
 
         var release = await sampleClient.GetReleaseAsync();
+
+        Assert.IsNotNull(release);
     }
 }

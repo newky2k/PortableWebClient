@@ -1,10 +1,4 @@
 ﻿extern alias SUT; 
-using DSoft.Portable.WebClient;
-using DSoft.Portable.WebClient.Grpc;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using SampleApiClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +6,13 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using DSoft.Portable.WebClient;
+using DSoft.Portable.WebClient.Grpc;
+using DSoft.Portable.WebClient.Rest;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using SampleApiClient;
 using UnitTester.Samples;
 
 namespace UnitTester
@@ -51,16 +52,37 @@ namespace UnitTester
                 x.HttpMessageHandler = webAppFactory.Server.CreateHandler();
             });
 
+            //services.AddRestServiceClientFactory(x =>
+            //{
+            //    x.TimeOut = TimeSpan.FromSeconds(5);
+            //    x.JsonSerializerOptions = DefaultJsonOptions;
+            //    x.HttpMessageHandler = webAppFactory.Server.CreateHandler();
+            //    x.UrlBuilder = (uniqueId) =>
+            //    {
+            //        return webAppFactory.Server.BaseAddress;
+            //    };
+            //});
+
             services.AddRestServiceClientFactory(x =>
             {
                 x.TimeOut = TimeSpan.FromSeconds(5);
                 x.JsonSerializerOptions = DefaultJsonOptions;
-                x.HttpMessageHandler = webAppFactory.Server.CreateHandler();
                 x.UrlBuilder = (uniqueId) =>
                 {
                     return webAppFactory.Server.BaseAddress;
                 };
             });
+
+            services.AddHttpClient("TestClient", c =>
+            {
+
+            }).ConfigurePrimaryHttpMessageHandler(webAppFactory.Server.CreateHandler);
+
+            services.AddHttpClient<PortableRestHttpClient>(c =>
+            {
+               
+            }).ConfigurePrimaryHttpMessageHandler(webAppFactory.Server.CreateHandler);
+
 
             Provider = services.BuildServiceProvider();
         }

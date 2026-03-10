@@ -22,6 +22,8 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
 {
     #region Fields
     private RestApiClientOptions _options;
+    private IHttpClientFactory _httpClientHandler;
+    private PortableRestHttpClient _httpClient;
     #endregion
 
     #region Properties
@@ -144,7 +146,10 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// Initializes a new instance of the <see cref="RestServiceClientBase"/> class with the specified configuration options.
     /// </summary>
     /// <param name="options">The configuration options for the REST API client. If null, a new instance of <see cref="RestApiClientOptions"/> with default settings will be used.</param>
-    public RestServiceClientBase(IOptions<RestApiClientOptions> options) : this(options?.Value ?? new RestApiClientOptions()) { }
+    /// <param name="httpClientHandler"></param>
+    public RestServiceClientBase(IOptions<RestApiClientOptions> options, IHttpClientFactory httpClientHandler) : this(options?.Value) {
+        _httpClientHandler = httpClientHandler;
+    }
 
     /// <summary>
     /// Initializes a new instance of the RestServiceClientBase class using the specified REST API client options.
@@ -152,6 +157,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <remarks>If the options parameter is null, a new instance of RestApiClientOptions is created and used
     /// as the default configuration.</remarks>
     /// <param name="options">The options that configure the behavior of the REST API client. If null, default options are used.</param>
+
     public RestServiceClientBase(RestApiClientOptions options)
     {
         _options = options ?? new RestApiClientOptions();
@@ -167,7 +173,12 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
 
     private IRestClient RestClient(string uniqueId, Uri addressOverride = null)
     {
-        var baseAddress = _options.UrlBuilder(uniqueId);
+        Uri baseAddress = null;
+
+        if (_options?.UrlBuilder != null)
+        {
+            baseAddress = _options.UrlBuilder(uniqueId);
+        }
 
         var options = new RestClientOptions()
         {
@@ -177,7 +188,15 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
 
         HttpClient client = null;
 
-        if (_options.HttpMessageHandler != null)
+        if (_httpClient != null)
+        {
+            client = _httpClient;
+        }
+        else if (_httpClientHandler != null)
+        {
+            client = _httpClientHandler.CreateClient(uniqueId);
+        }
+        else if (_options.HttpMessageHandler != null)
         {
             client = new HttpClient(_options.HttpMessageHandler);
         }
@@ -785,7 +804,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
                 {
                     if (CookieManager != null && !CookieManager.HasValidUserCookies)
                     {
-                        CookieManager.LoadCookies(uniqueId);
+                        await CookieManager.LoadCookiesAsync(uniqueId);
                     }
 
                     if (!CookieManager.HasValidUserCookies)
@@ -848,7 +867,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
             {
                 try
                 {
-                    CookieManager?.ValidateAndSave(uniqueId);
+                    await CookieManager?.ValidateAndSaveAsync(uniqueId);
                 }
                 catch (Exception ex)
                 {
@@ -864,7 +883,6 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// Handles the authentication failure for the unique connection id or base address
     /// </summary>
     /// <param name="uniqueId"></param>
-    /// <param name="connectionId">Unique connection id or base address</param>
     /// <param name="authentication"></param>
     public async Task HandleAuthFailureAsync(string uniqueId, RequestAuthenticationType authentication)
     {
@@ -872,7 +890,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
         {
             case RequestAuthenticationType.Cookie:
             {
-                CookieManager?.DeleteCookies(uniqueId);
+                await CookieManager?.DeleteCookiesAsync(uniqueId);
             }
             break;
         }

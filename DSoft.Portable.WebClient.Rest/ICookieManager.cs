@@ -1,4 +1,6 @@
 ﻿
+using System.Threading.Tasks;
+
 namespace DSoft.Portable.WebClient.Rest;
 
 /// <summary>
@@ -9,22 +11,22 @@ public interface ICookieManager
     /// <summary>
     /// Validates the cookies and saves them
     /// </summary>
-    void ValidateAndSave(string key);
+    Task ValidateAndSaveAsync(string key);
 
     /// <summary>
     /// Saves the EFOS related cookies.
     /// </summary>
-    void SaveCookies(string key);
+    Task SaveCookiesAsync(string key);
 
     /// <summary>
     /// Load the EFOS related cookies from disk
     /// </summary>
-    void LoadCookies(string key);
+    Task LoadCookiesAsync(string key);
 
     /// <summary>
     /// Delete the stored EFOS cookies and expire the ones in memory
     /// </summary>
-    void DeleteCookies(string key);
+    Task DeleteCookiesAsync(string key);
 
     /// <summary>
     /// Determines whether [has valid user cookies].

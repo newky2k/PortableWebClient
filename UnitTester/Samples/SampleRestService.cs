@@ -12,7 +12,7 @@ internal class SampleRestService : RestServiceClientBase, ISampleRestService
 
     protected override string ApiPrefix => "api";
 
-    public SampleRestService(IOptions<RestApiClientOptions> options) : base(options) { }
+    public SampleRestService(IOptions<RestApiClientOptions> options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
 
     public async Task<string> GetReleaseAsync()
     {
@@ -21,7 +21,7 @@ internal class SampleRestService : RestServiceClientBase, ISampleRestService
         return result;
     }
 
-    public override Task<string> GetUniqueIdAsync() => Task.FromResult(Guid.NewGuid().ToString());
+    public override Task<string> GetUniqueIdAsync() => Task.FromResult("TestClient");
 }
 
 public class ReleaseInfo()

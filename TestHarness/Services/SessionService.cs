@@ -1,4 +1,5 @@
 ﻿using DSoft.Portable.WebClient.Encryption;
+using DSoft.Portable.WebClient.Rest;
 using DSoft.Portable.WebClient.Rest.Encryption;
 using Microsoft.Extensions.Options;
 using PortableClient.Models;
