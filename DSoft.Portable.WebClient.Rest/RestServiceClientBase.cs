@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using DSoft.Portable.WebClient.Rest.Enums;
 using DSoft.Portable.WebClient.Rest.Exceptions;
 using DSoft.Portable.WebClient.Rest.Responses;
+using Microsoft.Extensions.Options;
 using RestSharp;
 using RestSharp.Serializers.Json;
 
@@ -20,9 +21,7 @@ namespace DSoft.Portable.WebClient.Rest;
 public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
 {
     #region Fields
-    private Uri _baseAddress;
     private RestApiClientOptions _options;
-    private string _connectionId;
     #endregion
 
     #region Properties
@@ -137,17 +136,25 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <value>The api prefix - default: api</value>
     protected virtual string ServiceName => "";
 
-    private string UniqueId
-    {
-        get
-        {
-            if (string.IsNullOrWhiteSpace(_connectionId))
-            {
-                return _baseAddress.ToString();
-            }
+    #endregion
 
-            return _connectionId;
-        }
+    #region Constructors
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RestServiceClientBase"/> class with the specified configuration options.
+    /// </summary>
+    /// <param name="options">The configuration options for the REST API client. If null, a new instance of <see cref="RestApiClientOptions"/> with default settings will be used.</param>
+    public RestServiceClientBase(IOptions<RestApiClientOptions> options) : this(options?.Value ?? new RestApiClientOptions()) { }
+
+    /// <summary>
+    /// Initializes a new instance of the RestServiceClientBase class using the specified REST API client options.
+    /// </summary>
+    /// <remarks>If the options parameter is null, a new instance of RestApiClientOptions is created and used
+    /// as the default configuration.</remarks>
+    /// <param name="options">The options that configure the behavior of the REST API client. If null, default options are used.</param>
+    public RestServiceClientBase(RestApiClientOptions options)
+    {
+        _options = options ?? new RestApiClientOptions();
     }
 
     #endregion
@@ -156,26 +163,15 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
 
     #region Setup
 
-    /// <summary>
-    /// Configure the service
-    /// </summary>
-    /// <param name="baseAddress">base address for requests</param>
-    /// <param name="options">Congiuration options</param>
-    /// <param name="uniqueId">Unique id or connection key</param>
-    public void Configure(Uri baseAddress, RestApiClientOptions options, string uniqueId = null)
-    {
-        _baseAddress = baseAddress;
-        _options = options;
-        _connectionId = uniqueId;
-    }
-
     #region Client Builder
 
-    private IRestClient RestClient(Uri addressOverride = null)
+    private IRestClient RestClient(string uniqueId, Uri addressOverride = null)
     {
+        var baseAddress = _options.UrlBuilder(uniqueId);
+
         var options = new RestClientOptions()
         {
-            BaseUrl = addressOverride ?? _baseAddress,
+            BaseUrl = addressOverride ?? baseAddress,
             Timeout = _options.TimeOut,
         };
 
@@ -192,6 +188,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
 
             options.CookieContainer = _options.CookieContainer;
         }
+        
 
         return BuildRestClient(options, client);
     }
@@ -410,7 +407,8 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <exception cref="UnauthorisedException"></exception>
     /// <exception cref="ServerResponseFailureException"></exception>
     /// <exception cref="System.Exception">Unexpected response</exception>
-    public Task<T> ExecuteGetAsync<T>(string actionName, string controllerOverride = null, RequestAuthenticationType authentication = RequestAuthenticationType.Anonymous, string parameterString = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
+    public Task<T> ExecuteGetAsync<T>(string actionName, string controllerOverride = null, RequestAuthenticationType authentication = RequestAuthenticationType.Anonymous, string parameterString = null,
+        Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
     {
         var request = BuildGetRequest(actionName, parameterString, controllerOverride, headers);
 
@@ -659,11 +657,13 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <exception cref="DataResponseFailureException"></exception>
     public async Task<T> ExecuteRequestWithBaseResonseAsync<T>(RestRequest request, RequestAuthenticationType authentication = RequestAuthenticationType.Anonymous, CancellationToken cancellationToken = default) where T : ResponseBase
     {
-        Preflight(request, authentication);
+        var uniqueId = await GetUniqueIdAsync();
 
-        var result = await RestClient().ExecuteAsync<T>(request, cancellationToken: cancellationToken);
+        await PreflightAsync(request, authentication, uniqueId);
 
-        HandleResponse(result, authentication);
+        var result = await RestClient(uniqueId).ExecuteAsync<T>(request, cancellationToken: cancellationToken);
+
+        await HandleResponseAsync(result, authentication, uniqueId);
 
         if (result.Data.Success == false)
             throw new DataResponseFailureException(result.Data.Message);
@@ -683,11 +683,13 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <returns>The response data of type <typeparamref name="T"/> from the executed REST request.</returns>
     public async Task<T> ExecuteAsync<T>(RestRequest request, RequestAuthenticationType authentication = RequestAuthenticationType.Anonymous, CancellationToken cancellationToken = default)
     {
-        Preflight(request, authentication);
+        var uniqueId = await GetUniqueIdAsync();
 
-        var result = await RestClient().ExecuteAsync<T>(request, cancellationToken: cancellationToken);
+        await PreflightAsync(request, authentication, uniqueId);
 
-        HandleResponse(result, authentication);
+        var result = await RestClient(uniqueId).ExecuteAsync<T>(request, cancellationToken: cancellationToken);
+
+        await HandleResponseAsync(result, authentication, uniqueId);
 
         return result.Data;
     }
@@ -705,11 +707,13 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <returns>The response data of type <typeparamref name="T"/> from the executed REST request.</returns>
     public async Task<T> ExecuteAsync<T>(Uri baseAddress, RestRequest request, RequestAuthenticationType authentication = RequestAuthenticationType.Anonymous, CancellationToken cancellationToken = default)
     {
-        Preflight(request, authentication);
+        var uniqueId = await GetUniqueIdAsync();
 
-        var result = await RestClient(baseAddress).ExecuteAsync<T>(request, cancellationToken: cancellationToken);
+        await PreflightAsync(request, authentication, uniqueId);
 
-        HandleResponse(result, authentication);
+        var result = await RestClient(uniqueId, baseAddress).ExecuteAsync<T>(request, cancellationToken: cancellationToken);
+
+        await HandleResponseAsync(result, authentication, uniqueId);
 
         return result.Data;
     }
@@ -729,13 +733,15 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <returns>A <see cref="DownloadResult"/> containing the binary data and the associated file name, if available.</returns>
     protected async Task<DownloadResult> ExecuteGetBinaryAsync(string actionName, RequestAuthenticationType authentication = RequestAuthenticationType.Anonymous, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
     {
+        var uniqueId = await GetUniqueIdAsync();
+
         var request = BuildGetRequest(actionName, parameterString, controllerOverride, headers);
 
-        Preflight(request, authentication);
+        await PreflightAsync(request, authentication, uniqueId);
 
-        var result = await RestClient().ExecuteAsync(request, cancellationToken: cancellationToken);
+        var result = await RestClient(uniqueId).ExecuteAsync(request, cancellationToken: cancellationToken);
 
-        HandleResponse(result, authentication);
+        await HandleResponseAsync(result, authentication, uniqueId);
 
         var header_contentDisposition = result.ContentHeaders.FirstOrDefault(x => x.Name.Equals("content-disposition", StringComparison.OrdinalIgnoreCase));
 
@@ -767,8 +773,10 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <param name="request"></param>
     /// <param name="authentication">Specifies the authentication method to use for the request. The value determines how preflight checks are
     /// performed and which authentication mechanisms are validated.</param>
-    public void Preflight(RestRequest request, RequestAuthenticationType authentication)
+    /// <param name="uniqueId"></param>
+    public async Task PreflightAsync(RestRequest request, RequestAuthenticationType authentication, string uniqueId)
     {
+      
         switch (authentication)
         {
             case RequestAuthenticationType.Cookie:
@@ -777,7 +785,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
                 {
                     if (CookieManager != null && !CookieManager.HasValidUserCookies)
                     {
-                        CookieManager.LoadCookies(UniqueId);
+                        CookieManager.LoadCookies(uniqueId);
                     }
 
                     if (!CookieManager.HasValidUserCookies)
@@ -787,7 +795,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
                 }
                 catch (Exception ex)
                 {
-                    HandleAuthFailure(UniqueId, authentication);
+                    await HandleAuthFailureAsync(uniqueId, authentication);
                 }
             }
             break;
@@ -807,10 +815,11 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// </summary>
     /// <param name="response">The response.</param>
     /// <param name="authentication">Type of authentication</param>
+    /// <param name="uniqueId"></param>
     /// <exception cref="NoServerResponseException"></exception>
     /// <exception cref="ServerResponseFailureException"></exception>
     /// <exception cref="UnauthorisedException"></exception>
-    public void HandleResponse(RestResponse response, RequestAuthenticationType authentication)
+    public async Task HandleResponseAsync(RestResponse response, RequestAuthenticationType authentication, string uniqueId)
     {
         if (!response.IsSuccessful)
         {
@@ -820,7 +829,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
             }
             else if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
-                HandleAuthFailure(UniqueId, authentication);
+                await HandleAuthFailureAsync(uniqueId, authentication);
             }
             else if (response.StatusCode != HttpStatusCode.OK)
             {
@@ -831,7 +840,6 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
                 throw new Exception("Unexpected response from the server");
 
             }
-
         }
 
         switch (authentication)
@@ -840,11 +848,11 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
             {
                 try
                 {
-                    CookieManager?.ValidateAndSave(UniqueId);
+                    CookieManager?.ValidateAndSave(uniqueId);
                 }
                 catch (Exception ex)
                 {
-                    HandleAuthFailure(UniqueId, authentication);
+                    await HandleAuthFailureAsync(uniqueId, authentication);
                 }
             }
             break;
@@ -855,15 +863,16 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <summary>
     /// Handles the authentication failure for the unique connection id or base address
     /// </summary>
+    /// <param name="uniqueId"></param>
     /// <param name="connectionId">Unique connection id or base address</param>
     /// <param name="authentication"></param>
-    public void HandleAuthFailure(string connectionId, RequestAuthenticationType authentication)
+    public async Task HandleAuthFailureAsync(string uniqueId, RequestAuthenticationType authentication)
     {
         switch (authentication)
         {
             case RequestAuthenticationType.Cookie:
             {
-                CookieManager?.DeleteCookies(connectionId);
+                CookieManager?.DeleteCookies(uniqueId);
             }
             break;
         }
@@ -878,6 +887,12 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     {
 
     }
+
+    public virtual Task<string> GetUniqueIdAsync()
+    {
+        return Task.FromResult(string.Empty);
+    }
+
 
     #endregion
 

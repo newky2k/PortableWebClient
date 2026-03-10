@@ -1,6 +1,5 @@
 ﻿using System;
 using DSoft.Portable.WebClient.Rest;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -26,8 +25,6 @@ public static class ServiceCollectionExtensions
     /// <returns>The service collection with the REST service client factory and options registered. Enables method chaining.</returns>
     public static IServiceCollection AddRestServiceClientFactory(this IServiceCollection services, Action<RestApiClientOptions> configure)
     {
-        services.TryAddScoped<IRestServiceClientFactory, RestServiceClientFactory>();
-
         services.AddOptions<RestApiClientOptions>().Configure(configure);
 
         return services;
