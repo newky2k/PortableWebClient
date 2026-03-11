@@ -12,7 +12,7 @@ internal class SampleRestService : RestServiceClientBase, ISampleRestService
 
     protected override string ApiPrefix => "api";
 
-    public SampleRestService(IOptions<RestApiClientOptions> options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
+    public SampleRestService(IOptions<RestApiClientOptions> options, PortableRestHttpClient httpClient) : base(options, httpClient) { }
 
     public async Task<string> GetReleaseAsync()
     {

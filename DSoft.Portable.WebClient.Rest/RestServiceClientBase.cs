@@ -22,7 +22,6 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
 {
     #region Fields
     private RestApiClientOptions _options;
-    private IHttpClientFactory _httpClientHandler;
     private PortableRestHttpClient _httpClient;
     #endregion
 
@@ -146,9 +145,9 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// Initializes a new instance of the <see cref="RestServiceClientBase"/> class with the specified configuration options.
     /// </summary>
     /// <param name="options">The configuration options for the REST API client. If null, a new instance of <see cref="RestApiClientOptions"/> with default settings will be used.</param>
-    /// <param name="httpClientHandler"></param>
-    public RestServiceClientBase(IOptions<RestApiClientOptions> options, IHttpClientFactory httpClientHandler) : this(options?.Value) {
-        _httpClientHandler = httpClientHandler;
+    /// <param name="httpClient"></param>
+    public RestServiceClientBase(IOptions<RestApiClientOptions> options, PortableRestHttpClient httpClient) : this(options?.Value) {
+        _httpClient = httpClient;
     }
 
     /// <summary>
@@ -190,11 +189,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
 
         if (_httpClient != null)
         {
-            client = _httpClient;
-        }
-        else if (_httpClientHandler != null)
-        {
-            client = _httpClientHandler.CreateClient(uniqueId);
+            client = _httpClient.HttpClient;
         }
         else if (_options.HttpMessageHandler != null)
         {

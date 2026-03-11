@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using DSoft.Portable.WebClient.Rest;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -13,7 +14,7 @@ namespace Microsoft.Extensions.DependencyInjection;
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Adds a REST service client factory to the specified service collection and configures REST API client options.
+    /// Adds REST service client logic to the specified service collection and configures REST API client options.
     /// </summary>
     /// <remarks>This method registers an implementation of IRestServiceClientFactory with scoped lifetime and
     /// configures RestApiClientOptions using the provided action. Use this extension method to enable dependency
@@ -23,12 +24,38 @@ public static class ServiceCollectionExtensions
     /// <param name="configure">An action used to configure the options for the REST API client. Allows customization of settings such as base
     /// URL, timeouts, and other client behaviors. Cannot be null.</param>
     /// <returns>The service collection with the REST service client factory and options registered. Enables method chaining.</returns>
-    public static IServiceCollection AddRestServiceClientFactory(this IServiceCollection services, Action<RestApiClientOptions> configure)
+    public static IServiceCollection AddRestServiceClient(this IServiceCollection services, Action<RestApiClientOptions> configure)
     {
         services.AddOptions<RestApiClientOptions>().Configure(configure);
 
         return services;
     }
 
+
+    /// <summary>
+    /// Adds REST service client logic using IHttpClientFactoryto the specified service collection and configures REST API client options.
+    /// </summary>
+    /// <remarks>This method registers an implementation of IRestServiceClientFactory with scoped lifetime and
+    /// configures RestApiClientOptions using the provided action. Use this extension method to enable dependency
+    /// injection for REST API clients in your application.</remarks>
+    /// <param name="services">The service collection to which the REST service client factory and related options will be added. Cannot be
+    /// null.</param>
+    /// <param name="configure">An action used to configure the options for the REST API client. Allows customization of settings such as base
+    /// URL, timeouts, and other client behaviors. Cannot be null.</param>
+    /// <param name="configureHandler">Option handler configuration function</param>
+    /// <returns>The service collection with the REST service client factory and options registered. Enables method chaining.</returns>
+    public static IServiceCollection AddRestServiceClientWithFactory(this IServiceCollection services, Action<RestApiClientOptions> configure, Func<HttpMessageHandler> configureHandler = null)
+    {
+        services.AddOptions<RestApiClientOptions>().Configure(configure);
+
+        var httpClientBuilder = services.AddHttpClient<PortableRestHttpClient>(c => { });
+
+        if (configureHandler is not null)
+        {
+            httpClientBuilder.ConfigurePrimaryHttpMessageHandler(configureHandler);
+        }
+
+        return services;
+    }
 
 }

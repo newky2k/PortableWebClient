@@ -52,7 +52,7 @@ namespace UnitTester
                 x.HttpMessageHandler = webAppFactory.Server.CreateHandler();
             });
 
-            //services.AddRestServiceClientFactory(x =>
+            //services.AddRestServiceClient(x =>
             //{
             //    x.TimeOut = TimeSpan.FromSeconds(5);
             //    x.JsonSerializerOptions = DefaultJsonOptions;
@@ -63,7 +63,7 @@ namespace UnitTester
             //    };
             //});
 
-            services.AddRestServiceClientFactory(x =>
+            services.AddRestServiceClientWithFactory(x =>
             {
                 x.TimeOut = TimeSpan.FromSeconds(5);
                 x.JsonSerializerOptions = DefaultJsonOptions;
@@ -71,18 +71,7 @@ namespace UnitTester
                 {
                     return webAppFactory.Server.BaseAddress;
                 };
-            });
-
-            services.AddHttpClient("TestClient", c =>
-            {
-
-            }).ConfigurePrimaryHttpMessageHandler(webAppFactory.Server.CreateHandler);
-
-            services.AddHttpClient<PortableRestHttpClient>(c =>
-            {
-               
-            }).ConfigurePrimaryHttpMessageHandler(webAppFactory.Server.CreateHandler);
-
+            }, webAppFactory.Server.CreateHandler);
 
             Provider = services.BuildServiceProvider();
         }
