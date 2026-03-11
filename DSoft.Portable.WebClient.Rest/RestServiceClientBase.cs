@@ -817,7 +817,14 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
             {
                 if (TokenManager is null)
                 {
-                    
+                    var accessToken = await TokenManager.LoadAccessTokenAsync(uniqueId);
+
+                    if (string.IsNullOrWhiteSpace(accessToken))
+                    {
+                        return;
+                    }
+
+                    request.AddOrUpdateHeader("Authorization", $"Bearer {accessToken}");
                 }
             }
             break;
