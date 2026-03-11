@@ -1,5 +1,6 @@
 ﻿using DSoft.Portable.WebClient.Rest;
 using DSoft.Portable.WebClient.Rest.Enums;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace UnitTester.Samples;
@@ -12,7 +13,7 @@ internal class SampleRestService : RestServiceClientBase, ISampleRestService
 
     protected override string ApiPrefix => "api";
 
-    public SampleRestService(IOptions<RestApiClientOptions> options, PortableRestHttpClient httpClient) : base(options, httpClient) { }
+    public SampleRestService(IOptions<RestApiClientOptions> options, PortableRestHttpClient httpClient, IServiceScopeFactory serviceScopeFactory) : base(options, httpClient, serviceScopeFactory) { }
 
     public async Task<string> GetReleaseAsync()
     {

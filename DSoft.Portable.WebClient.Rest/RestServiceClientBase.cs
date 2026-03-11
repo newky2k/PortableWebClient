@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using DSoft.Portable.WebClient.Rest.Enums;
 using DSoft.Portable.WebClient.Rest.Exceptions;
 using DSoft.Portable.WebClient.Rest.Responses;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using RestSharp;
 using RestSharp.Serializers.Json;
@@ -21,8 +22,12 @@ namespace DSoft.Portable.WebClient.Rest;
 public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
 {
     #region Fields
-    private RestApiClientOptions _options;
-    private PortableRestHttpClient _httpClient;
+    private readonly RestApiClientOptions _options;
+    private readonly PortableRestHttpClient _httpClient;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
+
+    private IJwtTokenManger _tokenManager;
+    private ICookieManager _cookieManager;
     #endregion
 
     #region Properties
@@ -44,9 +49,9 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
             {
                 client = new HttpClient(_options.HttpMessageHandler);
             }
-            else if (_options.CookieContainer != null)
+            else if (_cookieManager is CookieContainer cookies)
             {
-                var handler = new HttpClientHandler { CookieContainer = _options.CookieContainer };
+                var handler = new HttpClientHandler { CookieContainer = cookies };
                 client = new HttpClient(handler);
             }
             else
@@ -65,16 +70,19 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     {
         get
         {
-            if (_options.CookieContainer == null)
-                return null;
-
-            if (_options.CookieContainer is ICookieManager cm)
+            if (_cookieManager == null)
             {
-                return cm;
+                if (_serviceScopeFactory is not null)
+                {
+                    using var scope = _serviceScopeFactory.CreateScope();
+
+                    var cookieManager = scope.ServiceProvider.GetService<ICookieManager>();
+
+                    _cookieManager = cookieManager;
+                }
             }
 
             return null;
-
         }
     }
 
@@ -88,14 +96,18 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     {
         get
         {
-            if (_options.TokenManger == null)
-                return null;
-
-            if (_options.TokenManger is IJwtTokenManger tm)
+            if (_tokenManager == null)
             {
-                return tm;
-            }
+                if (_serviceScopeFactory is not null)
+                {
+                    using var scope = _serviceScopeFactory.CreateScope();
 
+                    var tokenManager = scope.ServiceProvider.GetService<IJwtTokenManger>();
+
+                    _tokenManager = tokenManager;
+                }
+            }
+            
             return null;
 
         }
@@ -146,8 +158,10 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// </summary>
     /// <param name="options">The configuration options for the REST API client. If null, a new instance of <see cref="RestApiClientOptions"/> with default settings will be used.</param>
     /// <param name="httpClient"></param>
-    public RestServiceClientBase(IOptions<RestApiClientOptions> options, PortableRestHttpClient httpClient) : this(options?.Value) {
+    /// <param name="serviceScopeFactory">Scope Factory</param>
+    public RestServiceClientBase(IOptions<RestApiClientOptions> options, PortableRestHttpClient httpClient, IServiceScopeFactory serviceScopeFactory) : this(options?.Value) {
         _httpClient = httpClient;
+        _serviceScopeFactory = serviceScopeFactory;
     }
 
     /// <summary>
@@ -159,6 +173,47 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
 
     public RestServiceClientBase(RestApiClientOptions options)
     {
+        _options = options ?? new RestApiClientOptions();
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the RestServiceClientBase class using the specified REST API client options.
+    /// </summary>
+    /// <remarks>If the options parameter is null, a new instance of RestApiClientOptions is created and used
+    /// as the default configuration.</remarks>
+    /// <param name="options">The options that configure the behavior of the REST API client. If null, default options are used.</param>
+    /// <param name="tokenManager">Token Manager instance</param>
+    public RestServiceClientBase(RestApiClientOptions options, IJwtTokenManger tokenManager)
+    {
+        _tokenManager ??= tokenManager;
+        _options = options ?? new RestApiClientOptions();
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the RestServiceClientBase class using the specified REST API client options.
+    /// </summary>
+    /// <remarks>If the options parameter is null, a new instance of RestApiClientOptions is created and used
+    /// as the default configuration.</remarks>
+    /// <param name="options">The options that configure the behavior of the REST API client. If null, default options are used.</param>
+    /// <param name="cookieManager">Cookie Manager</param>
+    public RestServiceClientBase(RestApiClientOptions options, ICookieManager cookieManager )
+    {
+        _cookieManager ??= _cookieManager;
+        _options = options ?? new RestApiClientOptions();
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the RestServiceClientBase class using the specified REST API client options.
+    /// </summary>
+    /// <remarks>If the options parameter is null, a new instance of RestApiClientOptions is created and used
+    /// as the default configuration.</remarks>
+    /// <param name="options">The options that configure the behavior of the REST API client. If null, default options are used.</param>
+    /// <param name="tokenManager">Token Manager instance</param>
+    /// <param name="cookieManager">Cookie Manager</param>
+    public RestServiceClientBase(RestApiClientOptions options, IJwtTokenManger tokenManager, ICookieManager cookieManager)
+    {
+        _tokenManager ??= tokenManager;
+        _cookieManager ??= _cookieManager;
         _options = options ?? new RestApiClientOptions();
     }
 
@@ -195,15 +250,14 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
         {
             client = new HttpClient(_options.HttpMessageHandler);
         }
-        else if (_options.CookieContainer != null)
+        else if (_cookieManager is CookieContainer cookies)
         {
-            var handler = new HttpClientHandler { CookieContainer = _options.CookieContainer };
+            var handler = new HttpClientHandler { CookieContainer = cookies };
             client = new HttpClient(handler);
 
-            options.CookieContainer = _options.CookieContainer;
+            options.CookieContainer = cookies;
         }
-        
-
+       
         return BuildRestClient(options, client);
     }
 

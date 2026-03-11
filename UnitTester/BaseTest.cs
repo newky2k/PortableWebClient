@@ -63,7 +63,8 @@ namespace UnitTester
             //    };
             //});
 
-            services.AddRestServiceClientWithFactory(x =>
+            
+            services.AddRestServiceClientWithFactory<JwtTokenManager>(x =>
             {
                 x.TimeOut = TimeSpan.FromSeconds(5);
                 x.JsonSerializerOptions = DefaultJsonOptions;
