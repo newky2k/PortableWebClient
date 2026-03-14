@@ -461,7 +461,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="actionName">Name of the action.</param>
-    /// <param name="authentication">Type of authentication</param>
+    /// <param name="authenticationOverride">Type of authentication</param>
     /// <param name="parameterString">The parameter string.</param>
     /// <param name="controllerOverride">The controller override.</param>
     /// <param name="headers">The headers.</param>
@@ -471,12 +471,12 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <exception cref="UnauthorisedException"></exception>
     /// <exception cref="ServerResponseFailureException"></exception>
     /// <exception cref="System.Exception">Unexpected response</exception>
-    public Task<T> ExecuteGetAsync<T>(string actionName, string controllerOverride = null, RequestAuthenticationType authentication = RequestAuthenticationType.Anonymous, string parameterString = null,
+    public Task<T> ExecuteGetAsync<T>(string actionName, string controllerOverride = null, RequestAuthenticationType? authenticationOverride = null, string parameterString = null,
         Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
     {
         var request = BuildGetRequest(actionName, parameterString, controllerOverride, headers);
 
-        return ExecuteAsync<T>(request, authentication, cancellationToken: cancellationToken);
+        return ExecuteAsync<T>(request, authenticationOverride, cancellationToken: cancellationToken);
     }
 
     /// <summary>
@@ -489,18 +489,18 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <param name="actionName">The name of the action to invoke on the server. Cannot be null or empty.</param>
     /// <param name="controllerOverride">An optional controller name that overrides the default controller. If null, the default controller is used.</param>
     /// <param name="serviceOverride">An optional service URL that overrides the default service endpoint. If null, the default endpoint is used.</param>
-    /// <param name="authentication">Specifies the authentication type to use for the request. Defaults to Anonymous if not provided.</param>
+    /// <param name="authenticationOverride">Specifies the authentication type to use for the request. Defaults to Anonymous if not provided.</param>
     /// <param name="parameterString">An optional string containing query parameters to include in the request. If null, no additional parameters are
     /// added.</param>
     /// <param name="headers">An optional dictionary of headers to include in the request. If null, no custom headers are sent.</param>
     /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete. Allows the operation to be cancelled.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains the response deserialized as the
     /// specified type.</returns>
-    public Task<T> ExecuteGetAsync<T>(string actionName, string controllerOverride, string serviceOverride, RequestAuthenticationType authentication = RequestAuthenticationType.Anonymous, string parameterString = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
+    public Task<T> ExecuteGetAsync<T>(string actionName, string controllerOverride, string serviceOverride, RequestAuthenticationType? authenticationOverride = null, string parameterString = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
     {
         var request = BuildGetRequest(actionName, parameterString, controllerOverride, headers, serviceOverride);
 
-        return ExecuteAsync<T>(request, authentication, cancellationToken: cancellationToken);
+        return ExecuteAsync<T>(request, authenticationOverride, cancellationToken: cancellationToken);
 
     }
 
@@ -511,19 +511,19 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <typeparam name="T2">The type of the 2.</typeparam>
     /// <param name="actionName">Name of the action.</param>
     /// <param name="payload">The payload.</param>
-    /// <param name="authentication">Type of authentication</param>
+    /// <param name="authenticationOverride">Type of authentication</param>
     /// <param name="controllerOverride">The controller override.</param>
     /// <param name="headers">The headers.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns></returns>
     /// <exception cref="System.Exception">Unexpected response</exception>
-    public Task<T> ExecutePostAsync<T, T2>(string actionName, T2 payload, RequestAuthenticationType authentication = RequestAuthenticationType.Anonymous, string controllerOverride = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
+    public Task<T> ExecutePostAsync<T, T2>(string actionName, T2 payload, RequestAuthenticationType? authenticationOverride = null, string controllerOverride = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
     {
         var request = BuildPostRequest(actionName, controllerOverride, headers);
 
         request.AddBody(payload);
 
-        return ExecuteAsync<T>(request, authentication, cancellationToken: cancellationToken);
+        return ExecuteAsync<T>(request, authenticationOverride, cancellationToken: cancellationToken);
     }
 
     /// <summary>
@@ -533,12 +533,12 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <param name="actionName">Controller action name</param>
     /// <param name="packetBuilder">Function to buile request body object</param>
     /// <returns>A Task&lt;T&gt; representing the asynchronous operation.</returns>
-    /// <param name="authentication">Type of authentication</param>
+    /// <param name="authenticationOverride">Type of authentication</param>
     /// <param name="cancellationToken"></param>
     /// <exception cref="NoServerResponseException"></exception>
     /// <exception cref="ServerResponseFailureException"></exception>
     /// <exception cref="DataResponseFailureException"></exception>
-    public async Task<T> ExecutePostAsync<T>(string actionName, Func<object> packetBuilder, RequestAuthenticationType authentication = RequestAuthenticationType.Anonymous, CancellationToken cancellationToken = default) where T : ResponseBase
+    public async Task<T> ExecutePostAsync<T>(string actionName, Func<object> packetBuilder, RequestAuthenticationType? authenticationOverride = null, CancellationToken cancellationToken = default) where T : ResponseBase
     {
         var request = BuildPostRequest(actionName);
 
@@ -547,7 +547,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
         if (body != null)
             request.AddJsonBody(body);
 
-        return await ExecuteAsync<T>(request, authentication);
+        return await ExecuteAsync<T>(request, authenticationOverride);
 
     }
 
@@ -557,7 +557,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// </summary>
     /// <typeparam name="T">The type of the response expected from the DELETE request.</typeparam>
     /// <param name="actionName">The name of the server action to invoke for the DELETE request. Cannot be null or empty.</param>
-    /// <param name="authentication">The authentication type to use for the request. Defaults to <see cref="RequestAuthenticationType.Anonymous"/> if
+    /// <param name="authenticationOverride">The authentication type to use for the request. Defaults to <see cref="RequestAuthenticationType.Anonymous"/> if
     /// not specified.</param>
     /// <param name="parameterString">An optional string containing query parameters to include in the request. May be null if no parameters are
     /// required.</param>
@@ -568,11 +568,11 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete. Allows the operation to be cancelled.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains the response from the server as an
     /// instance of type T.</returns>
-    public Task<T> ExecuteDeleteAsync<T>(string actionName, RequestAuthenticationType authentication = RequestAuthenticationType.Anonymous, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
+    public Task<T> ExecuteDeleteAsync<T>(string actionName, RequestAuthenticationType? authenticationOverride = null, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
     {
         var request = BuildDeleteRequest(actionName, parameterString, controllerOverride, headers);
 
-        return ExecuteAsync<T>(request, authentication, cancellationToken);
+        return ExecuteAsync<T>(request, authenticationOverride, cancellationToken);
 
     }
 
@@ -586,7 +586,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <typeparam name="T"></typeparam>
     /// <param name="baseAddress"></param>
     /// <param name="actionName">Name of the action.</param>
-    /// <param name="authentication">Type of authentication</param>
+    /// <param name="authenticationOverride">Type of authentication</param>
     /// <param name="parameterString">The parameter string.</param>
     /// <param name="controllerOverride">The controller override.</param>
     /// <param name="headers">The headers.</param>
@@ -596,11 +596,11 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <exception cref="UnauthorisedException"></exception>
     /// <exception cref="ServerResponseFailureException"></exception>
     /// <exception cref="System.Exception">Unexpected response</exception>
-    public Task<T> ExecuteGetAsync<T>(Uri baseAddress, string actionName, string controllerOverride = null, RequestAuthenticationType authentication = RequestAuthenticationType.Anonymous, string parameterString = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
+    public Task<T> ExecuteGetAsync<T>(Uri baseAddress, string actionName, string controllerOverride = null, RequestAuthenticationType? authenticationOverride = null, string parameterString = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
     {
         var request = BuildGetRequest(actionName, parameterString, controllerOverride, headers);
 
-        return ExecuteAsync<T>(baseAddress, request, authentication, cancellationToken: cancellationToken);
+        return ExecuteAsync<T>(baseAddress, request, authenticationOverride, cancellationToken: cancellationToken);
     }
 
     /// <summary>
@@ -614,18 +614,18 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <param name="actionName">The name of the action to invoke on the server. Cannot be null or empty.</param>
     /// <param name="controllerOverride">An optional controller name that overrides the default controller. If null, the default controller is used.</param>
     /// <param name="serviceOverride">An optional service URL that overrides the default service endpoint. If null, the default endpoint is used.</param>
-    /// <param name="authentication">Specifies the authentication type to use for the request. Defaults to Anonymous if not provided.</param>
+    /// <param name="authenticationOverride">Specifies the authentication type to use for the request. Defaults to Anonymous if not provided.</param>
     /// <param name="parameterString">An optional string containing query parameters to include in the request. If null, no additional parameters are
     /// added.</param>
     /// <param name="headers">An optional dictionary of headers to include in the request. If null, no custom headers are sent.</param>
     /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete. Allows the operation to be cancelled.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains the response deserialized as the
     /// specified type.</returns>
-    public Task<T> ExecuteGetAsync<T>(Uri baseAddress, string actionName, string controllerOverride, string serviceOverride, RequestAuthenticationType authentication = RequestAuthenticationType.Anonymous, string parameterString = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
+    public Task<T> ExecuteGetAsync<T>(Uri baseAddress, string actionName, string controllerOverride, string serviceOverride, RequestAuthenticationType? authenticationOverride = null, string parameterString = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
     {
         var request = BuildGetRequest(actionName, parameterString, controllerOverride, headers, serviceOverride);
 
-        return ExecuteAsync<T>(baseAddress, request, authentication, cancellationToken: cancellationToken);
+        return ExecuteAsync<T>(baseAddress, request, authenticationOverride, cancellationToken: cancellationToken);
 
     }
 
@@ -637,19 +637,19 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <param name="baseAddress"></param>
     /// <param name="actionName">Name of the action.</param>
     /// <param name="payload">The payload.</param>
-    /// <param name="authentication">Type of authentication</param>
+    /// <param name="authenticationOverride">Type of authentication</param>
     /// <param name="controllerOverride">The controller override.</param>
     /// <param name="headers">The headers.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns></returns>
     /// <exception cref="System.Exception">Unexpected response</exception>
-    public Task<T> ExecutePostAsync<T, T2>(Uri baseAddress, string actionName, T2 payload, RequestAuthenticationType authentication = RequestAuthenticationType.Anonymous, string controllerOverride = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
+    public Task<T> ExecutePostAsync<T, T2>(Uri baseAddress, string actionName, T2 payload, RequestAuthenticationType? authenticationOverride = null, string controllerOverride = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
     {
         var request = BuildPostRequest(actionName, controllerOverride, headers);
 
         request.AddBody(payload);
 
-        return ExecuteAsync<T>(baseAddress, request, authentication, cancellationToken: cancellationToken);
+        return ExecuteAsync<T>(baseAddress, request, authenticationOverride, cancellationToken: cancellationToken);
     }
 
     /// <summary>
@@ -660,12 +660,12 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <param name="actionName">Controller action name</param>
     /// <param name="packetBuilder">Function to buile request body object</param>
     /// <returns>A Task&lt;T&gt; representing the asynchronous operation.</returns>
-    /// <param name="authentication">Type of authentication</param>
+    /// <param name="authenticationOverride">Type of authentication</param>
     /// <param name="cancellationToken"></param>
     /// <exception cref="NoServerResponseException"></exception>
     /// <exception cref="ServerResponseFailureException"></exception>
     /// <exception cref="DataResponseFailureException"></exception>
-    public async Task<T> ExecutePostAsync<T>(Uri baseAddress, string actionName, Func<object> packetBuilder, RequestAuthenticationType authentication = RequestAuthenticationType.Anonymous, CancellationToken cancellationToken = default) where T : ResponseBase
+    public async Task<T> ExecutePostAsync<T>(Uri baseAddress, string actionName, Func<object> packetBuilder, RequestAuthenticationType? authenticationOverride = null, CancellationToken cancellationToken = default) where T : ResponseBase
     {
         var request = BuildPostRequest(actionName);
 
@@ -674,7 +674,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
         if (body != null)
             request.AddJsonBody(body);
 
-        return await ExecuteAsync<T>(baseAddress, request, authentication);
+        return await ExecuteAsync<T>(baseAddress, request, authenticationOverride);
 
     }
 
@@ -685,7 +685,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <typeparam name="T">The type of the response expected from the DELETE request.</typeparam>
     /// <param name="baseAddress"></param>
     /// <param name="actionName">The name of the server action to invoke for the DELETE request. Cannot be null or empty.</param>
-    /// <param name="authentication">The authentication type to use for the request. Defaults to <see cref="RequestAuthenticationType.Anonymous"/> if
+    /// <param name="authenticationOverride">The authentication type to use for the request. Defaults to <see cref="RequestAuthenticationType.Anonymous"/> if
     /// not specified.</param>
     /// <param name="parameterString">An optional string containing query parameters to include in the request. May be null if no parameters are
     /// required.</param>
@@ -696,11 +696,11 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete. Allows the operation to be cancelled.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains the response from the server as an
     /// instance of type T.</returns>
-    public Task<T> ExecuteDeleteAsync<T>(Uri baseAddress, string actionName, RequestAuthenticationType authentication = RequestAuthenticationType.Anonymous, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
+    public Task<T> ExecuteDeleteAsync<T>(Uri baseAddress, string actionName, RequestAuthenticationType? authenticationOverride = null, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
     {
         var request = BuildDeleteRequest(actionName, parameterString, controllerOverride, headers);
 
-        return ExecuteAsync<T>(baseAddress, request, authentication, cancellationToken);
+        return ExecuteAsync<T>(baseAddress, request, authenticationOverride, cancellationToken);
 
     }
 
@@ -714,20 +714,20 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <typeparam name="T">Response type</typeparam>
     /// <param name="request">Request</param>
     /// <returns>A Task&lt;T&gt; representing the asynchronous operation.</returns>
-    /// <param name="authentication">Type of authentication</param>
+    /// <param name="authenticationOverride">Type of authentication</param>
     /// <param name="cancellationToken"></param>
     /// <exception cref="NoServerResponseException"></exception>
     /// <exception cref="ServerResponseFailureException"></exception>
     /// <exception cref="DataResponseFailureException"></exception>
-    public async Task<T> ExecuteRequestWithBaseResonseAsync<T>(RestRequest request, RequestAuthenticationType authentication = RequestAuthenticationType.Anonymous, CancellationToken cancellationToken = default) where T : ResponseBase
+    public async Task<T> ExecuteRequestWithBaseResonseAsync<T>(RestRequest request, RequestAuthenticationType? authenticationOverride = null, CancellationToken cancellationToken = default) where T : ResponseBase
     {
         var uniqueId = await GetUniqueIdAsync();
 
-        await PreflightAsync(request, authentication, uniqueId);
+        await PreflightAsync(request, uniqueId, authenticationOverride);
 
         var result = await RestClient(uniqueId).ExecuteAsync<T>(request, cancellationToken: cancellationToken);
 
-        await HandleResponseAsync(result, authentication, uniqueId);
+        await HandleResponseAsync(result, uniqueId, authenticationOverride);
 
         if (result.Data.Success == false)
             throw new DataResponseFailureException(result.Data.Message);
@@ -742,18 +742,18 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// request. Handles the response to ensure proper processing according to the authentication method.</remarks>
     /// <typeparam name="T">The type of the data expected in the response from the REST request.</typeparam>
     /// <param name="request">The REST request to execute. Must contain all necessary information for the API call.</param>
-    /// <param name="authentication">The authentication type to use for the request. Defaults to <see cref="RequestAuthenticationType.Anonymous"/>.</param>
+    /// <param name="authenticationOverride">The authentication type to use for the request. Defaults to <see cref="RequestAuthenticationType.Anonymous"/>.</param>
     /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
     /// <returns>The response data of type <typeparamref name="T"/> from the executed REST request.</returns>
-    public async Task<T> ExecuteAsync<T>(RestRequest request, RequestAuthenticationType authentication = RequestAuthenticationType.Anonymous, CancellationToken cancellationToken = default)
+    public async Task<T> ExecuteAsync<T>(RestRequest request, RequestAuthenticationType? authenticationOverride = null, CancellationToken cancellationToken = default)
     {
         var uniqueId = await GetUniqueIdAsync();
 
-        await PreflightAsync(request, authentication, uniqueId);
+        await PreflightAsync(request, uniqueId, authenticationOverride);
 
         var result = await RestClient(uniqueId).ExecuteAsync<T>(request, cancellationToken: cancellationToken);
 
-        await HandleResponseAsync(result, authentication, uniqueId);
+        await HandleResponseAsync(result, uniqueId, authenticationOverride);
 
         return result.Data;
     }
@@ -766,18 +766,18 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <typeparam name="T">The type of the data expected in the response from the REST request.</typeparam>
     /// <param name="baseAddress"></param>
     /// <param name="request">The REST request to execute. Must contain all necessary information for the API call.</param>
-    /// <param name="authentication">The authentication type to use for the request. Defaults to <see cref="RequestAuthenticationType.Anonymous"/>.</param>
+    /// <param name="authenticationOverride">The authentication type to use for the request. Defaults to <see cref="RequestAuthenticationType.Anonymous"/>.</param>
     /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
     /// <returns>The response data of type <typeparamref name="T"/> from the executed REST request.</returns>
-    public async Task<T> ExecuteAsync<T>(Uri baseAddress, RestRequest request, RequestAuthenticationType authentication = RequestAuthenticationType.Anonymous, CancellationToken cancellationToken = default)
+    public async Task<T> ExecuteAsync<T>(Uri baseAddress, RestRequest request, RequestAuthenticationType? authenticationOverride = null, CancellationToken cancellationToken = default)
     {
         var uniqueId = await GetUniqueIdAsync();
 
-        await PreflightAsync(request, authentication, uniqueId);
+        await PreflightAsync(request, uniqueId, authenticationOverride);
 
         var result = await RestClient(uniqueId, baseAddress).ExecuteAsync<T>(request, cancellationToken: cancellationToken);
 
-        await HandleResponseAsync(result, authentication, uniqueId);
+        await HandleResponseAsync(result, uniqueId, authenticationOverride);
 
         return result.Data;
     }
@@ -788,24 +788,24 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <remarks>The file name is extracted from the 'content-disposition' header if present in the response.
     /// Use this method to download files or other binary content from a REST endpoint.</remarks>
     /// <param name="actionName">The name of the action to invoke, which determines the target endpoint for the GET request.</param>
-    /// <param name="authentication">Specifies the authentication type to use for the request. Defaults to <see
+    /// <param name="authenticationOverride">Specifies the authentication type to use for the request. Defaults to <see
     /// cref="RequestAuthenticationType.Anonymous"/> if not provided.</param>
     /// <param name="parameterString">An optional string containing additional query parameters to include in the request URL.</param>
     /// <param name="controllerOverride">An optional controller name to override the default controller used for the request.</param>
     /// <param name="headers">An optional dictionary of HTTP headers to include in the request, allowing customization of request behavior.</param>
     /// <param name="cancellationToken">A cancellation token that can be used to cancel the asynchronous operation.</param>
     /// <returns>A <see cref="DownloadResult"/> containing the binary data and the associated file name, if available.</returns>
-    protected async Task<DownloadResult> ExecuteGetBinaryAsync(string actionName, RequestAuthenticationType authentication = RequestAuthenticationType.Anonymous, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
+    protected async Task<DownloadResult> ExecuteGetBinaryAsync(string actionName, RequestAuthenticationType? authenticationOverride = null, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null, CancellationToken cancellationToken = default)
     {
         var uniqueId = await GetUniqueIdAsync();
 
         var request = BuildGetRequest(actionName, parameterString, controllerOverride, headers);
 
-        await PreflightAsync(request, authentication, uniqueId);
+        await PreflightAsync(request, uniqueId, authenticationOverride);
 
         var result = await RestClient(uniqueId).ExecuteAsync(request, cancellationToken: cancellationToken);
 
-        await HandleResponseAsync(result, authentication, uniqueId);
+        await HandleResponseAsync(result, uniqueId, authenticationOverride);
 
         var header_contentDisposition = result.ContentHeaders.FirstOrDefault(x => x.Name.Equals("content-disposition", StringComparison.OrdinalIgnoreCase));
 
@@ -835,12 +835,13 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// loading, an InvalidCookiesException is thrown. This process is essential for confirming user authentication
     /// prior to executing further operations.</remarks>
     /// <param name="request"></param>
-    /// <param name="authentication">Specifies the authentication method to use for the request. The value determines how preflight checks are
-    /// performed and which authentication mechanisms are validated.</param>
     /// <param name="uniqueId"></param>
-    public async Task PreflightAsync(RestRequest request, RequestAuthenticationType authentication, string uniqueId)
+    /// <param name="authenticationOverride">Specifies the authentication method to use for the request. The value determines how preflight checks are
+    /// performed and which authentication mechanisms are validated.</param>
+    public async Task PreflightAsync(RestRequest request, string uniqueId, RequestAuthenticationType? authenticationOverride = null)
     {
-      
+        RequestAuthenticationType authentication = authenticationOverride ?? _options.AuthenticationType;
+
         switch (authentication)
         {
             case RequestAuthenticationType.Cookie:
@@ -859,7 +860,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
                 }
                 catch (Exception ex)
                 {
-                    await HandleAuthFailureAsync(uniqueId, authentication);
+                    await HandleAuthFailureAsync(uniqueId, authenticationOverride);
                 }
             }
             break;
@@ -885,13 +886,15 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// Handles the response from the server
     /// </summary>
     /// <param name="response">The response.</param>
-    /// <param name="authentication">Type of authentication</param>
     /// <param name="uniqueId"></param>
+    /// <param name="authenticationOverride">Type of authentication</param>
     /// <exception cref="NoServerResponseException"></exception>
     /// <exception cref="ServerResponseFailureException"></exception>
     /// <exception cref="UnauthorisedException"></exception>
-    public async Task HandleResponseAsync(RestResponse response, RequestAuthenticationType authentication, string uniqueId)
+    public async Task HandleResponseAsync(RestResponse response, string uniqueId, RequestAuthenticationType? authenticationOverride = null)
     {
+        RequestAuthenticationType authentication = authenticationOverride ?? _options.AuthenticationType;
+
         if (!response.IsSuccessful)
         {
             if (response.StatusCode == 0)
@@ -900,7 +903,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
             }
             else if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
-                await HandleAuthFailureAsync(uniqueId, authentication);
+                await HandleAuthFailureAsync(uniqueId, authenticationOverride);
             }
             else if (response.StatusCode != HttpStatusCode.OK)
             {
@@ -923,7 +926,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
                 }
                 catch (Exception ex)
                 {
-                    await HandleAuthFailureAsync(uniqueId, authentication);
+                    await HandleAuthFailureAsync(uniqueId, authenticationOverride);
                 }
             }
             break;
@@ -935,9 +938,11 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// Handles the authentication failure for the unique connection id or base address
     /// </summary>
     /// <param name="uniqueId"></param>
-    /// <param name="authentication"></param>
-    public async Task HandleAuthFailureAsync(string uniqueId, RequestAuthenticationType authentication)
+    /// <param name="authenticationOverride"></param>
+    public async Task HandleAuthFailureAsync(string uniqueId, RequestAuthenticationType? authenticationOverride = null)
     {
+        RequestAuthenticationType authentication = authenticationOverride ?? _options.AuthenticationType;
+
         switch (authentication)
         {
             case RequestAuthenticationType.Cookie:

@@ -17,14 +17,14 @@ internal class SampleRestService : RestServiceClientBase, ISampleRestService
 
     public async Task<string> GetReleaseAsync()
     {
-        var result = await ExecuteGetAsync<string>("Current", authentication: RequestAuthenticationType.Anonymous);
+        var result = await ExecuteGetAsync<string>("Current", authenticationOverride: RequestAuthenticationType.Anonymous);
 
         return result;
     }
 
     public async Task<string> GetAccessToken()
     {
-        var result = await ExecuteGetAsync<string>("AccessToken", authentication: RequestAuthenticationType.Token);
+        var result = await ExecuteGetAsync<string>("AccessToken", authenticationOverride: RequestAuthenticationType.Token);
 
         return result;
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
+using DSoft.Portable.WebClient.Rest.Enums;
 
 namespace DSoft.Portable.WebClient.Rest;
 
@@ -10,6 +11,10 @@ namespace DSoft.Portable.WebClient.Rest;
 /// </summary>
 public class RestApiClientOptions
 {
+    /// <summary>
+    /// Type of authentication
+    /// </summary>
+    public RequestAuthenticationType AuthenticationType { get; set; } = RequestAuthenticationType.Anonymous;
 
     /// <summary>
     /// Gets the time out. Default(30 seconds)
