@@ -56,7 +56,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
             }
             else
             {
-                client = new HttpClient();
+                client = _httpClient.HttpClient;
             }
 
             return client;
@@ -221,8 +221,6 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
 
     #region Methods
 
-    #region Setup
-
     #region Client Builder
 
     private IRestClient RestClient(string uniqueId, Uri addressOverride = null)
@@ -290,8 +288,6 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
             }
         }
     }
-
-    #endregion
 
     #endregion
 
@@ -947,6 +943,11 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
             case RequestAuthenticationType.Cookie:
             {
                 await CookieManager?.DeleteCookiesAsync(uniqueId);
+            }
+            break;
+            case RequestAuthenticationType.Token:
+            {
+                await TokenManager?.HandleAuthFailure(uniqueId);
             }
             break;
         }

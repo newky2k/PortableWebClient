@@ -15,4 +15,11 @@ public interface IJwtTokenManger
     /// <returns></returns>
     Task<string> LoadAccessTokenAsync(string key);
 
+    /// <summary>
+    /// This is called when there is an authentication failure with the provided access token.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    Task HandleAuthFailure(string key);
+
 }
