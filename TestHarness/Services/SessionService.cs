@@ -1,5 +1,7 @@
 ﻿using DSoft.Portable.WebClient.Encryption;
+using DSoft.Portable.WebClient.Rest;
 using DSoft.Portable.WebClient.Rest.Encryption;
+using Microsoft.Extensions.Options;
 using PortableClient.Models;
 using System;
 using System.Threading.Tasks;
@@ -13,7 +15,7 @@ public class SessionService : RestServiceSecureClientBase
     public override string ClientVersionNo => "1.0";
 
 
-    public SessionService(SecureRestApiClientOptions options, IIVKeyProvider initVectorProvider) : base(initVectorProvider)
+    public SessionService(SecureRestApiClientOptions options, IIVKeyProvider initVectorProvider) : base(initVectorProvider, options)
     {
 
     }

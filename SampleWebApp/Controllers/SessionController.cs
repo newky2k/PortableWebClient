@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using DSoft.Portable.WebClient.Encryption;
 using DSoft.Portable.WebClient.Encryption.Helpers;
 using DSoft.Portable.WebClient.Rest.Encryption;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PortableClient.Models;
 

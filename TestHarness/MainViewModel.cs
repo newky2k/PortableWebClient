@@ -1,6 +1,7 @@
 ﻿using DSoft.Portable.WebClient.Encryption;
 using DSoft.Portable.WebClient.Encryption.Factories;
 using DSoft.Portable.WebClient.Grpc;
+using DSoft.Portable.WebClient.Rest;
 using DSoft.Portable.WebClient.Rest.Encryption;
 using SampleApiClient;
 using System;

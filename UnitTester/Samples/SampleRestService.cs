@@ -1,5 +1,7 @@
 ﻿using DSoft.Portable.WebClient.Rest;
 using DSoft.Portable.WebClient.Rest.Enums;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace UnitTester.Samples;
 
@@ -9,17 +11,25 @@ internal class SampleRestService : RestServiceClientBase, ISampleRestService
 
     protected override string ControllerName => "Release";
 
-    public SampleRestService()
-    {
-        
-    }
+    protected override string ApiPrefix => "api";
 
-    public async Task<ReleaseInfo> GetReleaseAsync()
+    public SampleRestService(IOptions<RestApiClientOptions> options, PortableRestHttpClient httpClient, IServiceScopeFactory serviceScopeFactory) : base(options, httpClient, serviceScopeFactory) { }
+
+    public async Task<string> GetReleaseAsync()
     {
-        var result = await ExecuteGetAsync<ReleaseInfo>("Current", authentication: RequestAuthenticationType.Anonymous);
+        var result = await ExecuteGetAsync<string>("Current", authenticationOverride: RequestAuthenticationType.Anonymous);
 
         return result;
     }
+
+    public async Task<string> GetAccessToken()
+    {
+        var result = await ExecuteGetAsync<string>("AccessToken", authenticationOverride: RequestAuthenticationType.Token);
+
+        return result;
+    }
+
+    public override Task<string> GetUniqueIdAsync() => Task.FromResult("TestClient");
 }
 
 public class ReleaseInfo()
