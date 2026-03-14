@@ -17,4 +17,16 @@ public class RestTests : BaseTest
 
         Assert.IsNotNull(release);
     }
+
+    [TestMethod]
+    public async Task CanGetSampleClientTokenAuth()
+    {
+        var sampleClient = Provider.GetRequiredService<ISampleRestService>();
+
+        Assert.IsNotNull(sampleClient);
+
+        var release = await sampleClient.GetAccessToken();
+
+        Assert.IsNotNull(release);
+    }
 }

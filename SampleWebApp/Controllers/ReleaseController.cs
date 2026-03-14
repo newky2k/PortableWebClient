@@ -14,4 +14,11 @@ public class ReleaseController : ControllerBase
     {
         return Task.FromResult("2026.1");
     }
+
+    [HttpGet]
+    [ActionName("AccessToken")]
+    public Task<string> GetAccessTokenAsync()
+    {
+        return Task.FromResult("12345-67890");
+    }
 }

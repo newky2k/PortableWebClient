@@ -82,7 +82,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
                 }
             }
 
-            return null;
+            return _cookieManager;
         }
     }
 
@@ -108,7 +108,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
                 }
             }
             
-            return null;
+            return _tokenManager;
 
         }
     }
@@ -869,7 +869,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
             break;
             case RequestAuthenticationType.Token:
             {
-                if (TokenManager is null)
+                if (TokenManager is not null)
                 {
                     var accessToken = await TokenManager.LoadAccessTokenAsync(uniqueId);
 

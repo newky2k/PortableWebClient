@@ -22,6 +22,13 @@ internal class SampleRestService : RestServiceClientBase, ISampleRestService
         return result;
     }
 
+    public async Task<string> GetAccessToken()
+    {
+        var result = await ExecuteGetAsync<string>("AccessToken", authentication: RequestAuthenticationType.Token);
+
+        return result;
+    }
+
     public override Task<string> GetUniqueIdAsync() => Task.FromResult("TestClient");
 }
 
