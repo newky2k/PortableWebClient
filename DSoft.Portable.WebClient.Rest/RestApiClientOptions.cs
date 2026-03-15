@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using System.Text.Json;
+using DSoft.Portable.WebClient.Rest.Enums;
 
 namespace DSoft.Portable.WebClient.Rest;
 
@@ -11,28 +11,16 @@ namespace DSoft.Portable.WebClient.Rest;
 /// </summary>
 public class RestApiClientOptions
 {
+    /// <summary>
+    /// Type of authentication
+    /// </summary>
+    public RequestAuthenticationType AuthenticationType { get; set; } = RequestAuthenticationType.Anonymous;
 
     /// <summary>
     /// Gets the time out. Default(30 seconds)
     /// </summary>
     /// <value>The time out.</value>
     public TimeSpan TimeOut { get; set; } = TimeSpan.FromSeconds(30);
-
-    /// <summary>
-    /// Gets or sets the optional cookie container.
-    /// </summary>
-    /// <value>
-    /// The cookie container.
-    /// </value>
-    public CookieContainer CookieContainer { get; set; }
-
-    /// <summary>
-    /// Gets or sets the token manager responsible for handling JSON Web Tokens (JWT) during authentication operations.
-    /// </summary>
-    /// <remarks>Ensure that the token manager is properly initialized before use to avoid authentication
-    /// errors. This property allows for customization of JWT handling, which may affect authentication and
-    /// authorization workflows.</remarks>
-    public IJwtTokenManger TokenManger { get; set; }
 
     /// <summary>
     /// Gets or sets the json serializer options for RestClient to override the defaults

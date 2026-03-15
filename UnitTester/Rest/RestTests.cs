@@ -1,9 +1,4 @@
-﻿using DSoft.Portable.WebClient.Rest;
-using Microsoft.Extensions.DependencyInjection;
-using SampleApiClient;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Microsoft.Extensions.DependencyInjection;
 using UnitTester.Samples;
 
 namespace UnitTester.Rest;
@@ -11,24 +6,27 @@ namespace UnitTester.Rest;
 [TestClass]
 public class RestTests : BaseTest
 {
-
     [TestMethod]
-    public void CanGetFactory()
+    public async Task CanGetSampleClienty()
     {
-        var serviceFactory = Provider.GetRequiredService<IRestServiceClientFactory>();
+        var sampleClient = Provider.GetRequiredService<ISampleRestService>();
 
-        Assert.IsNotNull(serviceFactory);
+        Assert.IsNotNull(sampleClient);
+
+        var release = await sampleClient.GetReleaseAsync();
+
+        Assert.IsNotNull(release);
     }
 
     [TestMethod]
-    public void CanGetSampleClienty()
+    public async Task CanGetSampleClientTokenAuth()
     {
-        var serviceFactory = Provider.GetRequiredService<IRestServiceClientFactory>();
-
-        Assert.IsNotNull(serviceFactory);
-
-        var sampleClient = serviceFactory.GetClient<ISampleRestService>(Guid.NewGuid().ToString());
+        var sampleClient = Provider.GetRequiredService<ISampleRestService>();
 
         Assert.IsNotNull(sampleClient);
+
+        var release = await sampleClient.GetAccessToken();
+
+        Assert.IsNotNull(release);
     }
 }
