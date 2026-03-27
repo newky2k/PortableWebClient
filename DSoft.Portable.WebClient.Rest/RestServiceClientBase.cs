@@ -952,7 +952,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
             break;
             case RequestAuthenticationType.Token:
             {
-                await TokenManager?.HandleAuthFailure(uniqueId);
+                await TokenManager?.HandleAuthFailureAsync(uniqueId);
             }
             break;
         }

@@ -20,6 +20,6 @@ public interface IJwtTokenManger
     /// </summary>
     /// <param name="key"></param>
     /// <returns></returns>
-    Task HandleAuthFailure(string key);
+    Task HandleAuthFailureAsync(string key);
 
 }

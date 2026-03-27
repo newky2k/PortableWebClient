@@ -5,7 +5,7 @@ namespace UnitTester.Samples;
 
 internal class JwtTokenManager : IJwtTokenManger
 {
-    public async Task HandleAuthFailure(string key)
+    public async Task HandleAuthFailureAsync(string key)
     {
         await Task.Delay(1000);
     }
