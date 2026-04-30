@@ -1,9 +1,10 @@
-﻿using DSoft.Portable.WebClient.Encryption;
+using DSoft.Portable.WebClient.Encryption;
 using DSoft.Portable.WebClient.Rest.Encryption;
-using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace DSoft.Portable.WebClient.Rest
@@ -27,14 +28,14 @@ namespace DSoft.Portable.WebClient.Rest
         /// <param name="controllerOverride">The controller override.</param>
         /// <param name="headers">Optional custom headers.</param>
         /// <param name="serviceOverride">override the service component</param>
-        /// <returns>RestRequest.</returns>
-        public static RestRequest BuildUserPostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null, string serviceOverride = null)
+        /// <returns>HttpRequestMessage.</returns>
+        public static HttpRequestMessage BuildUserPostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null, string serviceOverride = null)
         {
-            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString: parameterString, controllerOverride: controllerOverride, serviceOverride), Method.Post);
+            var request = new HttpRequestMessage(HttpMethod.Post, target.CalculateUrlForMethod(action, parameterString: parameterString, controllerOverride: controllerOverride, serviceOverride: serviceOverride));
 
             target.ApplyHeaders(request, headers);
 
-            request.AddJsonBody(target.CreateUserRequest(data, tokenId, encryptionToken));
+            request.Content = new StringContent(JsonSerializer.Serialize(target.CreateUserRequest(data, tokenId, encryptionToken), target.Options.JsonSerializerOptions), Encoding.UTF8, "application/json");
 
             return request;
         }
@@ -50,14 +51,14 @@ namespace DSoft.Portable.WebClient.Rest
         /// <param name="controllerOverride">The controller override.</param>
         /// <param name="headers">Optional custom headers.</param>
         /// <param name="serviceOverride">override the service component</param>
-        /// <returns>RestRequest.</returns>
-        public static RestRequest BuildEmptyUserPostRequest(this RestServiceSecureClientBase target, string action, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null, string serviceOverride = null)
+        /// <returns>HttpRequestMessage.</returns>
+        public static HttpRequestMessage BuildEmptyUserPostRequest(this RestServiceSecureClientBase target, string action, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null, string serviceOverride = null)
         {
-            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString: parameterString, controllerOverride: controllerOverride, serviceOverride), Method.Post);
+            var request = new HttpRequestMessage(HttpMethod.Post, target.CalculateUrlForMethod(action, parameterString: parameterString, controllerOverride: controllerOverride, serviceOverride: serviceOverride));
 
             target.ApplyHeaders(request, headers);
 
-            request.AddJsonBody(target.CreateEmptyUserRequest(tokenId, encryptionToken));
+            request.Content = new StringContent(JsonSerializer.Serialize(target.CreateEmptyUserRequest(tokenId, encryptionToken), target.Options.JsonSerializerOptions), Encoding.UTF8, "application/json");
 
             return request;
         }
@@ -75,14 +76,14 @@ namespace DSoft.Portable.WebClient.Rest
         /// <param name="controllerOverride">The controller override.</param>
         /// <param name="headers">Optional custom headers.</param>
         /// <param name="serviceOverride">override the service component</param>
-        /// <returns>RestRequest.</returns>
-        public static RestRequest BuildUserBinaryPostRequest(this RestServiceSecureClientBase target, string action, object data, byte[] binary, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null, string serviceOverride = null)
+        /// <returns>HttpRequestMessage.</returns>
+        public static HttpRequestMessage BuildUserBinaryPostRequest(this RestServiceSecureClientBase target, string action, object data, byte[] binary, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null, string serviceOverride = null)
         {
-            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString: parameterString, controllerOverride: controllerOverride, serviceOverride), Method.Post);
+            var request = new HttpRequestMessage(HttpMethod.Post, target.CalculateUrlForMethod(action, parameterString: parameterString, controllerOverride: controllerOverride, serviceOverride: serviceOverride));
 
             target.ApplyHeaders(request, headers);
 
-            request.AddJsonBody(target.CreateUserBinaryRequest(data, binary, tokenId, encryptionToken));
+            request.Content = new StringContent(JsonSerializer.Serialize(target.CreateUserBinaryRequest(data, binary, tokenId, encryptionToken), target.Options.JsonSerializerOptions), Encoding.UTF8, "application/json");
 
             return request;
         }
@@ -99,10 +100,10 @@ namespace DSoft.Portable.WebClient.Rest
         /// <param name="controllerOverride">The controller override.</param>
         /// <param name="headers">Optional custom headers.</param>
         /// <param name="serviceOverride">override the service component</param>
-        /// <returns>RestRequest.</returns>
-        public static RestRequest BuildSecurePostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null, string serviceOverride = null)
+        /// <returns>HttpRequestMessage.</returns>
+        public static HttpRequestMessage BuildSecurePostRequest(this RestServiceSecureClientBase target, string action, object data, string tokenId, string encryptionToken, string parameterString = null, string controllerOverride = null, Dictionary<string, string> headers = null, string serviceOverride = null)
         {
-            var request = new RestRequest(target.CalculateUrlForMethod(action, parameterString: parameterString, controllerOverride: controllerOverride, serviceOverride), Method.Post);
+            var request = new HttpRequestMessage(HttpMethod.Post, target.CalculateUrlForMethod(action, parameterString: parameterString, controllerOverride: controllerOverride, serviceOverride: serviceOverride));
 
             target.ApplyHeaders(request, headers);
 
@@ -113,7 +114,7 @@ namespace DSoft.Portable.WebClient.Rest
                 Payload = new SecurePayload(data, encryptionToken, target.InitVector, target.KeySize),
             };
 
-            request.AddJsonBody(fReq);
+            request.Content = new StringContent(JsonSerializer.Serialize(fReq, target.Options.JsonSerializerOptions), Encoding.UTF8, "application/json");
 
             return request;
         }
@@ -324,4 +325,3 @@ namespace DSoft.Portable.WebClient.Rest
         #endregion
     }
 }
-

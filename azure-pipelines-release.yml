@@ -14,7 +14,7 @@ trigger:
     - readme.md
 
 pool:
-  vmImage: 'windows-2022'
+  vmImage: 'windows-latest'
 
 variables:
   solution: '**/*.slnx'
@@ -23,7 +23,7 @@ variables:
   releaseSuffix: '-prerelease'
   netVersion: '10.x'
 
-name: 6.0.$(date:yyMM).$(date:dd)$(rev:r)
+name: 7.0.$(date:yyMM).$(date:dd)$(rev:r)
 
 steps:  
 - task: NuGetToolInstaller@1

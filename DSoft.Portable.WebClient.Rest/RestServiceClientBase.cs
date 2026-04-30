@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Mime;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using DSoft.Portable.WebClient.Rest.Enums;
@@ -11,8 +12,6 @@ using DSoft.Portable.WebClient.Rest.Exceptions;
 using DSoft.Portable.WebClient.Rest.Responses;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using RestSharp;
-using RestSharp.Serializers.Json;
 
 namespace DSoft.Portable.WebClient.Rest;
 
@@ -43,23 +42,16 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     {
         get
         {
-            HttpClient client = null;
-
             if (_options.HttpMessageHandler != null)
-            {
-                client = new HttpClient(_options.HttpMessageHandler);
-            }
-            else if (_cookieManager is CookieContainer cookies)
+                return new HttpClient(_options.HttpMessageHandler);
+
+            if (_cookieManager is CookieContainer cookies)
             {
                 var handler = new HttpClientHandler { CookieContainer = cookies };
-                client = new HttpClient(handler);
-            }
-            else
-            {
-                client = _httpClient.HttpClient;
+                return new HttpClient(handler);
             }
 
-            return client;
+            return _httpClient?.HttpClient ?? new HttpClient();
         }
     }
 
@@ -107,7 +99,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
                     _tokenManager = tokenManager;
                 }
             }
-            
+
             return _tokenManager;
 
         }
@@ -223,28 +215,14 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
 
     #region Client Builder
 
-    private IRestClient RestClient(string uniqueId, Uri addressOverride = null)
+    private HttpClient GetHttpClient()
     {
-        Uri baseAddress = null;
-
-        if (_options?.UrlBuilder != null)
-        {
-            baseAddress = _options.UrlBuilder(uniqueId);
-        }
-
-        var options = new RestClientOptions()
-        {
-            BaseUrl = addressOverride ?? baseAddress,
-            Timeout = _options.TimeOut,
-        };
-
-        HttpClient client = null;
-
         if (_httpClient != null)
-        {
-            client = _httpClient.HttpClient;
-        }
-        else if (_options.HttpMessageHandler != null)
+            return _httpClient.HttpClient;
+
+        HttpClient client;
+
+        if (_options.HttpMessageHandler != null)
         {
             client = new HttpClient(_options.HttpMessageHandler);
         }
@@ -252,41 +230,67 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
         {
             var handler = new HttpClientHandler { CookieContainer = cookies };
             client = new HttpClient(handler);
-
-            options.CookieContainer = cookies;
-        }
-       
-        return BuildRestClient(options, client);
-    }
-
-    private RestClient BuildRestClient(RestClientOptions options, HttpClient httpClient = null)
-    {
-        if (_options.JsonSerializerOptions is not null)
-        {
-            if (httpClient is null)
-            {
-                return new RestClient(options,
-                   configureSerialization: s => s.UseSystemTextJson(_options.JsonSerializerOptions));
-            }
-            else
-            {
-                return new RestClient(httpClient,
-                   options,
-                   configureSerialization: s => s.UseSystemTextJson(_options.JsonSerializerOptions));
-            }
-
         }
         else
         {
-            if (httpClient is null)
-            {
-                return new RestClient(options);
-            }
-            else
-            {
-                return new RestClient(httpClient, options);
-            }
+            client = new HttpClient();
         }
+
+        client.Timeout = _options.TimeOut;
+        return client;
+    }
+
+    private void ResolveRequestUri(HttpRequestMessage request, string uniqueId, Uri baseAddressOverride = null)
+    {
+        if (request.RequestUri?.IsAbsoluteUri == true)
+            return;
+
+        var baseUri = baseAddressOverride ?? _options.UrlBuilder?.Invoke(uniqueId);
+
+        if (baseUri != null && request.RequestUri != null)
+            request.RequestUri = new Uri(baseUri, request.RequestUri);
+    }
+
+    private async Task<HttpResponseMessage> SendAndHandleAsync(HttpRequestMessage request, string uniqueId, Uri baseAddressOverride, RequestAuthenticationType? authenticationOverride, CancellationToken cancellationToken)
+    {
+        ResolveRequestUri(request, uniqueId, baseAddressOverride);
+
+        await PreflightAsync(request, uniqueId, authenticationOverride);
+
+        HttpResponseMessage response;
+
+        try
+        {
+            response = await GetHttpClient().SendAsync(request, cancellationToken);
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new NoServerResponseException(ex.Message, ex);
+        }
+
+        await HandleResponseAsync(response, uniqueId, authenticationOverride);
+
+        return response;
+    }
+
+    private async Task<T> DeserializeAsync<T>(HttpResponseMessage response)
+    {
+        var content = await response.Content.ReadAsStringAsync();
+
+        if (string.IsNullOrEmpty(content))
+            return default;
+
+        var contentType = response.Content.Headers.ContentType?.MediaType ?? string.Empty;
+
+        if (!contentType.Contains("json", StringComparison.OrdinalIgnoreCase))
+        {
+            // Plain-text or other non-JSON response: return raw string for string types,
+            // otherwise fall through to JSON (will throw if content isn't valid JSON).
+            if (typeof(T) == typeof(string))
+                return (T)(object)content;
+        }
+
+        return JsonSerializer.Deserialize<T>(content, _options.JsonSerializerOptions);
     }
 
     #endregion
@@ -351,16 +355,21 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// </summary>
     /// <param name="request">The request.</param>
     /// <param name="customHeaders">Optional custom headers.</param>
-    public void ApplyHeaders(RestRequest request, Dictionary<string, string> customHeaders = null)
+    public void ApplyHeaders(HttpRequestMessage request, Dictionary<string, string> customHeaders = null)
     {
-        if (_options.DefaultHeaders != null && _options.DefaultHeaders.Count > 0)
-        {
-            request.AddHeaders(_options.DefaultHeaders);
-        }
+        ApplyHeaderDictionary(request, _options.DefaultHeaders);
+        ApplyHeaderDictionary(request, customHeaders);
+    }
 
-        if (customHeaders != null && customHeaders.Count > 0)
+    private static void ApplyHeaderDictionary(HttpRequestMessage request, Dictionary<string, string> headers)
+    {
+        if (headers == null || headers.Count == 0)
+            return;
+
+        foreach (var kvp in headers)
         {
-            request.AddHeaders(customHeaders);
+            request.Headers.Remove(kvp.Key);
+            request.Headers.TryAddWithoutValidation(kvp.Key, kvp.Value);
         }
     }
 
@@ -372,11 +381,11 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <param name="headers">The headers.</param>
     /// <param name="serviceOverride">override the service component</param>
     /// <returns>
-    /// RestRequest.
+    /// HttpRequestMessage.
     /// </returns>
-    protected RestRequest BuildPostRequest(string methodName, string controllerOverride = null, Dictionary<string, string> headers = null, string serviceOverride = null)
+    protected HttpRequestMessage BuildPostRequest(string methodName, string controllerOverride = null, Dictionary<string, string> headers = null, string serviceOverride = null)
     {
-        var request = new RestRequest(CalculateUrlForMethod(methodName, null, controllerOverride, serviceOverride), Method.Post);
+        var request = new HttpRequestMessage(HttpMethod.Post, CalculateUrlForMethod(methodName, null, controllerOverride, serviceOverride));
 
         ApplyHeaders(request, headers);
 
@@ -392,11 +401,11 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <param name="headers">The headers.</param>
     /// <param name="serviceOverride">override the service component</param>
     /// <returns>
-    /// RestRequest.
+    /// HttpRequestMessage.
     /// </returns>
-    protected RestRequest BuildGetRequest(string methodName, string parameterString, string controllerOverride = null, Dictionary<string, string> headers = null, string serviceOverride = null)
+    protected HttpRequestMessage BuildGetRequest(string methodName, string parameterString, string controllerOverride = null, Dictionary<string, string> headers = null, string serviceOverride = null)
     {
-        var request = new RestRequest(CalculateUrlForMethod(methodName, parameterString, controllerOverride, serviceOverride), Method.Get);
+        var request = new HttpRequestMessage(HttpMethod.Get, CalculateUrlForMethod(methodName, parameterString, controllerOverride, serviceOverride));
 
         ApplyHeaders(request, headers);
 
@@ -412,11 +421,11 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <param name="headers">The headers.</param>
     /// <param name="serviceOverride">override the service component</param>
     /// <returns>
-    /// RestRequest.
+    /// HttpRequestMessage.
     /// </returns>
-    protected RestRequest BuildDeleteRequest(string methodName, string parameterString, string controllerOverride = null, Dictionary<string, string> headers = null, string serviceOverride = null)
+    protected HttpRequestMessage BuildDeleteRequest(string methodName, string parameterString, string controllerOverride = null, Dictionary<string, string> headers = null, string serviceOverride = null)
     {
-        var request = new RestRequest(CalculateUrlForMethod(methodName, parameterString, controllerOverride, serviceOverride), Method.Delete);
+        var request = new HttpRequestMessage(HttpMethod.Delete, CalculateUrlForMethod(methodName, parameterString, controllerOverride, serviceOverride));
 
         ApplyHeaders(request, headers);
 
@@ -429,9 +438,9 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <param name="url">The Url.</param>
     /// <param name="headers">The headers.</param>
     /// <returns>
-    /// RestRequest.
+    /// HttpRequestMessage.
     /// </returns>
-    protected RestRequest BuildGetRequest(string url, Dictionary<string, string> headers = null) => BuildGetRequest(new Uri(url), headers);
+    protected HttpRequestMessage BuildGetRequest(string url, Dictionary<string, string> headers = null) => BuildGetRequest(new Uri(url), headers);
 
     /// <summary>
     /// Builds basic Get Request with the specified Url
@@ -439,11 +448,11 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <param name="url">The Url.</param>
     /// <param name="headers">The headers.</param>
     /// <returns>
-    /// RestRequest.
+    /// HttpRequestMessage.
     /// </returns>
-    protected RestRequest BuildGetRequest(Uri url, Dictionary<string, string> headers = null)
+    protected HttpRequestMessage BuildGetRequest(Uri url, Dictionary<string, string> headers = null)
     {
-        var request = new RestRequest(url, Method.Get);
+        var request = new HttpRequestMessage(HttpMethod.Get, url);
 
         ApplyHeaders(request, headers);
 
@@ -521,7 +530,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     {
         var request = BuildPostRequest(actionName, controllerOverride, headers);
 
-        request.AddBody(payload);
+        request.Content = new StringContent(JsonSerializer.Serialize(payload, _options.JsonSerializerOptions), Encoding.UTF8, "application/json");
 
         return ExecuteAsync<T>(request, authenticationOverride, cancellationToken: cancellationToken);
     }
@@ -545,7 +554,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
         var body = packetBuilder?.Invoke();
 
         if (body != null)
-            request.AddJsonBody(body);
+            request.Content = new StringContent(JsonSerializer.Serialize(body, _options.JsonSerializerOptions), Encoding.UTF8, "application/json");
 
         return await ExecuteAsync<T>(request, authenticationOverride);
 
@@ -647,7 +656,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     {
         var request = BuildPostRequest(actionName, controllerOverride, headers);
 
-        request.AddBody(payload);
+        request.Content = new StringContent(JsonSerializer.Serialize(payload, _options.JsonSerializerOptions), Encoding.UTF8, "application/json");
 
         return ExecuteAsync<T>(baseAddress, request, authenticationOverride, cancellationToken: cancellationToken);
     }
@@ -672,7 +681,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
         var body = packetBuilder?.Invoke();
 
         if (body != null)
-            request.AddJsonBody(body);
+            request.Content = new StringContent(JsonSerializer.Serialize(body, _options.JsonSerializerOptions), Encoding.UTF8, "application/json");
 
         return await ExecuteAsync<T>(baseAddress, request, authenticationOverride);
 
@@ -719,20 +728,14 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <exception cref="NoServerResponseException"></exception>
     /// <exception cref="ServerResponseFailureException"></exception>
     /// <exception cref="DataResponseFailureException"></exception>
-    public async Task<T> ExecuteRequestWithBaseResonseAsync<T>(RestRequest request, RequestAuthenticationType? authenticationOverride = null, CancellationToken cancellationToken = default) where T : ResponseBase
+    public async Task<T> ExecuteRequestWithBaseResonseAsync<T>(HttpRequestMessage request, RequestAuthenticationType? authenticationOverride = null, CancellationToken cancellationToken = default) where T : ResponseBase
     {
-        var uniqueId = await GetUniqueIdAsync();
+        var result = await ExecuteAsync<T>(request, authenticationOverride, cancellationToken);
 
-        await PreflightAsync(request, uniqueId, authenticationOverride);
+        if (result?.Success == false)
+            throw new DataResponseFailureException(result.Message);
 
-        var result = await RestClient(uniqueId).ExecuteAsync<T>(request, cancellationToken: cancellationToken);
-
-        await HandleResponseAsync(result, uniqueId, authenticationOverride);
-
-        if (result.Data.Success == false)
-            throw new DataResponseFailureException(result.Data.Message);
-
-        return result.Data;
+        return result;
     }
 
     /// <summary>
@@ -745,17 +748,13 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <param name="authenticationOverride">The authentication type to use for the request. Defaults to <see cref="RequestAuthenticationType.Anonymous"/>.</param>
     /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
     /// <returns>The response data of type <typeparamref name="T"/> from the executed REST request.</returns>
-    public async Task<T> ExecuteAsync<T>(RestRequest request, RequestAuthenticationType? authenticationOverride = null, CancellationToken cancellationToken = default)
+    public async Task<T> ExecuteAsync<T>(HttpRequestMessage request, RequestAuthenticationType? authenticationOverride = null, CancellationToken cancellationToken = default)
     {
         var uniqueId = await GetUniqueIdAsync();
 
-        await PreflightAsync(request, uniqueId, authenticationOverride);
+        using var response = await SendAndHandleAsync(request, uniqueId, null, authenticationOverride, cancellationToken);
 
-        var result = await RestClient(uniqueId).ExecuteAsync<T>(request, cancellationToken: cancellationToken);
-
-        await HandleResponseAsync(result, uniqueId, authenticationOverride);
-
-        return result.Data;
+        return await DeserializeAsync<T>(response);
     }
 
     /// <summary>
@@ -769,17 +768,13 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <param name="authenticationOverride">The authentication type to use for the request. Defaults to <see cref="RequestAuthenticationType.Anonymous"/>.</param>
     /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
     /// <returns>The response data of type <typeparamref name="T"/> from the executed REST request.</returns>
-    public async Task<T> ExecuteAsync<T>(Uri baseAddress, RestRequest request, RequestAuthenticationType? authenticationOverride = null, CancellationToken cancellationToken = default)
+    public async Task<T> ExecuteAsync<T>(Uri baseAddress, HttpRequestMessage request, RequestAuthenticationType? authenticationOverride = null, CancellationToken cancellationToken = default)
     {
         var uniqueId = await GetUniqueIdAsync();
 
-        await PreflightAsync(request, uniqueId, authenticationOverride);
+        using var response = await SendAndHandleAsync(request, uniqueId, baseAddress, authenticationOverride, cancellationToken);
 
-        var result = await RestClient(uniqueId, baseAddress).ExecuteAsync<T>(request, cancellationToken: cancellationToken);
-
-        await HandleResponseAsync(result, uniqueId, authenticationOverride);
-
-        return result.Data;
+        return await DeserializeAsync<T>(response);
     }
 
     /// <summary>
@@ -801,23 +796,12 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
 
         var request = BuildGetRequest(actionName, parameterString, controllerOverride, headers);
 
-        await PreflightAsync(request, uniqueId, authenticationOverride);
+        using var response = await SendAndHandleAsync(request, uniqueId, null, authenticationOverride, cancellationToken);
 
-        var result = await RestClient(uniqueId).ExecuteAsync(request, cancellationToken: cancellationToken);
+        var filename = response.Content.Headers.ContentDisposition?.FileName ?? string.Empty;
+        var data = await response.Content.ReadAsByteArrayAsync();
 
-        await HandleResponseAsync(result, uniqueId, authenticationOverride);
-
-        var header_contentDisposition = result.ContentHeaders.FirstOrDefault(x => x.Name.Equals("content-disposition", StringComparison.OrdinalIgnoreCase));
-
-        var filename = string.Empty;
-
-        if (header_contentDisposition != null)
-        {
-            filename = new ContentDisposition(header_contentDisposition.Value).FileName;
-        }
-
-        return new DownloadResult() { Data = result.RawBytes, FileName = filename };
-
+        return new DownloadResult() { Data = data, FileName = filename };
     }
 
     #endregion
@@ -838,7 +822,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <param name="uniqueId"></param>
     /// <param name="authenticationOverride">Specifies the authentication method to use for the request. The value determines how preflight checks are
     /// performed and which authentication mechanisms are validated.</param>
-    public async Task PreflightAsync(RestRequest request, string uniqueId, RequestAuthenticationType? authenticationOverride = null)
+    public async Task PreflightAsync(HttpRequestMessage request, string uniqueId, RequestAuthenticationType? authenticationOverride = null)
     {
         RequestAuthenticationType authentication = authenticationOverride ?? _options.AuthenticationType;
 
@@ -858,7 +842,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
                         throw new InvalidCookiesException();
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     await HandleAuthFailureAsync(uniqueId, authenticationOverride);
                 }
@@ -875,7 +859,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
                         return;
                     }
 
-                    request.AddOrUpdateHeader("Authorization", $"Bearer {accessToken}");
+                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
                 }
             }
             break;
@@ -891,28 +875,19 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
     /// <exception cref="NoServerResponseException"></exception>
     /// <exception cref="ServerResponseFailureException"></exception>
     /// <exception cref="UnauthorisedException"></exception>
-    public async Task HandleResponseAsync(RestResponse response, string uniqueId, RequestAuthenticationType? authenticationOverride = null)
+    public async Task HandleResponseAsync(HttpResponseMessage response, string uniqueId, RequestAuthenticationType? authenticationOverride = null)
     {
         RequestAuthenticationType authentication = authenticationOverride ?? _options.AuthenticationType;
 
-        if (!response.IsSuccessful)
+        if (!response.IsSuccessStatusCode)
         {
-            if (response.StatusCode == 0)
-            {
-                throw new NoServerResponseException(response.ErrorMessage, response.ErrorException);
-            }
-            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 await HandleAuthFailureAsync(uniqueId, authenticationOverride);
             }
-            else if (response.StatusCode != HttpStatusCode.OK)
-            {
-                throw new ServerResponseFailureException(response.StatusCode, response.ErrorMessage, response.ErrorException);
-            }
             else
             {
-                throw new Exception("Unexpected response from the server");
-
+                throw new ServerResponseFailureException(response.StatusCode, response.ReasonPhrase, null);
             }
         }
 
@@ -924,7 +899,7 @@ public abstract class RestServiceClientBase : IRestServiceClient, IDisposable
                 {
                     await CookieManager?.ValidateAndSaveAsync(uniqueId);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     await HandleAuthFailureAsync(uniqueId, authenticationOverride);
                 }

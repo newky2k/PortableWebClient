@@ -23,6 +23,7 @@
   <Folder Name="/_ci/">
     <File Path="azure-pipelines-mergetest.yml" />
     <File Path="azure-pipelines-release.yml" />
+    <File Path="CLAUDE.md" />
     <File Path="Directory.Build.props" />
     <File Path="README.md" />
   </Folder>
