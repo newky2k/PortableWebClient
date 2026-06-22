@@ -1,96 +1,88 @@
-﻿extern alias SUT; 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿extern alias SUT;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using DSoft.Portable.WebClient;
 using DSoft.Portable.WebClient.Grpc;
-using DSoft.Portable.WebClient.Rest;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using SampleApiClient;
 using UnitTester.Samples;
 
-namespace UnitTester
+namespace UnitTester;
+
+[TestClass]
+public abstract class BaseTest
 {
-    [TestClass]
-    public abstract class BaseTest
+    public static JsonSerializerOptions DefaultJsonOptions = new()
     {
-        public static JsonSerializerOptions DefaultJsonOptions = new()
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        WriteIndented = true,
+    };
+
+    public static ServiceProvider Provider { get; private set; }
+
+    public static WebApplicationFactory<SUT::SampleWebApp.Startup> webAppFactory { get; private set; }
+
+
+    [AssemblyInitialize]
+    public static void AssemblyInit(TestContext context)
+    {
+        // Executes once before the test run. (Optional)
+        webAppFactory = new WebApplicationFactory<SUT::SampleWebApp.Startup>();
+
+        var services = new ServiceCollection();
+
+        ConfigureServices(services);
+
+        services.AddOptions().Configure<GrpcClientOptions>(x =>
         {
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-            WriteIndented = true,
-        };
-
-        public static ServiceProvider Provider { get; private set; }
-
-        public static WebApplicationFactory<SUT::SampleWebApp.Startup> webAppFactory { get; private set; }
-
-
-        [AssemblyInitialize]
-        public static void AssemblyInit(TestContext context)
-        {
-            // Executes once before the test run. (Optional)
-            webAppFactory = new WebApplicationFactory<SUT::SampleWebApp.Startup>();
-
-            var services = new ServiceCollection();
-
-            ConfigureServices(services);
-
-            services.AddOptions().Configure<GrpcClientOptions>(x =>
+            x.GrpcMode = HttpMode.Http_1_1;
+            x.DisableSSLCertValidation = true;
+            x.UrlBuilder = () =>
             {
-                x.GrpcMode = HttpMode.Http_1_1;
-                x.DisableSSLCertValidation = true;
-                x.UrlBuilder = () =>
-                {
-                    return webAppFactory.Server.BaseAddress.ToString();
-                };
-                x.HttpMessageHandler = webAppFactory.Server.CreateHandler();
-            });
+                return webAppFactory.Server.BaseAddress.ToString();
+            };
+            x.HttpMessageHandler = webAppFactory.Server.CreateHandler();
+        });
 
-            //services.AddRestServiceClient(x =>
-            //{
-            //    x.TimeOut = TimeSpan.FromSeconds(5);
-            //    x.JsonSerializerOptions = DefaultJsonOptions;
-            //    x.HttpMessageHandler = webAppFactory.Server.CreateHandler();
-            //    x.UrlBuilder = (uniqueId) =>
-            //    {
-            //        return webAppFactory.Server.BaseAddress;
-            //    };
-            //});
+        //services.AddRestServiceClient(x =>
+        //{
+        //    x.TimeOut = TimeSpan.FromSeconds(5);
+        //    x.JsonSerializerOptions = DefaultJsonOptions;
+        //    x.HttpMessageHandler = webAppFactory.Server.CreateHandler();
+        //    x.UrlBuilder = (uniqueId) =>
+        //    {
+        //        return webAppFactory.Server.BaseAddress;
+        //    };
+        //});
 
-            
-            services.AddRestServiceClientWithFactory<JwtTokenManager>(x =>
+
+        services.AddRestServiceClientWithFactory<JwtTokenManager>(x =>
+        {
+            x.TimeOut = TimeSpan.FromSeconds(5);
+            x.JsonSerializerOptions = DefaultJsonOptions;
+            x.UrlBuilder = (uniqueId) =>
             {
-                x.TimeOut = TimeSpan.FromSeconds(5);
-                x.JsonSerializerOptions = DefaultJsonOptions;
-                x.UrlBuilder = (uniqueId) =>
-                {
-                    return webAppFactory.Server.BaseAddress;
-                };
-            }, webAppFactory.Server.CreateHandler);
+                return webAppFactory.Server.BaseAddress;
+            };
+        }, webAppFactory.Server.CreateHandler);
 
-            Provider = services.BuildServiceProvider();
-        }
+        Provider = services.BuildServiceProvider();
+    }
 
-        public BaseTest()
-        {
-            
-        }
+    public BaseTest()
+    {
 
-        private static IServiceCollection ConfigureServices(IServiceCollection services)
-        {
-            services.TryAddSingleton<IGrpcChannelManager, GrpcChannelManager>();
-            services.TryAddScoped<SampleServiceClient>();
+    }
 
-            //add sample rest service
-            services.TryAddScoped<ISampleRestService, SampleRestService>(); 
+    private static IServiceCollection ConfigureServices(IServiceCollection services)
+    {
+        services.TryAddSingleton<IGrpcChannelManager, GrpcChannelManager>();
+        services.TryAddScoped<SampleServiceClient>();
 
-            return services;
-        }
+        //add sample rest service
+        services.TryAddScoped<ISampleRestService, SampleRestService>();
+
+        return services;
     }
 }

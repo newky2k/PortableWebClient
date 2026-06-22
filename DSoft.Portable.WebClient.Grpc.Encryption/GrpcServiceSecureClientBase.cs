@@ -1,65 +1,57 @@
 ﻿using DSoft.Portable.WebClient.Encryption;
-using Grpc.Core;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace DSoft.Portable.WebClient.Grpc.Encryption
+namespace DSoft.Portable.WebClient.Grpc.Encryption;
+
+/// <summary>
+/// Base for gRPC clients that exchange encrypted payloads. Extends <see cref="GrpcServiceClientBase"/>
+/// with the initialization vector and key size needed to encrypt and decrypt secure payloads.
+/// </summary>
+/// <seealso cref="DSoft.Portable.WebClient.Grpc.GrpcServiceClientBase" />
+public abstract class GrpcServiceSecureClientBase : GrpcServiceClientBase
 {
+    #region Fields
+    private readonly IIVKeyProvider _initVectorProvider;
+
+    #endregion
+
+    #region Properties
+
     /// <summary>
-    /// Secure ServiceClientBase.
-    /// Implements the <see cref="DSoft.Portable.WebClient.Grpc.GrpcServiceClientBase" />
+    /// The initialization vector used to encrypt and decrypt this client's payloads.
     /// </summary>
-    /// <seealso cref="DSoft.Portable.WebClient.Grpc.GrpcServiceClientBase" />
-    public abstract class GrpcServiceSecureClientBase : GrpcServiceClientBase
+    public string InitVector => _initVectorProvider.InitVector;
+
+    /// <summary>
+    /// The key size used by the cipher, taken from the secure gRPC options.
+    /// </summary>
+    public KeySize KeySize => ((SecureGrpcClientOptions)Options).KeySize;
+
+    #endregion
+
+    #region Constructors
+
+    /// <summary>
+    /// Initializes the secure client directly from a secure options instance.
+    /// </summary>
+    /// <param name="grpcChannelManager">The channel manager used to create and cache channels.</param>
+    /// <param name="options">The secure gRPC options, including the key size.</param>
+    /// <param name="initVectorProvider">Supplies the initialization vector for the cipher.</param>
+    protected GrpcServiceSecureClientBase(IGrpcChannelManager grpcChannelManager, SecureGrpcClientOptions options, IIVKeyProvider initVectorProvider) : base(grpcChannelManager, options)
     {
-		#region Fields
-		private readonly IIVKeyProvider _initVectorProvider;
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets the initialize vector.
-        /// </summary>
-        /// <value>The initialize vector.</value>
-        public string InitVector => _initVectorProvider.InitVector;
-
-		/// <summary>
-		/// Gets the size of the key.
-		/// </summary>
-		/// <value>The size of the key.</value>
-		public KeySize KeySize => ((SecureGrpcClientOptions)Options).KeySize;
-
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GrpcServiceSecureClientBase"/> class.
-        /// </summary>
-        /// <param name="grpcChannelManager">The GRPC channel manager.</param>
-        /// <param name="options">The options.</param>
-        /// <param name="initVectorProvider">The initialize vector provider.</param>
-        protected GrpcServiceSecureClientBase(IGrpcChannelManager grpcChannelManager, SecureGrpcClientOptions options, IIVKeyProvider initVectorProvider) : base(grpcChannelManager, options)
-        {
-            _initVectorProvider = initVectorProvider;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GrpcServiceSecureClientBase"/> class.
-        /// </summary>
-        /// <param name="grpcChannelManager">The GRPC channel manager.</param>
-        /// <param name="options">The options.</param>
-        /// <param name="initVectorProvider">The initialize vector provider.</param>
-        protected GrpcServiceSecureClientBase(IGrpcChannelManager grpcChannelManager, IOptions<SecureGrpcClientOptions> options, IIVKeyProvider initVectorProvider) : base(grpcChannelManager, options)
-        {
-            _initVectorProvider = initVectorProvider;
-        }
-
-        #endregion
+        _initVectorProvider = initVectorProvider;
     }
 
+    /// <summary>
+    /// Initializes the secure client from DI-bound secure options.
+    /// </summary>
+    /// <param name="grpcChannelManager">The channel manager used to create and cache channels.</param>
+    /// <param name="options">The configured secure gRPC options resolved from the options pipeline.</param>
+    /// <param name="initVectorProvider">Supplies the initialization vector for the cipher.</param>
+    protected GrpcServiceSecureClientBase(IGrpcChannelManager grpcChannelManager, IOptions<SecureGrpcClientOptions> options, IIVKeyProvider initVectorProvider) : base(grpcChannelManager, options)
+    {
+        _initVectorProvider = initVectorProvider;
+    }
+
+    #endregion
 }

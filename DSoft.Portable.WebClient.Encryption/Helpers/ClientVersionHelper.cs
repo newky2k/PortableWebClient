@@ -1,59 +1,57 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Reflection;
-using System.Text;
 
-namespace DSoft.Portable.WebClient.Encryption.Helpers
+namespace DSoft.Portable.WebClient.Encryption.Helpers;
+
+/// <summary>
+/// Helper for checking that a caller-supplied client version is compatible with this assembly,
+/// comparing on major and minor version only.
+/// </summary>
+public class ClientVersionHelper
 {
-	/// <summary>
-	/// Class ClientVersionHelper.
-	/// </summary>
-	public class ClientVersionHelper
+    /// <summary>
+    /// Error message used when a version string is missing or cannot be parsed.
+    /// </summary>
+    public const string InvalidVersionNumber = "The version number is invalid";
+    /// <summary>
+    /// Error message used when a client version number is rejected.
+    /// </summary>
+    public const string InvalidClientVersionNumber = "The client version number is invalid";
+
+    /// <summary>
+    /// Parses a version string and checks it against this assembly's version.
+    /// </summary>
+    /// <param name="versionNo">The version string, e.g. "1.2.3.4".</param>
+    /// <returns><c>true</c> when the major and minor components match this assembly; otherwise <c>false</c>.</returns>
+    /// <exception cref="System.Exception">Thrown when <paramref name="versionNo"/> is null, whitespace, or not a valid version.</exception>
+    public static bool VersionCheck(string versionNo)
     {
-		/// <summary>
-		/// The invalid version number
-		/// </summary>
-		public const string InvalidVersionNumber = "The version number is invalid";
-		/// <summary>
-		/// The invalid client version number
-		/// </summary>
-		public const string InvalidClientVersionNumber = "The client version number is invalid";
+        if (string.IsNullOrWhiteSpace(versionNo))
+            throw new Exception(InvalidVersionNumber);
 
-		/// <summary>
-		/// Versions the check.
-		/// </summary>
-		/// <param name="versionNo">The version no.</param>
-		/// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-		/// <exception cref="System.Exception"></exception>
-		public static bool VersionCheck(string versionNo)
-        {
-            if (string.IsNullOrWhiteSpace(versionNo))
-                throw new Exception(InvalidVersionNumber);
+        Version aVersion;
 
-            Version aVersion;
+        if (!Version.TryParse(versionNo, out aVersion))
+            throw new Exception(InvalidVersionNumber);
 
-            if (!Version.TryParse(versionNo, out aVersion))
-                throw new Exception(InvalidVersionNumber);
+        return VersionCheck(aVersion);
 
-            return VersionCheck(aVersion);
+    }
 
-        }
+    /// <summary>
+    /// Checks a version against this assembly's version, comparing major and minor components only.
+    /// </summary>
+    /// <param name="version">The version to compare.</param>
+    /// <returns><c>true</c> when the major and minor components match this assembly; otherwise <c>false</c>.</returns>
+    public static bool VersionCheck(Version version)
+    {
+        var asm = Assembly.GetAssembly(typeof(ClientVersionHelper));
 
-		/// <summary>
-		/// Versions the check.
-		/// </summary>
-		/// <param name="version">The version.</param>
-		/// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-		public static bool VersionCheck(Version version)
-        {
-            var asm = Assembly.GetAssembly(typeof(ClientVersionHelper));
+        var curVersion = asm.GetName().Version;
 
-            var curVersion = asm.GetName().Version;
+        if (curVersion.Major == version.Major && curVersion.Minor == version.Minor)
+            return true;
 
-            if (curVersion.Major == version.Major && curVersion.Minor == version.Minor)
-                return true;
-
-            return false;
-        }
+        return false;
     }
 }

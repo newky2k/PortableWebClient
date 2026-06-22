@@ -1,32 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+namespace DSoft.Portable.WebClient.Rest;
 
-namespace DSoft.Portable.WebClient.Rest
+/// <summary>
+/// Base type for all API responses, carrying the success flag and optional message that every
+/// response shares. Concrete responses add their own payload properties.
+/// </summary>
+public abstract class ResponseBase
 {
-	/// <summary>
-	/// Class ResponseBase.
-	/// </summary>
-	public abstract class ResponseBase
+    /// <summary>
+    /// Whether the operation succeeded. Defaults to <c>true</c> and is set to <c>false</c> when the server reports a failure.
+    /// </summary>
+    public bool Success { get; set; }
+
+    /// <summary>
+    /// An optional human-readable message, typically describing the failure when <see cref="Success"/> is <c>false</c>.
+    /// </summary>
+    public string Message { get; set; }
+
+    /// <summary>
+    /// Creates a response that is successful by default.
+    /// </summary>
+    public ResponseBase()
     {
-		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="ResponseBase"/> is success.
-		/// </summary>
-		/// <value><c>true</c> if success; otherwise, <c>false</c>.</value>
-		public bool Success { get; set; }
-
-		/// <summary>
-		/// Gets or sets the message.
-		/// </summary>
-		/// <value>The message.</value>
-		public string Message { get; set; }
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ResponseBase"/> class.
-		/// </summary>
-		public ResponseBase()
-        {
-            Success = true;
-        }
+        Success = true;
     }
 }

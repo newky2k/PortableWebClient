@@ -1,24 +1,23 @@
-﻿using Grpc.Core;
+﻿using System.Threading.Tasks;
+using Grpc.Core;
 using SampleRpc;
-using System.Threading.Tasks;
 
-namespace SampleWebApp.Services
+namespace SampleWebApp.Services;
+
+public class SampleServiceRpc : SampleRpc.SampleContract.SampleContractBase
 {
-	public class SampleServiceRpc : SampleRpc.SampleContract.SampleContractBase
-	{
 
-		public SampleServiceRpc()
-		{
+    public SampleServiceRpc()
+    {
 
-		}
+    }
 
-		public override Task<SimpleResponse> Find(SimpleRequest request, ServerCallContext context)
-		{
-			return Task.FromResult(new SimpleResponse()
-			{
-				Success = true,
-				Message = "Hello, World!",
-			});
-		}
-	}
+    public override Task<SimpleResponse> Find(SimpleRequest request, ServerCallContext context)
+    {
+        return Task.FromResult(new SimpleResponse()
+        {
+            Success = true,
+            Message = "Hello, World!",
+        });
+    }
 }

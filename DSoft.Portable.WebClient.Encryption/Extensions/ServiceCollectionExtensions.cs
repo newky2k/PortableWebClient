@@ -1,29 +1,25 @@
 ﻿using DSoft.Portable.WebClient.Encryption;
 using DSoft.Portable.WebClient.Encryption.Providers;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace Microsoft.Extensions.DependencyInjection;
+
+/// <summary>
+/// Dependency-injection helpers for registering the encryption services.
+/// </summary>
+public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Encryption Provider Service Collection Extensions.
+    /// Registers the default encryption services, wiring <see cref="IIVKeyProvider"/> to the
+    /// built-in IV key provider as a scoped service (only if not already registered).
     /// </summary>
-    public static class ServiceCollectionExtensions
+    /// <param name="services">The service collection to add to.</param>
+    /// <returns>The same service collection, to allow chaining.</returns>
+    public static IServiceCollection AddEncryptionProviders(this IServiceCollection services)
     {
-        /// <summary>
-        /// Adds the encryption providers.
-        /// </summary>
-        /// <param name="services">The services.</param>
-        /// <returns>IServiceCollection.</returns>
-        public static IServiceCollection AddEncryptionProviders(this IServiceCollection services)
-        {
-            services.TryAddScoped<IIVKeyProvider, IVKeyProvider>();
+        services.TryAddScoped<IIVKeyProvider, IVKeyProvider>();
 
-            return services;
-        }
-
+        return services;
     }
+
 }

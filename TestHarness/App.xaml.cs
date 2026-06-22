@@ -1,25 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Mvvm;
-using System.Threading.Tasks;
+﻿using System.Mvvm;
 using System.Windows;
 
-namespace TestHarness
+namespace TestHarness;
+
+/// <summary>
+/// Interaction logic for App.xaml
+/// </summary>
+public partial class App : Application
 {
-	/// <summary>
-	/// Interaction logic for App.xaml
-	/// </summary>
-	public partial class App : Application
-	{
-		protected override void OnStartup(StartupEventArgs e)
-		{
-			base.OnStartup(e);
+    protected override void OnStartup(StartupEventArgs e)
+    {
+        base.OnStartup(e);
 
-			MvvmManager.Init();
+        MvvmManager.Init();
 
-		}
-	}
+    }
 }

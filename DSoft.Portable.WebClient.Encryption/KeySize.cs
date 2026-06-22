@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+namespace DSoft.Portable.WebClient.Encryption;
 
-namespace DSoft.Portable.WebClient.Encryption
+/// <summary>
+/// Supported symmetric key sizes, expressed in bits.
+/// </summary>
+public enum KeySize : int
 {
-	/// <summary>
-	/// Enum KeySize
-	/// </summary>
-	public enum KeySize : int
-    {
-		/// <summary>
-		/// The two fifty six
-		/// </summary>
-		TwoFiftySix = 256,
-    }
+    /// <summary>
+    /// A 256-bit key (AES-256).
+    /// </summary>
+    TwoFiftySix = 256,
 }

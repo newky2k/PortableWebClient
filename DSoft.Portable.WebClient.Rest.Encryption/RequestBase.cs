@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace DSoft.Portable.WebClient.Rest;
 
-namespace DSoft.Portable.WebClient.Rest
+/// <summary>
+/// Base for request bodies that carry the calling client's version so the server can enforce compatibility.
+/// </summary>
+public abstract class RequestBase
 {
-	/// <summary>
-	/// Class RequestBase.
-	/// </summary>
-	public abstract class RequestBase
-    {
-		/// <summary>
-		/// Gets or sets the client version no.
-		/// </summary>
-		/// <value>The client version no.</value>
-		public string ClientVersionNo { get; set; }
-    }
+    /// <summary>
+    /// The version of the client making the request, used for server-side version checks.
+    /// </summary>
+    public string ClientVersionNo { get; set; }
 }

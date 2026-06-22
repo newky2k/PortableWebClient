@@ -1,38 +1,32 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SampleApiClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace UnitTester.Services
+namespace UnitTester.Services;
+
+[TestClass]
+public class SampleServiceTest : BaseTest
 {
-    [TestClass]
-    public class SampleServiceTest : BaseTest
+    public SampleServiceTest() : base()
     {
-        public SampleServiceTest() : base()
-        {
-                
-        }
 
-        [TestMethod]
-        public void CanLoadServiceClient()
-        {
-            var sampleServiceClient = Provider.GetRequiredService<SampleServiceClient>();
+    }
 
-            Assert.IsNotNull(sampleServiceClient);
+    [TestMethod]
+    public void CanLoadServiceClient()
+    {
+        var sampleServiceClient = Provider.GetRequiredService<SampleServiceClient>();
 
-        }
+        Assert.IsNotNull(sampleServiceClient);
 
-        [TestMethod]
-        public async Task CanCallFunctionClientAsync()
-        {
-            var sampleServiceClient = Provider.GetRequiredService<SampleServiceClient>();
+    }
 
-            Assert.IsNotNull(sampleServiceClient);
+    [TestMethod]
+    public async Task CanCallFunctionClientAsync()
+    {
+        var sampleServiceClient = Provider.GetRequiredService<SampleServiceClient>();
 
-            await sampleServiceClient.FindAsync(1);
-        }
+        Assert.IsNotNull(sampleServiceClient);
+
+        await sampleServiceClient.FindAsync(1);
     }
 }

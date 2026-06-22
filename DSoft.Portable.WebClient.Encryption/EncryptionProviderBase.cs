@@ -1,83 +1,81 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System;
 
-namespace DSoft.Portable.WebClient.Encryption
+namespace DSoft.Portable.WebClient.Encryption;
+
+/// <summary>
+/// Base class for <see cref="IEncryptionProvider"/> implementations. Holds the initialization vector
+/// and key size and provides virtual no-op members so derived providers only override the transforms they support.
+/// </summary>
+/// <seealso cref="DSoft.Portable.WebClient.Encryption.IEncryptionProvider" />
+public abstract class EncryptionProviderBase : IEncryptionProvider
 {
-	/// <summary>
-	/// Encryption Provider Base class for implementing a custom
-	/// </summary>
-	/// <seealso cref="DSoft.Portable.WebClient.Encryption.IEncryptionProvider" />
-	public abstract class EncryptionProviderBase : IEncryptionProvider
+    /// <summary>
+    /// The initialization vector string supplied at construction, shared by all transforms.
+    /// </summary>
+    protected string _initVector;
+
+    /// <summary>
+    /// The key size used to derive the encryption key; defaults to 256-bit.
+    /// </summary>
+    protected KeySize _keysize = KeySize.TwoFiftySix;
+
+    /// <summary>
+    /// Initializes the base provider with the initialization vector and key size used for all transforms.
+    /// </summary>
+    /// <param name="initVector">The initialization vector string.</param>
+    /// <param name="keySize">The key size to derive.</param>
+    public EncryptionProviderBase(string initVector, KeySize keySize)
     {
-		/// <summary>
-		/// The initialize vector
-		/// </summary>
-		protected string _initVector;
-
-		/// <summary>
-		/// This constant is used to determine the keysize of the encryption algorithm
-		/// </summary>
-		protected KeySize _keysize = KeySize.TwoFiftySix;
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="EncryptionProviderBase"/> class.
-		/// </summary>
-		/// <param name="initVector">The initialize vector.</param>
-		/// <param name="keySize">Size of the key.</param>
-		public EncryptionProviderBase(string initVector, KeySize keySize)
-        {
-            _initVector = initVector;
-            _keysize = keySize;
-        }
-
-		/// <summary>
-		/// Decrypts the bytes.
-		/// </summary>
-		/// <param name="data">The data.</param>
-		/// <param name="passPhrase">The pass phrase.</param>
-		/// <returns>System.Byte[].</returns>
-		/// <exception cref="System.NotImplementedException"></exception>
-		public virtual byte[] DecryptBytes(byte[] data, string passPhrase)
-        {
-            throw new NotImplementedException();
-        }
-
-		/// <summary>
-		/// Decrypts the string.
-		/// </summary>
-		/// <param name="cipherText">The cipher text.</param>
-		/// <param name="passPhrase">The pass phrase.</param>
-		/// <returns>System.String.</returns>
-		/// <exception cref="System.NotImplementedException"></exception>
-		public virtual string DecryptString(string cipherText, string passPhrase)
-        {
-            throw new NotImplementedException();
-        }
-
-		/// <summary>
-		/// Encrypts the bytes.
-		/// </summary>
-		/// <param name="data">The data.</param>
-		/// <param name="passPhrase">The pass phrase.</param>
-		/// <returns>System.Byte[].</returns>
-		/// <exception cref="System.NotImplementedException"></exception>
-		public virtual byte[] EncryptBytes(byte[] data, string passPhrase)
-        {
-            throw new NotImplementedException();
-        }
-
-		/// <summary>
-		/// Encrypts the string.
-		/// </summary>
-		/// <param name="plainText">The plain text.</param>
-		/// <param name="passPhrase">The pass phrase.</param>
-		/// <returns>System.String.</returns>
-		/// <exception cref="System.NotImplementedException"></exception>
-		public virtual string EncryptString(string plainText, string passPhrase)
-        {
-            throw new NotImplementedException();
-        }
-
+        _initVector = initVector;
+        _keysize = keySize;
     }
+
+    /// <summary>
+    /// Decrypts a byte buffer. Override in a derived provider; the base throws if not implemented.
+    /// </summary>
+    /// <param name="data">The encrypted bytes.</param>
+    /// <param name="passPhrase">The secret used to derive the key.</param>
+    /// <returns>The recovered clear bytes.</returns>
+    /// <exception cref="System.NotImplementedException">Thrown when the derived provider does not support byte decryption.</exception>
+    public virtual byte[] DecryptBytes(byte[] data, string passPhrase)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Decrypts cipher text. Override in a derived provider; the base throws if not implemented.
+    /// </summary>
+    /// <param name="cipherText">The cipher text.</param>
+    /// <param name="passPhrase">The secret used to derive the key.</param>
+    /// <returns>The recovered clear text.</returns>
+    /// <exception cref="System.NotImplementedException">Thrown when the derived provider does not support string decryption.</exception>
+    public virtual string DecryptString(string cipherText, string passPhrase)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Encrypts a byte buffer. Override in a derived provider; the base throws if not implemented.
+    /// </summary>
+    /// <param name="data">The clear bytes to encrypt.</param>
+    /// <param name="passPhrase">The secret used to derive the key.</param>
+    /// <returns>The encrypted bytes.</returns>
+    /// <exception cref="System.NotImplementedException">Thrown when the derived provider does not support byte encryption.</exception>
+    public virtual byte[] EncryptBytes(byte[] data, string passPhrase)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Encrypts clear text. Override in a derived provider; the base throws if not implemented.
+    /// </summary>
+    /// <param name="plainText">The clear text to encrypt.</param>
+    /// <param name="passPhrase">The secret used to derive the key.</param>
+    /// <returns>The cipher text.</returns>
+    /// <exception cref="System.NotImplementedException">Thrown when the derived provider does not support string encryption.</exception>
+    public virtual string EncryptString(string plainText, string passPhrase)
+    {
+        throw new NotImplementedException();
+    }
+
 }

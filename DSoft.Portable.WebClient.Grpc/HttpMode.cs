@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+namespace DSoft.Portable.WebClient.Grpc;
 
-namespace DSoft.Portable.WebClient.Grpc
+/// <summary>
+/// The HTTP protocol a gRPC channel uses, selecting between gRPC-Web over HTTP/1.1 and native gRPC over HTTP/2.
+/// </summary>
+public enum HttpMode
 {
-	/// <summary>
-	/// Enum HttpMode
-	/// </summary>
-	public enum HttpMode
-    {
-		/// <summary>
-		/// The HTTP 1.1
-		/// </summary>
-		Http_1_1,
-		/// <summary>
-		/// The HTTP 2.0
-		/// </summary>
-		Http_2_0,
-    }
+    /// <summary>
+    /// HTTP/1.1, used for gRPC-Web (for example when calling through a browser-compatible endpoint or proxy).
+    /// </summary>
+    Http_1_1,
+    /// <summary>
+    /// HTTP/2, used for native gRPC.
+    /// </summary>
+    Http_2_0,
 }

@@ -1,35 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System;
 
-namespace DSoft.Portable.WebClient.Encryption
+namespace DSoft.Portable.WebClient.Encryption;
+
+/// <summary>
+/// An encrypted, time-stamped data container exchanged between client and server.
+/// The payload can be checked for freshness and decrypted back into a typed object.
+/// </summary>
+public interface ISecurePayload
 {
-	/// <summary>
-	/// Interface ISecurePayload
-	/// </summary>
-	public interface ISecurePayload
-    {
-		/// <summary>
-		/// Gets or sets the data.
-		/// </summary>
-		/// <value>The data.</value>
-		string Data { get; set; }
+    /// <summary>
+    /// The encrypted payload as a Base64-encoded string.
+    /// </summary>
+    string Data { get; set; }
 
-		/// <summary>
-		/// Validates the specified time span.
-		/// </summary>
-		/// <param name="timeSpan">The time span.</param>
-		/// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-		bool Validate(TimeSpan timeSpan);
+    /// <summary>
+    /// Checks whether the payload is still within its allowed age.
+    /// </summary>
+    /// <param name="timeSpan">The maximum age the payload may have.</param>
+    /// <returns><c>true</c> when the payload is younger than <paramref name="timeSpan"/>; otherwise <c>false</c>.</returns>
+    bool Validate(TimeSpan timeSpan);
 
-		/// <summary>
-		/// Extracts the specified pass key.
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="passKey">The pass key.</param>
-		/// <param name="initVector">The initialize vector.</param>
-		/// <param name="keySize">Size of the key.</param>
-		/// <returns>T.</returns>
-		T Extract<T>(string passKey, string initVector, KeySize keySize = KeySize.TwoFiftySix);
-    }
+    /// <summary>
+    /// Decrypts the payload and deserializes it into <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type the encrypted payload represents.</typeparam>
+    /// <param name="passKey">The pass phrase the payload was encrypted with.</param>
+    /// <param name="initVector">The initialization vector used by the cipher.</param>
+    /// <param name="keySize">The key size used by the cipher; defaults to 256-bit.</param>
+    /// <returns>The decrypted, deserialized payload.</returns>
+    T Extract<T>(string passKey, string initVector, KeySize keySize = KeySize.TwoFiftySix);
 }

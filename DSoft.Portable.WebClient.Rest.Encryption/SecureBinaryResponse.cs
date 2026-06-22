@@ -1,43 +1,35 @@
 ﻿using DSoft.Portable.WebClient.Encryption;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace DSoft.Portable.WebClient.Rest.Encryption
+namespace DSoft.Portable.WebClient.Rest.Encryption;
+
+/// <summary>
+/// A <see cref="SecureResponse"/> that returns an encrypted binary file together with its name and MIME
+/// type, used when a service streams a download back to the client.
+/// </summary>
+/// <seealso cref="DSoft.Portable.WebClient.Rest.Encryption.SecureResponse" />
+/// <seealso cref="DSoft.Portable.WebClient.Encryption.ISecureBinaryResponse{T, T2}" />
+public class SecureBinaryResponse : SecureResponse, ISecureBinaryResponse<SecurePayload, byte[]>
 {
-	/// <summary>
-	/// Class SecureBinaryResponse.
-	/// Implements the <see cref="DSoft.Portable.WebClient.Rest.Encryption.SecureResponse" />
-	/// Implements the <see cref="DSoft.Portable.WebClient.Encryption.ISecureBinaryResponse{T, T2}" />
-	/// </summary>
-	/// <seealso cref="DSoft.Portable.WebClient.Rest.Encryption.SecureResponse" />
-	/// <seealso cref="DSoft.Portable.WebClient.Encryption.ISecureBinaryResponse{T, T2}" />
-	public class SecureBinaryResponse : SecureResponse, ISecureBinaryResponse<SecurePayload, byte[]>
+    /// <summary>
+    /// The file name to present to the caller for the returned content.
+    /// </summary>
+    public string FileName { get; set; }
+
+    /// <summary>
+    /// The MIME type describing the returned content.
+    /// </summary>
+    public string MimeType { get; set; }
+
+    /// <summary>
+    /// The encrypted binary content being returned.
+    /// </summary>
+    public byte[] Data { get; set; }
+
+    /// <summary>
+    /// Creates an empty binary response; populate the file metadata and content before returning it.
+    /// </summary>
+    public SecureBinaryResponse()
     {
-		/// <summary>
-		/// Gets or sets the name of the file.
-		/// </summary>
-		/// <value>The name of the file.</value>
-		public string FileName { get; set; }
 
-		/// <summary>
-		/// Gets or sets the type of the MIME.
-		/// </summary>
-		/// <value>The type of the MIME.</value>
-		public string MimeType { get; set; }
-
-		/// <summary>
-		/// Gets or sets the data.
-		/// </summary>
-		/// <value>The data.</value>
-		public byte[] Data { get; set; }
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="SecureBinaryResponse"/> class.
-		/// </summary>
-		public SecureBinaryResponse()
-        {
-
-        }
     }
 }

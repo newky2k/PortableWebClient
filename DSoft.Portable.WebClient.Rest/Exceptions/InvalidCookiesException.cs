@@ -1,21 +1,19 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace DSoft.Portable.WebClient.Rest.Exceptions
+namespace DSoft.Portable.WebClient.Rest.Exceptions;
+
+/// <summary>
+/// Thrown during cookie-authentication preflight when the required session cookies are missing
+/// or no longer valid.
+/// </summary>
+/// <seealso cref="System.Exception" />
+public class InvalidCookiesException : Exception
 {
     /// <summary>
-    /// Cookies were invalid
+    /// Creates the exception with a default "invalid or missing cookies" message.
     /// </summary>
-    /// <seealso cref="System.Exception" />
-    public class InvalidCookiesException : Exception
+    public InvalidCookiesException() : base("Cookies are invalid or missing")
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="InvalidCookiesException"/> class.
-        /// </summary>
-        public InvalidCookiesException() : base("Cookies are invalid or missing")
-        {
 
-        }
     }
 }

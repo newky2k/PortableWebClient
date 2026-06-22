@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+namespace DSoft.Portable.WebClient.Encryption;
 
-namespace DSoft.Portable.WebClient.Encryption
+/// <summary>
+/// Supplies the initialization vector used to seed the encryption cipher, letting the IV
+/// come from configuration or another source rather than being hard-coded.
+/// </summary>
+public interface IIVKeyProvider
 {
     /// <summary>
-    /// Interface Init Vector Provider
+    /// The initialization vector string the cipher should use.
     /// </summary>
-    public interface IIVKeyProvider
-    {
-        /// <summary>
-        /// Gets the init vertor for the encryption.
-        /// </summary>
-        /// <value>The key.</value>
-        string InitVector { get; }
+    string InitVector { get; }
 
-    }
 }

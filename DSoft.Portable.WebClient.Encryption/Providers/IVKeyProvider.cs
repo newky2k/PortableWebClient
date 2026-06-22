@@ -1,40 +1,36 @@
 ﻿using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace DSoft.Portable.WebClient.Encryption.Providers
+namespace DSoft.Portable.WebClient.Encryption.Providers;
+
+internal class IVKeyProvider : IIVKeyProvider
 {
-    internal class IVKeyProvider : IIVKeyProvider
+    #region Fields
+
+    private readonly IVProviderOptions _options;
+
+    #endregion
+    #region Properties
+
+    public string InitVector => _options.InitVector;
+
+    #endregion
+
+    #region Constructors
+
+    /// <summary>
+    /// Initializes the provider from DI-bound options.
+    /// </summary>
+    /// <param name="options">The configured <see cref="IVProviderOptions"/> resolved from the options pipeline.</param>
+    public IVKeyProvider(IOptions<IVProviderOptions> options) : this(options.Value) { }
+
+    /// <summary>
+    /// Initializes the provider directly from an options instance.
+    /// </summary>
+    /// <param name="options">The options carrying the initialization vector to expose.</param>
+    public IVKeyProvider(IVProviderOptions options)
     {
-        #region Fields
-
-        private readonly IVProviderOptions _options;
-
-        #endregion
-        #region Properties
-
-        public string InitVector => _options.InitVector;
-
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="IVKeyProvider"/> class.
-        /// </summary>
-        /// <param name="options">The options.</param>
-        public IVKeyProvider(IOptions<IVProviderOptions> options) : this(options.Value) { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="IVKeyProvider"/> class.
-        /// </summary>
-        /// <param name="options">The options.</param>
-        public IVKeyProvider(IVProviderOptions options)
-        {
-            _options = options;
-        }
-
-        #endregion
+        _options = options;
     }
+
+    #endregion
 }

@@ -1,68 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
-namespace DSoft.Portable.WebClient.Encryption.Helpers
+namespace DSoft.Portable.WebClient.Encryption.Helpers;
+
+/// <summary>
+/// Convenience helper that serializes objects to JSON and encrypts them (and the reverse),
+/// wiring up an <see cref="IEncryptionProvider"/> via <see cref="EncryptionProviderFactory"/> for each call.
+/// </summary>
+public class PayloadManager
 {
-	/// <summary>
-	/// Class PayloadManager.
-	/// </summary>
-	public class PayloadManager
+    private static TimeSpan _defaultTimeSpan = TimeSpan.FromMinutes(10);
+    /// <summary>
+    /// The validity window applied to time-stamped payloads. Defaults to 10 minutes.
+    /// </summary>
+    public static TimeSpan DefaultTimeout
     {
-        private static TimeSpan _defaultTimeSpan = TimeSpan.FromMinutes(10);
-		/// <summary>
-		/// Gets or sets the default timeout.
-		/// </summary>
-		/// <value>The default timeout.</value>
-		public static TimeSpan DefaultTimeout
+        get
         {
-            get
-            {
-                return _defaultTimeSpan;
-            }
-            set
-            {
-                _defaultTimeSpan = value;
-            }
+            return _defaultTimeSpan;
         }
-
-		/// <summary>
-		/// Decrypt the specified payload
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="payload">Payload string</param>
-		/// <param name="passkey">Encryption key</param>
-		/// <param name="initVector">The initialize vector.</param>
-		/// <param name="keySize">Size of the key.</param>
-		/// <returns>T.</returns>
-		public static T DecryptPayload<T>(string payload, string passkey, string initVector, KeySize keySize = KeySize.TwoFiftySix)
+        set
         {
-            var decryptedPayload = EncryptionProviderFactory.Build(initVector, keySize).DecryptString(payload, passkey);
-
-            var outPut = JsonSerializer.Deserialize<T>(decryptedPayload);
-
-            return outPut;
+            _defaultTimeSpan = value;
         }
-
-		/// <summary>
-		/// Encrypt the specified payload
-		/// </summary>
-		/// <param name="payload">Payload object</param>
-		/// <param name="passkey">Encryption key</param>
-		/// <param name="initVector">The initialize vector.</param>
-		/// <param name="keySize">Size of the key.</param>
-		/// <returns>System.String.</returns>
-		public static string EncryptPayload(object payload, string passkey, string initVector, KeySize keySize = KeySize.TwoFiftySix)
-        {
-            var payloadString = JsonSerializer.Serialize(payload, payload.GetType());
-
-            return EncryptionProviderFactory.Build(initVector, keySize).EncryptString(payloadString, passkey);
-        }
-
-
-
     }
+
+    /// <summary>
+    /// Decrypts an encrypted payload string and deserializes it into <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type the JSON payload represents.</typeparam>
+    /// <param name="payload">The encrypted, Base64-encoded payload.</param>
+    /// <param name="passkey">The pass phrase the payload was encrypted with.</param>
+    /// <param name="initVector">The initialization vector used by the cipher.</param>
+    /// <param name="keySize">The key size used by the cipher; defaults to 256-bit.</param>
+    /// <returns>The deserialized payload.</returns>
+    public static T DecryptPayload<T>(string payload, string passkey, string initVector, KeySize keySize = KeySize.TwoFiftySix)
+    {
+        var decryptedPayload = EncryptionProviderFactory.Build(initVector, keySize).DecryptString(payload, passkey);
+
+        var outPut = JsonSerializer.Deserialize<T>(decryptedPayload);
+
+        return outPut;
+    }
+
+    /// <summary>
+    /// Serializes an object to JSON and encrypts it into a transportable string.
+    /// </summary>
+    /// <param name="payload">The object to serialize and encrypt.</param>
+    /// <param name="passkey">The pass phrase to encrypt with.</param>
+    /// <param name="initVector">The initialization vector used by the cipher.</param>
+    /// <param name="keySize">The key size used by the cipher; defaults to 256-bit.</param>
+    /// <returns>The encrypted, Base64-encoded payload.</returns>
+    public static string EncryptPayload(object payload, string passkey, string initVector, KeySize keySize = KeySize.TwoFiftySix)
+    {
+        var payloadString = JsonSerializer.Serialize(payload, payload.GetType());
+
+        return EncryptionProviderFactory.Build(initVector, keySize).EncryptString(payloadString, passkey);
+    }
+
+
+
 }
