@@ -16,14 +16,13 @@
 		</None>
 	</ItemGroup>
 
-	<ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
-		<PackageReference Include="System.Text.Json" Version="10.0.3" />
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
+		<PackageReference Include="System.Text.Json" Version="10.0.9" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Options" Version="10.0.3" />
-		<PackageReference Include="RestSharp" Version="113.1.0" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.9" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="10.0.9" />
 	</ItemGroup>
 
 </Project>

@@ -1,19 +1,14 @@
 ﻿using DSoft.Portable.WebClient.Encryption;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace DSoft.Portable.WebClient.Rest.Encryption
+namespace DSoft.Portable.WebClient.Rest.Encryption;
+
+/// <summary>
+/// <see cref="RestApiClientOptions"/> extended with the encryption settings a secure REST client needs.
+/// </summary>
+public class SecureRestApiClientOptions : RestApiClientOptions
 {
     /// <summary>
-    /// Security Options for the rest client
+    /// The key size the cipher should use when encrypting and decrypting payloads.
     /// </summary>
-    public class SecureRestApiClientOptions : RestApiClientOptions
-    {
-        /// <summary>
-        /// Gets or sets the size of the key for the encryption
-        /// </summary>
-        /// <value>The size of the key.</value>
-        public KeySize KeySize { get; set; }
-    }
+    public KeySize KeySize { get; set; }
 }

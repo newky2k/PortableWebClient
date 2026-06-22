@@ -14,7 +14,15 @@
 		<LangVersion>Latest</LangVersion>
 		<Configurations>Debug;Release</Configurations>
 		<NoWarn>1701;1702;CS8002</NoWarn>
+    <PackageIcon>DSIcon.png</PackageIcon>
 	</PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\DSIcon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
 		<DebugSymbols>true</DebugSymbols>

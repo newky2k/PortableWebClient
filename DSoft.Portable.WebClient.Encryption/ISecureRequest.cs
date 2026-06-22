@@ -1,53 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System;
 
-namespace DSoft.Portable.WebClient.Encryption
+namespace DSoft.Portable.WebClient.Encryption;
+
+/// <summary>
+/// A request envelope that carries an encrypted <see cref="ISecurePayload"/> together with the
+/// identifiers a server needs to route and authorize it.
+/// </summary>
+/// <typeparam name="T">The concrete secure payload type carried by the request.</typeparam>
+public interface ISecureRequest<T> where T : ISecurePayload
 {
-	/// <summary>
-	/// Interface ISecureRequest
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	public interface ISecureRequest<T> where T : ISecurePayload
-    {
-		/// <summary>
-		/// Gets or sets the identifier.
-		/// </summary>
-		/// <value>The identifier.</value>
-		string Id { get; set; }
+    /// <summary>
+    /// A correlation identifier for the request.
+    /// </summary>
+    string Id { get; set; }
 
-		/// <summary>
-		/// Gets or sets the token identifier.
-		/// </summary>
-		/// <value>The token identifier.</value>
-		string TokenId { get; set; }
+    /// <summary>
+    /// The identifier of the authentication token the request is made under.
+    /// </summary>
+    string TokenId { get; set; }
 
-		/// <summary>
-		/// Gets or sets the context.
-		/// </summary>
-		/// <value>The context.</value>
-		string Context { get; set; }
+    /// <summary>
+    /// An optional caller-defined context string passed alongside the request.
+    /// </summary>
+    string Context { get; set; }
 
-		/// <summary>
-		/// Gets or sets the payload.
-		/// </summary>
-		/// <value>The payload.</value>
-		T Payload { get; set; }
+    /// <summary>
+    /// The encrypted payload being sent.
+    /// </summary>
+    T Payload { get; set; }
 
-		/// <summary>
-		/// Validates the specified timeout.
-		/// </summary>
-		/// <param name="timeout">The timeout.</param>
-		void Validate(TimeSpan timeout);
+    /// <summary>
+    /// Validates the request's payload against the given freshness window.
+    /// </summary>
+    /// <param name="timeout">The maximum age the payload may have.</param>
+    void Validate(TimeSpan timeout);
 
-		/// <summary>
-		/// Extracts the payload.
-		/// </summary>
-		/// <typeparam name="TData">The type of the t data.</typeparam>
-		/// <param name="passKey">The pass key.</param>
-		/// <param name="initVector">The initialize vector.</param>
-		/// <param name="keySize">Size of the key.</param>
-		/// <returns>TData.</returns>
-		TData ExtractPayload<TData>(string passKey, string initVector, KeySize keySize = KeySize.TwoFiftySix);
-    }
+    /// <summary>
+    /// Decrypts the request's payload and deserializes it into <typeparamref name="TData"/>.
+    /// </summary>
+    /// <typeparam name="TData">The type the encrypted payload represents.</typeparam>
+    /// <param name="passKey">The pass phrase the payload was encrypted with.</param>
+    /// <param name="initVector">The initialization vector used by the cipher.</param>
+    /// <param name="keySize">The key size used by the cipher; defaults to 256-bit.</param>
+    /// <returns>The decrypted, deserialized payload.</returns>
+    TData ExtractPayload<TData>(string passKey, string initVector, KeySize keySize = KeySize.TwoFiftySix);
 }

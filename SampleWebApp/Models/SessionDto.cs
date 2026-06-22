@@ -1,16 +1,15 @@
 ﻿using System;
 
-namespace PortableClient.Models
+namespace PortableClient.Models;
+
+public class SessionDto
 {
-	public class SessionDto
-	{
-		public Guid Id { get; set; }
+    public Guid Id { get; set; }
 
-		public string Token { get; set; }
+    public string Token { get; set; }
 
-		public DateTime Timestamp { get; set; }
+    public DateTime Timestamp { get; set; }
 
-		public DateTime Expires { get; set; }
+    public DateTime Expires { get; set; }
 
-	}
 }

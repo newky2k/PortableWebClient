@@ -6,25 +6,17 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace Microsoft.Extensions.DependencyInjection;
 
 /// <summary>
-/// Provides extension methods for registering REST service client factories and configuring REST API client options
-/// within an IServiceCollection.
+/// Dependency-injection helpers for registering REST clients and their <see cref="RestApiClientOptions"/>.
 /// </summary>
-/// <remarks>Use this class to enable dependency injection for REST API clients in your application. The extension
-/// methods facilitate the registration of REST client factories and related configuration, supporting modular and
-/// testable application design.</remarks>
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Adds REST service client logic to the specified service collection and configures REST API client options.
+    /// Registers <see cref="RestApiClientOptions"/> configured by the supplied action, for clients that
+    /// manage their own <see cref="System.Net.Http.HttpClient"/>.
     /// </summary>
-    /// <remarks>This method registers an implementation of IRestServiceClientFactory with scoped lifetime and
-    /// configures RestApiClientOptions using the provided action. Use this extension method to enable dependency
-    /// injection for REST API clients in your application.</remarks>
-    /// <param name="services">The service collection to which the REST service client factory and related options will be added. Cannot be
-    /// null.</param>
-    /// <param name="configure">An action used to configure the options for the REST API client. Allows customization of settings such as base
-    /// URL, timeouts, and other client behaviors. Cannot be null.</param>
-    /// <returns>The service collection with the REST service client factory and options registered. Enables method chaining.</returns>
+    /// <param name="services">The service collection to add to.</param>
+    /// <param name="configure">Action that configures the client options (base URL, timeouts, auth, and so on).</param>
+    /// <returns>The same service collection, to allow chaining.</returns>
     public static IServiceCollection AddRestServiceClient(this IServiceCollection services, Action<RestApiClientOptions> configure)
     {
         services.AddOptions<RestApiClientOptions>().Configure(configure);
@@ -34,17 +26,13 @@ public static class ServiceCollectionExtensions
 
 
     /// <summary>
-    /// Adds REST service client logic using IHttpClientFactory to the specified service collection and configures REST API client options.
+    /// Registers <see cref="RestApiClientOptions"/> and a typed <c>HttpClient</c> for <c>PortableRestHttpClient</c>
+    /// through <c>IHttpClientFactory</c>, optionally overriding the primary HTTP message handler.
     /// </summary>
-    /// <remarks>This method registers an implementation of IRestServiceClientFactory with scoped lifetime and
-    /// configures RestApiClientOptions using the provided action. Use this extension method to enable dependency
-    /// injection for REST API clients in your application.</remarks>
-    /// <param name="services">The service collection to which the REST service client factory and related options will be added. Cannot be
-    /// null.</param>
-    /// <param name="configure">An action used to configure the options for the REST API client. Allows customization of settings such as base
-    /// URL, timeouts, and other client behaviors. Cannot be null.</param>
-    /// <param name="configureHandler">Option handler configuration function</param>
-    /// <returns>The service collection with the REST service client factory and options registered. Enables method chaining.</returns>
+    /// <param name="services">The service collection to add to.</param>
+    /// <param name="configure">Action that configures the client options (base URL, timeouts, auth, and so on).</param>
+    /// <param name="configureHandler">Optional factory for the primary HTTP message handler; useful for tests or custom transport.</param>
+    /// <returns>The same service collection, to allow chaining.</returns>
     public static IServiceCollection AddRestServiceClientWithFactory(this IServiceCollection services, Action<RestApiClientOptions> configure, Func<HttpMessageHandler> configureHandler = null)
     {
         services.AddOptions<RestApiClientOptions>().Configure(configure);
@@ -60,18 +48,15 @@ public static class ServiceCollectionExtensions
     }
 
     /// <summary>
-    /// Adds REST service client logic using IHttpClientFactory and registers the given Token Manager to the specified service collection and configures REST API client options.
+    /// Same as <see cref="AddRestServiceClientWithFactory(IServiceCollection, Action{RestApiClientOptions}, Func{HttpMessageHandler})"/>
+    /// but also registers the given <see cref="IJwtTokenManger"/> implementation for token-based authentication.
     /// </summary>
-    /// <remarks>This method registers an implementation of IRestServiceClientFactory with scoped lifetime and
-    /// configures RestApiClientOptions using the provided action. Use this extension method to enable dependency
-    /// injection for REST API clients in your application.</remarks>
-    /// <param name="services">The service collection to which the REST service client factory and related options will be added. Cannot be
-    /// null.</param>
-    /// <param name="configure">An action used to configure the options for the REST API client. Allows customization of settings such as base
-    /// URL, timeouts, and other client behaviors. Cannot be null.</param>
-    /// <param name="configureHandler">Option handler configuration function</param>
-    /// <param name="tokenManagerAsSingleton">Should the token manager use singleton lifecycle or scoped</param>
-    /// <returns>The service collection with the REST service client factory and options registered. Enables method chaining.</returns>
+    /// <typeparam name="T">The token manager implementation to register.</typeparam>
+    /// <param name="services">The service collection to add to.</param>
+    /// <param name="configure">Action that configures the client options (base URL, timeouts, auth, and so on).</param>
+    /// <param name="configureHandler">Optional factory for the primary HTTP message handler; useful for tests or custom transport.</param>
+    /// <param name="tokenManagerAsSingleton">When <c>true</c> the token manager is registered as a singleton; otherwise scoped.</param>
+    /// <returns>The same service collection, to allow chaining.</returns>
     public static IServiceCollection AddRestServiceClientWithFactory<T>(this IServiceCollection services, Action<RestApiClientOptions> configure, Func<HttpMessageHandler> configureHandler = null, bool tokenManagerAsSingleton = true)
         where T : class, IJwtTokenManger
     {
@@ -84,7 +69,7 @@ public static class ServiceCollectionExtensions
         {
             services.TryAddScoped<IJwtTokenManger, T>();
         }
-        
+
         services.AddOptions<RestApiClientOptions>().Configure(configure);
 
         var httpClientBuilder = services.AddHttpClient<PortableRestHttpClient>(c => { });

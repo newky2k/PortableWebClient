@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+namespace DSoft.Portable.WebClient.Encryption;
 
-namespace DSoft.Portable.WebClient.Encryption
+/// <summary>
+/// Options used to configure an <see cref="IIVKeyProvider"/>, carrying the initialization vector
+/// to expose to the encryption pipeline.
+/// </summary>
+public class IVProviderOptions
 {
     /// <summary>
-	/// IV Provider Options.
-	/// </summary>
-	public class IVProviderOptions
-    {
-        /// <summary>
-        /// Gets or sets the initialize vector.
-        /// </summary>
-        /// <value>The initialize vector.</value>
-        public string InitVector { get; set; }
+    /// The initialization vector string the provider will expose.
+    /// </summary>
+    public string InitVector { get; set; }
 
-    }
 }

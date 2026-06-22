@@ -1,20 +1,17 @@
 ﻿using DSoft.Portable.WebClient.Encryption.Providers;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace DSoft.Portable.WebClient.Encryption.Factories
+namespace DSoft.Portable.WebClient.Encryption.Factories;
+
+/// <summary>
+/// Creates <see cref="IIVKeyProvider"/> instances from options, for callers that need an IV
+/// provider outside of dependency injection.
+/// </summary>
+public static class IVProviderFactory
 {
     /// <summary>
-    /// Factory for the IV Provider
+    /// Builds an IV key provider backed by the supplied options.
     /// </summary>
-    public static class IVProviderFactory
-    {
-        /// <summary>
-        /// Creates the IV key provider with the specified options.
-        /// </summary>
-        /// <param name="options">The options.</param>
-        /// <returns>IIVKeyProvider.</returns>
-        public static IIVKeyProvider Create(IVProviderOptions options) => new IVKeyProvider(options);
-    }
+    /// <param name="options">The options carrying the initialization vector.</param>
+    /// <returns>A ready-to-use <see cref="IIVKeyProvider"/>.</returns>
+    public static IIVKeyProvider Create(IVProviderOptions options) => new IVKeyProvider(options);
 }

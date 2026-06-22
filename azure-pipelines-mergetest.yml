@@ -6,7 +6,7 @@
 trigger: none
 
 pool:
-  vmImage: 'windows-2022'
+  vmImage: 'windows-latest'
 
 variables:
   solution: '**/*.slnx'

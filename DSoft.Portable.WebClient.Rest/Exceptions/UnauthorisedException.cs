@@ -1,21 +1,19 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace DSoft.Portable.WebClient.Rest.Exceptions
+namespace DSoft.Portable.WebClient.Rest.Exceptions;
+
+/// <summary>
+/// Thrown when the server rejects a request as unauthorized (HTTP 401/403), indicating the
+/// caller lacks access to the requested resource.
+/// </summary>
+/// <seealso cref="System.Exception" />
+public class UnauthorisedException : Exception
 {
     /// <summary>
-    /// Thrown when unauthorised 
+    /// Creates the exception with a default "no access" message.
     /// </summary>
-    /// <seealso cref="System.Exception" />
-    public class UnauthorisedException : Exception
+    public UnauthorisedException() : base("You do not have access to this rsesource")
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UnauthorisedException"/> class.
-        /// </summary>
-        public UnauthorisedException() : base("You do not have access to this rsesource")
-        {
-            
-        }
+
     }
 }

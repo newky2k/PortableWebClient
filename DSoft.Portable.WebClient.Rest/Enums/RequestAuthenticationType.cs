@@ -1,26 +1,22 @@
-﻿
+
 
 namespace DSoft.Portable.WebClient.Rest.Enums;
 
 /// <summary>
-/// Authentication Type for request
+/// The authentication scheme a REST client applies to its requests.
 /// </summary>
 public enum RequestAuthenticationType
 {
     /// <summary>
-    /// Represents an anonymous type that encapsulates a set of read-only properties.
+    /// No authentication; requests are sent without credentials.
     /// </summary>
-    /// <remarks>Anonymous types are typically used to create simple objects for data transfer without
-    /// explicitly defining a class. They are immutable and can only be created using object initializers.</remarks>
     Anonymous,
     /// <summary>
-    /// Represents an HTTP cookie used to store data on the client and send it to the server with subsequent requests.
+    /// Cookie-based authentication, where a session cookie is attached to each request.
     /// </summary>
-    /// <remarks>Cookies are commonly used for session management, personalization, and tracking. They can
-    /// have attributes such as expiration, path, and domain that determine their behavior and scope.</remarks>
     Cookie,
     /// <summary>
-    /// Use JWT Token based authentication
+    /// JWT bearer-token authentication, where a token is sent in the Authorization header.
     /// </summary>
     Token,
 }

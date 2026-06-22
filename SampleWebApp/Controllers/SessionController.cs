@@ -6,58 +6,57 @@ using DSoft.Portable.WebClient.Rest.Encryption;
 using Microsoft.AspNetCore.Mvc;
 using PortableClient.Models;
 
-namespace SampleWebApp.Controllers
+namespace SampleWebApp.Controllers;
+
+[Produces("application/json")]
+[Route("api/[controller]/[action]")]
+[ApiController]
+public class SessionController : ControllerBase
 {
-    [Produces("application/json")]
-    [Route("api/[controller]/[action]")]
-    [ApiController]
-    public class SessionController : ControllerBase
+    [HttpPost]
+    [ActionName("Create")]
+    public async Task<SecureResponse> CreateSession([FromBody] SecureRequest request)
     {
-        [HttpPost]
-        [ActionName("Create")]
-        public async Task<SecureResponse> CreateSession([FromBody] SecureRequest request)
+        var result = new SecureResponse();
+
+        try
         {
-            var result = new SecureResponse();
+            //calculate the encryption Hash
+            var initKey = "1234567890";
+            var ivKey = "xRFg8Ctp1sEqWfVp";
 
-            try
+            //try and extract the empty payload, will fail if the key is wrong
+            var payload = ExtractPayload<EmptyPayload>(request, initKey, ivKey);
+
+            await Task.Delay(10);
+
+            var session = new SessionDto()
             {
-                //calculate the encryption Hash
-                var initKey = "1234567890";
-                var ivKey = "xRFg8Ctp1sEqWfVp";
+                Id = Guid.NewGuid(),
+                Expires = DateTime.UtcNow.AddHours(1),
+                Timestamp = DateTime.UtcNow,
+                Token = Guid.NewGuid().ToString(),
+            };
 
-                //try and extract the empty payload, will fail if the key is wrong
-                var payload = ExtractPayload<EmptyPayload>(request, initKey, ivKey);
-
-                await Task.Delay(10);
-
-                var session = new SessionDto()
-                {
-                    Id = Guid.NewGuid(),
-                    Expires = DateTime.UtcNow.AddHours(1),
-                    Timestamp = DateTime.UtcNow,
-                    Token = Guid.NewGuid().ToString(),
-                };
-
-                result.Payload.Data = PayloadManager.EncryptPayload(session, initKey, ivKey);
+            result.Payload.Data = PayloadManager.EncryptPayload(session, initKey, ivKey);
 
 
 
-            }
-            catch (Exception ex)
-            {
-                result.Success = false;
-                result.Message = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            result.Success = false;
+            result.Message = ex.Message;
 
-            }
-
-            return result;
         }
 
-        public static T ExtractPayload<T>(SecureRequest request, string encryptionToken, string ivKey)
-        {
-            var payLoad = request.Payload.Extract<T>(encryptionToken, ivKey);
+        return result;
+    }
 
-            return payLoad;
-        }
+    public static T ExtractPayload<T>(SecureRequest request, string encryptionToken, string ivKey)
+    {
+        var payLoad = request.Payload.Extract<T>(encryptionToken, ivKey);
+
+        return payLoad;
     }
 }

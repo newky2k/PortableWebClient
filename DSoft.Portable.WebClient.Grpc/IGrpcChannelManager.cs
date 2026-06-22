@@ -1,28 +1,25 @@
-﻿using Grpc.Net.Client;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Grpc.Net.Client;
 
-namespace DSoft.Portable.WebClient.Grpc
+namespace DSoft.Portable.WebClient.Grpc;
+
+/// <summary>
+/// Manages the lifecycle of gRPC channels, caching one per address so callers reuse a single channel
+/// rather than opening a new connection per call.
+/// </summary>
+public interface IGrpcChannelManager
 {
-	/// <summary>
-	/// IGrpcChannelManager Interface
-	/// </summary>
-	public interface IGrpcChannelManager
-	{
-		/// <summary>
-		/// Get the channel for the specified address, returning cached instance if found
-		/// </summary>
-		/// <param name="address">The address.</param>
-		/// <param name="options">The options.</param>
-		/// <returns>GrpcChannel.</returns>
-		GrpcChannel ForAddress(string address, GrpcClientOptions options);
+    /// <summary>
+    /// Returns the channel for the given address, creating and caching it on first use or returning the cached one thereafter.
+    /// </summary>
+    /// <param name="address">The server address the channel connects to.</param>
+    /// <param name="options">The options controlling how the channel is created (HTTP mode, certificate handling, and so on).</param>
+    /// <returns>A shared gRPC channel for the address.</returns>
+    GrpcChannel ForAddress(string address, GrpcClientOptions options);
 
-		/// <summary>
-		/// Clears the channel for the specified address.
-		/// </summary>
-		/// <param name="address">The address.</param>
-		Task ClearAsync(string address);
-	}
+    /// <summary>
+    /// Removes and shuts down the cached channel for the given address, so the next call recreates it.
+    /// </summary>
+    /// <param name="address">The server address whose channel should be cleared.</param>
+    Task ClearAsync(string address);
 }
