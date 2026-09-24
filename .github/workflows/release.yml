@@ -1,0 +1,99 @@
+# Build, test and package on pushes to master
+# (replaces azure-pipelines-release.yml)
+name: Release
+
+on:
+  push:
+    branches: [ master ]
+    paths-ignore:
+      - '**.md'
+      - '.github/workflows/build.yml'
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Push the packages to nuget.org (requires the NUGET_API_KEY secret)'
+        type: boolean
+        default: false
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  SOLUTION: DSoft.Portable.WebClient.slnx
+  BUILD_CONFIGURATION: Release
+  MAJOR_MINOR: '7.0'
+  RELEASE_SUFFIX: '-prerelease'
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  release:
+    # windows is required for the WPF TestHarness (net10.0-windows) and the net462 targets
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install .NET SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      # Same scheme as the old Azure pipeline: {major}.{minor}.{yyMM}.{dd}{daily revision}
+      - name: Calculate version
+        id: version
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $now = [DateTime]::UtcNow
+          $since = $now.ToString('yyyy-MM-dd')
+          $runs = gh run list --repo "${{ github.repository }}" --workflow release.yml --created ">=$since" --limit 100 --json databaseId,createdAt | ConvertFrom-Json
+          $rev = @($runs | Where-Object { $_.databaseId -le ${{ github.run_id }} }).Count
+          if ($rev -lt 1) { $rev = 1 }
+          $version = "$env:MAJOR_MINOR.$($now.ToString('yyMM')).$($now.ToString('dd'))$rev"
+          "version=$version" >> $env:GITHUB_OUTPUT
+          Write-Host "Version: $version$env:RELEASE_SUFFIX"
+
+      - name: Restore packages
+        run: dotnet restore ${{ env.SOLUTION }}
+
+      - name: Build
+        run: >
+          dotnet build ${{ env.SOLUTION }} --no-restore
+          --configuration ${{ env.BUILD_CONFIGURATION }}
+          /p:Version=${{ steps.version.outputs.version }}${{ env.RELEASE_SUFFIX }}
+          /p:AssemblyVersion=${{ steps.version.outputs.version }}
+          /p:FileVersion=${{ steps.version.outputs.version }}
+
+      - name: Test
+        run: dotnet test UnitTester/UnitTester.csproj --no-build --configuration ${{ env.BUILD_CONFIGURATION }}
+
+      - name: Collect packages
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path artifacts | Out-Null
+          Get-ChildItem -Recurse -Include 'DSoft.*.nupkg','DSoft.*.snupkg' -Path . |
+            Where-Object { $_.FullName -notmatch '[\\/]artifacts[\\/]' } |
+            Copy-Item -Destination artifacts
+          Get-ChildItem artifacts
+
+      - name: Upload packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: drop
+          path: artifacts/*
+
+      - name: Push to nuget.org
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish }}
+        shell: pwsh
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          if (-not $env:NUGET_API_KEY) { throw 'NUGET_API_KEY secret is not set' }
+          dotnet nuget push "artifacts/*.nupkg" --api-key $env:NUGET_API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate

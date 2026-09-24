@@ -9,10 +9,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
-    <PackageReference Include="Grpc.AspNetCore" Version="2.80.0" />
-    <PackageReference Include="Grpc.AspNetCore.Web" Version="2.80.0" />
-    <PackageReference Include="NuGet.Packaging" Version="7.6.0" />
-    <PackageReference Include="NuGet.Protocol" Version="7.6.0" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.84.0" />
+    <PackageReference Include="Grpc.AspNetCore.Web" Version="2.84.0" />
+    <PackageReference Include="NuGet.Packaging" Version="7.9.0" />
+    <PackageReference Include="NuGet.Protocol" Version="7.9.0" />
     
   </ItemGroup>
 

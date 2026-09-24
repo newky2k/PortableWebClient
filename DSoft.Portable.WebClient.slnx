@@ -22,8 +22,8 @@
   </Folder>
   <Folder Name="/_ci/">
     <File Path=".editorconfig" />
-    <File Path="azure-pipelines-mergetest.yml" />
-    <File Path="azure-pipelines-release.yml" />
+    <File Path=".github/workflows/build.yml" />
+    <File Path=".github/workflows/release.yml" />
     <File Path="CLAUDE.md" />
     <File Path="Directory.Build.props" />
     <File Path="README.md" />
