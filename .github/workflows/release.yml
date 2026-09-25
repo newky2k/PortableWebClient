@@ -19,6 +19,10 @@ on:
       - '.github/workflows/build.yml'
   workflow_dispatch:
     inputs:
+      stable:
+        description: 'Stable release (no -prerelease suffix). Leave unticked for a beta.'
+        type: boolean
+        default: false
       publish:
         description: 'Publish the packages to nuget.org'
         type: boolean
@@ -30,7 +34,8 @@ env:
   SOLUTION: DSoft.Portable.WebClient.slnx
   BUILD_CONFIGURATION: Release
   MAJOR_MINOR: '7.0'
-  RELEASE_SUFFIX: '-prerelease'
+  # pushes to master are always betas; a manual run with "stable" ticked drops the suffix
+  RELEASE_SUFFIX: ${{ !inputs.stable && '-prerelease' || '' }}
 
 concurrency:
   group: release
