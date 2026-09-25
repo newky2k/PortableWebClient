@@ -31,7 +31,7 @@ env:
   BUILD_CONFIGURATION: Release
   MAJOR_MINOR: '7.0'
   # set to '-prerelease' while working on a beta, or '' for a stable release
-  RELEASE_SUFFIX: '-prerelease'
+  RELEASE_SUFFIX: ''
 
 concurrency:
   group: release
