@@ -1,4 +1,4 @@
-# Build, test, package and publish to nuget.org on pushes to master
+# Build, test, package, publish to nuget.org and tag the release on pushes to master
 # (replaces the Azure DevOps build and release pipelines)
 #
 # Publishing uses NuGet Trusted Publishing (OIDC), so no API key is stored in GitHub.
@@ -45,6 +45,8 @@ jobs:
   release:
     # windows is required for the WPF TestHarness (net10.0-windows) and the net462 targets
     runs-on: windows-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}${{ env.RELEASE_SUFFIX }}
 
     steps:
       - uses: actions/checkout@v5
@@ -131,3 +133,32 @@ jobs:
           --api-key ${{ steps.login.outputs.NUGET_API_KEY }}
           --source https://api.nuget.org/v3/index.json
           --skip-duplicate
+
+  tag:
+    # tag the commit and create a GitHub release once the packages are on nuget.org
+    needs: [ release, publish ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download packages
+        uses: actions/download-artifact@v4
+        with:
+          name: drop
+          path: artifacts
+
+      - name: Create tag and GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: v${{ needs.release.outputs.version }}
+          PRERELEASE: ${{ env.RELEASE_SUFFIX != '' }}
+        run: |
+          flags=()
+          if [ "$PRERELEASE" = "true" ]; then flags+=(--prerelease); else flags+=(--latest); fi
+          gh release create "$TAG" artifacts/*.nupkg \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "$TAG" \
+            --generate-notes \
+            "${flags[@]}"
