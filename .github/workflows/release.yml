@@ -1,0 +1,164 @@
+# Build, test, package, publish to nuget.org and tag the release on pushes to master
+# (replaces the Azure DevOps build and release pipelines)
+#
+# Publishing uses NuGet Trusted Publishing (OIDC), so no API key is stored in GitHub.
+# One-time setup:
+#   1. nuget.org > Trusted Publishing: add a GitHub Actions policy for
+#      owner newky2k, repository PortableWebClient, workflow file release.yml, environment nuget
+#   2. GitHub > Settings > Environments: create an environment named "nuget"
+#      (optionally add required reviewers to approve each publish)
+#   3. GitHub > Settings > Secrets and variables > Actions: add a secret NUGET_USER
+#      containing your nuget.org user name (profile name, not email)
+name: Release
+
+on:
+  push:
+    branches: [ master ]
+    paths-ignore:
+      - '**.md'
+      - '.github/workflows/build.yml'
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publish the packages to nuget.org'
+        type: boolean
+        default: true
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  SOLUTION: DSoft.Portable.WebClient.slnx
+  BUILD_CONFIGURATION: Release
+  MAJOR_MINOR: '7.0'
+  # set to '-prerelease' while working on a beta, or '' for a stable release
+  RELEASE_SUFFIX: '-prerelease'
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  release:
+    # windows is required for the WPF TestHarness (net10.0-windows) and the net462 targets
+    runs-on: windows-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}${{ env.RELEASE_SUFFIX }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install .NET SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      # Same scheme as the old Azure pipeline: {major}.{minor}.{yyMM}.{dd}{daily revision}
+      - name: Calculate version
+        id: version
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $now = [DateTime]::UtcNow
+          $since = $now.ToString('yyyy-MM-dd')
+          $runs = gh run list --repo "${{ github.repository }}" --workflow release.yml --created ">=$since" --limit 100 --json databaseId,createdAt | ConvertFrom-Json
+          $rev = @($runs | Where-Object { $_.databaseId -le ${{ github.run_id }} }).Count
+          if ($rev -lt 1) { $rev = 1 }
+          $version = "$env:MAJOR_MINOR.$($now.ToString('yyMM')).$($now.ToString('dd'))$rev"
+          "version=$version" >> $env:GITHUB_OUTPUT
+          Write-Host "Version: $version$env:RELEASE_SUFFIX"
+
+      - name: Restore packages
+        run: dotnet restore ${{ env.SOLUTION }}
+
+      - name: Build
+        run: >
+          dotnet build ${{ env.SOLUTION }} --no-restore
+          --configuration ${{ env.BUILD_CONFIGURATION }}
+          /p:Version=${{ steps.version.outputs.version }}${{ env.RELEASE_SUFFIX }}
+          /p:AssemblyVersion=${{ steps.version.outputs.version }}
+          /p:FileVersion=${{ steps.version.outputs.version }}
+
+      - name: Test
+        run: dotnet test UnitTester/UnitTester.csproj --no-build --configuration ${{ env.BUILD_CONFIGURATION }}
+
+      - name: Collect packages
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path artifacts | Out-Null
+          Get-ChildItem -Recurse -Include 'DSoft.*.nupkg','DSoft.*.snupkg' -Path . |
+            Where-Object { $_.FullName -notmatch '[\\/]artifacts[\\/]' } |
+            Copy-Item -Destination artifacts
+          Get-ChildItem artifacts
+
+      - name: Upload packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: drop
+          path: artifacts/*
+
+  publish:
+    needs: release
+    if: ${{ github.event_name == 'push' || inputs.publish }}
+    runs-on: ubuntu-latest
+    environment: nuget
+    permissions:
+      id-token: write   # required for NuGet trusted publishing
+
+    steps:
+      - name: Download packages
+        uses: actions/download-artifact@v4
+        with:
+          name: drop
+          path: artifacts
+
+      - name: Install .NET SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: NuGet login (OIDC)
+        id: login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      - name: Push to nuget.org
+        run: >
+          dotnet nuget push "artifacts/*.nupkg"
+          --api-key ${{ steps.login.outputs.NUGET_API_KEY }}
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate
+
+  tag:
+    # tag the commit and create a GitHub release once the packages are on nuget.org
+    needs: [ release, publish ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download packages
+        uses: actions/download-artifact@v4
+        with:
+          name: drop
+          path: artifacts
+
+      - name: Create tag and GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: v${{ needs.release.outputs.version }}
+          PRERELEASE: ${{ env.RELEASE_SUFFIX != '' }}
+        run: |
+          flags=()
+          if [ "$PRERELEASE" = "true" ]; then flags+=(--prerelease); else flags+=(--latest); fi
+          gh release create "$TAG" artifacts/*.nupkg \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "$TAG" \
+            --generate-notes \
+            "${flags[@]}"

@@ -36,7 +36,7 @@ In v3.1 and above the InitVector key is passed explicilty to the `IEncryptionPro
 `IWebClient` has been removed and now constructors for `GrpcServiceClientBase` and `RestServiceClientBase` receive `GrpcClientOptions` and `RestApiClientOptions` to provide configuration data.
 
 ## Build status
-[![Build Status](https://dev.azure.com/humbatt/Daves%20Projects/_apis/build/status/PortableWebClient/PortableWebClient%20-%20Release?branchName=master)](https://dev.azure.com/humbatt/Daves%20Projects/_build/latest?definitionId=49&branchName=master)
+[![Release](https://github.com/newky2k/PortableWebClient/actions/workflows/release.yml/badge.svg?branch=master)](https://github.com/newky2k/PortableWebClient/actions/workflows/release.yml)
 
 
 
