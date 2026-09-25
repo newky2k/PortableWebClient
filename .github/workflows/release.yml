@@ -1,5 +1,14 @@
-# Build, test and package on pushes to master
-# (replaces azure-pipelines-release.yml)
+# Build, test, package and publish to nuget.org on pushes to master
+# (replaces the Azure DevOps build and release pipelines)
+#
+# Publishing uses NuGet Trusted Publishing (OIDC), so no API key is stored in GitHub.
+# One-time setup:
+#   1. nuget.org > Trusted Publishing: add a GitHub Actions policy for
+#      owner newky2k, repository PortableWebClient, workflow file release.yml, environment nuget
+#   2. GitHub > Settings > Environments: create an environment named "nuget"
+#      (optionally add required reviewers to approve each publish)
+#   3. GitHub > Settings > Secrets and variables > Actions: add a secret NUGET_USER
+#      containing your nuget.org user name (profile name, not email)
 name: Release
 
 on:
@@ -11,9 +20,9 @@ on:
   workflow_dispatch:
     inputs:
       publish:
-        description: 'Push the packages to nuget.org (requires the NUGET_API_KEY secret)'
+        description: 'Publish the packages to nuget.org'
         type: boolean
-        default: false
+        default: true
 
 env:
   DOTNET_NOLOGO: true
@@ -89,11 +98,35 @@ jobs:
           name: drop
           path: artifacts/*
 
+  publish:
+    needs: release
+    if: ${{ github.event_name == 'push' || inputs.publish }}
+    runs-on: ubuntu-latest
+    environment: nuget
+    permissions:
+      id-token: write   # required for NuGet trusted publishing
+
+    steps:
+      - name: Download packages
+        uses: actions/download-artifact@v4
+        with:
+          name: drop
+          path: artifacts
+
+      - name: Install .NET SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: NuGet login (OIDC)
+        id: login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
       - name: Push to nuget.org
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish }}
-        shell: pwsh
-        env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-        run: |
-          if (-not $env:NUGET_API_KEY) { throw 'NUGET_API_KEY secret is not set' }
-          dotnet nuget push "artifacts/*.nupkg" --api-key $env:NUGET_API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate
+        run: >
+          dotnet nuget push "artifacts/*.nupkg"
+          --api-key ${{ steps.login.outputs.NUGET_API_KEY }}
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate
