@@ -20,7 +20,7 @@ dotnet test UnitTester/UnitTester.csproj --filter "FullyQualifiedName~TestClassN
 
 ## Architecture
 
-This is a multi-project .NET library (targets `net462`, `net9.0`, `net10.0`) providing base classes for consuming ASP.NET Core REST APIs and gRPC services. All library projects share build settings from `Directory.Build.props` (NuGet packaging, signing via `DSoft.snk`, SourceLink on Release).
+This is a multi-project .NET library (targets `net462`, `net9.0`, `net10.0` and `net11.0`; build with the .NET 10 and .NET 11 SDKs) providing base classes for consuming ASP.NET Core REST APIs and gRPC services. All library projects share build settings from `Directory.Build.props` (NuGet packaging, signing via `DSoft.snk`, SourceLink on Release).
 
 ### Package Dependency Graph
 
@@ -74,7 +74,7 @@ All responses extend `ResponseBase` (`Success: bool`, `Message: string`). Concre
 
 ### Testing
 
-Tests live in `UnitTester/` (MSTest, targets `net10.0`). Integration tests use `Microsoft.AspNetCore.Mvc.Testing` (`WebApplicationFactory`). The `SampleWebApp` project is the system under test; `SampleApiClient` contains the client implementation used in tests. Pass a custom `HttpMessageHandler` from the test factory into `RestApiClientOptions` or `GrpcClientOptions` to intercept HTTP traffic without a real server.
+Tests live in `UnitTester/` (MSTest, targets `net10.0` and `net11.0`). Integration tests use `Microsoft.AspNetCore.Mvc.Testing` (`WebApplicationFactory`). The `SampleWebApp` project is the system under test; `SampleApiClient` contains the client implementation used in tests. Pass a custom `HttpMessageHandler` from the test factory into `RestApiClientOptions` or `GrpcClientOptions` to intercept HTTP traffic without a real server.
 
 ### Key Interfaces for Extension
 
