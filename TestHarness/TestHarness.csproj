@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net10.0-windows</TargetFrameworks>
+    <TargetFrameworks>net10.0-windows;net11.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <SignAssembly>false</SignAssembly>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DSoft.System.Mvvm.Ui.Wpf" Version="3.6.2606.131" />
+    <PackageReference Include="DSoft.System.Mvvm.Ui.Wpf" Version="3.6.2611.2" />
   </ItemGroup>
 
   <ItemGroup>
