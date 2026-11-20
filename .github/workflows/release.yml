@@ -1,4 +1,4 @@
-# Build, test, package, publish to nuget.org and tag the release on pushes to master
+# Build, test, package, publish to nuget.org and tag the release on pushes to main
 # (replaces the Azure DevOps build and release pipelines)
 #
 # Publishing uses NuGet Trusted Publishing (OIDC), so no API key is stored in GitHub.
@@ -13,10 +13,10 @@ name: Release
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
     paths-ignore:
       - '**.md'
-      - '.github/workflows/build.yml'
+      - '.github/workflows/**'
   workflow_dispatch:
     inputs:
       publish:
