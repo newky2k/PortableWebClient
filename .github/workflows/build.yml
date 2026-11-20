@@ -1,10 +1,10 @@
-# Build and test pull requests into master and Development
+# Build and test pull requests into main and development
 # (replaces azure-pipelines-mergetest.yml)
 name: Build
 
 on:
   pull_request:
-    branches: [ master, Development ]
+    branches: [ main, development ]
   workflow_dispatch:
 
 env:
